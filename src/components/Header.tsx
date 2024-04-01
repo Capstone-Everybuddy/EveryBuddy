@@ -6,8 +6,17 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title }) => {
-  return <HeaderWrapper>{title}</HeaderWrapper>;
+  return (
+    <Container>
+      <HeaderWrapper>{title}</HeaderWrapper>
+    </Container>
+  );
 };
+
+const Container = styled.div`
+  width: 100%;
+  /* padding: 0 20px; */
+`;
 
 const HeaderWrapper = styled.div`
   color: black;
@@ -15,7 +24,6 @@ const HeaderWrapper = styled.div`
   font-size: 30px;
   font-weight: 600;
   padding: 20px;
-  margin: 0px 20px;
   border-bottom: 1px solid ${(props) => props.theme.colors.gray};
 `;
 
