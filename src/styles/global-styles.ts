@@ -7,6 +7,7 @@ const GlobalStyle = createGlobalStyle`
 
   html,
   body {
+    position: relative;
     max-width: 400px;
     height: 100vh;
     margin-left: auto;
