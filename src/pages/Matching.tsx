@@ -3,8 +3,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { ReactComponent as MatchingSvg } from 'assets/matching_start.svg';
 import Button from 'components/Button';
+import { useNavigate } from 'react-router-dom';
 
 const Matching = () => {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <Header title="Matching" />
@@ -16,7 +18,10 @@ const Matching = () => {
         <br />
         나에게 맞는 서울메이트/버디를 찾아보세요!
       </TextWrapper>
-      <Button text="매칭 시작하기" onClick={() => console.log('start')} />
+      <Button
+        text="매칭 시작하기"
+        onClick={() => navigate('/matching-start')}
+      />
     </Wrapper>
   );
 };

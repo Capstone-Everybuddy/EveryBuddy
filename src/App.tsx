@@ -10,6 +10,7 @@ import BottomNav from 'components/BottomNav';
 import Matching from 'pages/Matching';
 import Chatting from 'pages/Chatting';
 import Profile from 'pages/Profile';
+import MatchingStart from 'pages/MatchingStart';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/chatting" element={<Chatting />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
+          <Route path="/matching-start" element={<MatchingStart />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
