@@ -24,14 +24,28 @@ public class MatchingController {
         this.matchingService = matchingService;
     }
 
-    // [GET] 설메) 담당 버디 조회 API
+    // [GET] 버디) 담당 서울메이트 조회 API
     @ResponseBody
     @GetMapping("/seoulmate/{buddyIdx}")
-    @Operation(summary = "summary_API", description = "matching API: seoulmate-buddy")
+    @Operation(summary = "서울메이트 조회 API", description = "버디) 담당 서울메이트 조회 API")
     public BaseResponse<GetMatchingRes> getMatching(@PathVariable("buddyIdx") Integer buddyIdx) {
         try {
             GetMatchingRes getMatchingRes = matchingProvider.getMatching(buddyIdx);
             return new BaseResponse<>(getMatchingRes);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
+
+
+    // [GET] 설메) 담당 버디들 조회 API
+    @ResponseBody
+    @GetMapping("/buddies/{seoulmateIdx}")
+    @Operation(summary = "버디 조회 API", description = "설메) 담당 버디들 조회 API")
+    public BaseResponse<List<GetMatchingRes>> getMatchings(@PathVariable("seoulmateIdx") Integer seoulmateIdx) {
+        try {
+            List<GetMatchingRes> getMatchingsRes = matchingProvider.getMatchings(seoulmateIdx);
+            return new BaseResponse<>(getMatchingsRes);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }

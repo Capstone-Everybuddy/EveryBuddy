@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.List;
+
 import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
@@ -24,6 +26,15 @@ public class MatchingProvider {
         try {
             GetMatchingRes getMatchingRes = matchingDao.getMatching(buddyIdx);
             return getMatchingRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetMatchingRes> getMatchings(Integer seoulmateIdx) throws BaseException {
+        try {
+            List<GetMatchingRes> getMatchingsRes = matchingDao.getMatchings(seoulmateIdx);
+            return getMatchingsRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
