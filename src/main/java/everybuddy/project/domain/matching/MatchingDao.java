@@ -10,19 +10,25 @@ import javax.sql.DataSource;
 public class MatchingDao {
     private JdbcTemplate jdbcTemplate;
 
-    public void setDataSource(DataSource dataSource) {
+    public MatchingDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public GetMatchingRes getMatching(Integer matchingIdx) {
-        String getMatchingQuery = "SELECT buddyIdx, seoulmateIdx FROM buddy WHERE matchingIdx = ?";
+
+    public GetMatchingRes getMatching(Integer buddyIdx) {
+        String getMatchingQuery = "SELECT s.name as seoulmateName, s.ID as seoulmateID, s.profileImg as seoulmateProfileImg, b.name as buddyName, b.ID as buddyID, b.profileImg as buddyProfileImg FROM `buddy` AS `b` INNER JOIN `matching` as `m` ON b.buddyIdx = m.buddyIdx INNER JOIN `seoulmate` AS `s` ON m.seoulmateIdx = s.seoulmateIdx WHERE b.buddyIdx = ?";
+        String getMatchingParams = String.valueOf(buddyIdx);
         GetMatchingRes getMatchingRes = this.jdbcTemplate.queryForObject(
                 getMatchingQuery,
                 (rs, rowNum) -> new GetMatchingRes(
-                        rs.getInt("buddyIdx"),
-                        rs.getInt("seoulmateIdx")
+                        rs.getString("seoulmateName"),
+                        rs.getString("seoulmateID"),
+                        rs.getString("seoulmateProfileImg"),
+                        rs.getString("buddyName"),
+                        rs.getString("buddyID"),
+                        rs.getString("buddyProfileImg")
                         ),
-                matchingIdx
+                getMatchingParams
         );
         return getMatchingRes;
     }

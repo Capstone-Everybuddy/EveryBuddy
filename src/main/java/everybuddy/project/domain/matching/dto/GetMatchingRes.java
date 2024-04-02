@@ -8,6 +8,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class GetMatchingRes {
-    private int buddyIdx;
-    private int seoulmateIdx;
+    private String seoulmateName;
+    private String seoulmateID;
+    private String seoulmateProfileImg;
+    private String buddyName;
+    private String buddyID;
+    private String buddyProfileImg;
 }
