@@ -4,11 +4,12 @@ import styled from 'styled-components';
 import { ReactComponent as MatchingSvg } from 'assets/matching_start.svg';
 import Button from 'components/Button';
 import { useNavigate } from 'react-router-dom';
+import Layout from 'components/Layout';
 
 const Matching = () => {
   const navigate = useNavigate();
   return (
-    <Wrapper>
+    <Layout.PageContent>
       <Header title="Matching" />
       <SvgWrapper>
         <MatchingSvg width={300} height={300} />
@@ -22,19 +23,9 @@ const Matching = () => {
         text="매칭 시작하기"
         onClick={() => navigate('/matching-start')}
       />
-    </Wrapper>
+    </Layout.PageContent>
   );
 };
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  background-color: white;
-  height: 100vh;
-  padding: 0 20px;
-`;
 
 const SvgWrapper = styled.div`
   margin: 60px 0 0 0;
