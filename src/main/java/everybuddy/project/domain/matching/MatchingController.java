@@ -10,17 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 // https://velog.io/@gmlstjq123/SpringBoot-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%97%90-Swagger-UI-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
-@RestController
+@RestController // JSON으로 데이터를 주고받음을 선언합니다.
 @RequestMapping("/matchings")
 public class MatchingController {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+//    final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-    private final MatchingProvider matchingProvider;
     private final MatchingService matchingService;
 
-    public MatchingController(MatchingProvider matchingProvider, MatchingService matchingService) {
-        this.matchingProvider = matchingProvider;
+    public MatchingController(MatchingService matchingService) {
         this.matchingService = matchingService;
     }
 
@@ -30,7 +27,7 @@ public class MatchingController {
     @Operation(summary = "서울메이트 조회 API", description = "버디) 담당 서울메이트 조회 API")
     public BaseResponse<GetMatchingRes> getMatching(@PathVariable("buddyIdx") Integer buddyIdx) {
         try {
-            GetMatchingRes getMatchingRes = matchingProvider.getMatching(buddyIdx);
+            GetMatchingRes getMatchingRes = matchingService.getMatching(buddyIdx);
             return new BaseResponse<>(getMatchingRes);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -44,7 +41,7 @@ public class MatchingController {
     @Operation(summary = "버디 조회 API", description = "설메) 담당 버디들 조회 API")
     public BaseResponse<List<GetMatchingRes>> getMatchings(@PathVariable("seoulmateIdx") Integer seoulmateIdx) {
         try {
-            List<GetMatchingRes> getMatchingsRes = matchingProvider.getMatchings(seoulmateIdx);
+            List<GetMatchingRes> getMatchingsRes = matchingService.getMatchings(seoulmateIdx);
             return new BaseResponse<>(getMatchingsRes);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
