@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 interface ButtonProps {
   text: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
