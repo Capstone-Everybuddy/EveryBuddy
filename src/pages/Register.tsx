@@ -53,12 +53,20 @@ const Register = () => {
       user_studentNum: false,
     };
 
+    // 모든 입력 필드에 대해 빈 값을 체크하여 에러 여부를 업데이트합니다.
     for (const key in formData) {
       if (formData[key as keyof FormData] === '') {
         updatedErrors[key as keyof FormErrors] = true;
         hasErrors = true;
       }
     }
+
+    // 비밀번호 확인 값이 비밀번호 값과 일치하는지 확인
+    if (formData.user_pwd !== formData.user_pwdCheck) {
+      updatedErrors.user_pwdCheck = true;
+      hasErrors = true;
+    }
+
     // 모든 입력 값이 유효한지 확인 후 formErrors 객체 업데이트
     setFormErrors(updatedErrors);
 
@@ -72,9 +80,11 @@ const Register = () => {
 
   return (
     <MainWrapper>
-      <ArrowWrapper>
-        <FaArrowLeft color="white" size="22px" />
-      </ArrowWrapper>
+      <Link to="/signup">
+        <ArrowWrapper>
+          <FaArrowLeft color="white" size="22px" />
+        </ArrowWrapper>
+      </Link>
       <ContentWrapper>
         <BackgroundCircle>
           <h1>회원가입</h1>
@@ -89,9 +99,8 @@ const Register = () => {
                   name="user_name"
                   value={formData.user_name}
                   onChange={handleInputChange}
-                  isError={formErrors.user_name}
                 />
-                {formErrors.user_name && (
+                {formData.user_name === '' && (
                   <ErrorMessage>이름은 필수 입력 항목입니다.</ErrorMessage>
                 )}
               </InputDiv>
@@ -103,9 +112,8 @@ const Register = () => {
                   name="user_id"
                   value={formData.user_id}
                   onChange={handleInputChange}
-                  isError={formErrors.user_id}
                 />
-                {formErrors.user_id && (
+                {formData.user_id === '' && (
                   <ErrorMessage>아이디는 필수 입력 항목입니다.</ErrorMessage>
                 )}
               </InputDiv>
@@ -117,9 +125,8 @@ const Register = () => {
                   name="user_pwd"
                   value={formData.user_pwd}
                   onChange={handleInputChange}
-                  isError={formErrors.user_pwd}
                 />
-                {formErrors.user_pwd && (
+                {formData.user_pwd === '' && (
                   <ErrorMessage>비밀번호는 필수 입력 항목입니다.</ErrorMessage>
                 )}
               </InputDiv>
@@ -131,13 +138,16 @@ const Register = () => {
                   name="user_pwdCheck"
                   value={formData.user_pwdCheck}
                   onChange={handleInputChange}
-                  isError={formErrors.user_pwdCheck}
                 />
-                {formErrors.user_pwdCheck && (
+                {formData.user_pwdCheck === '' && (
                   <ErrorMessage>
                     비밀번호 확인은 필수 입력 항목입니다.
                   </ErrorMessage>
                 )}
+                {formData.user_pwdCheck !== '' &&
+                  formData.user_pwd !== formData.user_pwdCheck && (
+                    <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>
+                  )}
               </InputDiv>
               <InputDiv>
                 <Label htmlFor="user_studentNum">학번</Label>
@@ -147,9 +157,8 @@ const Register = () => {
                   name="user_studentNum"
                   value={formData.user_studentNum}
                   onChange={handleInputChange}
-                  isError={formErrors.user_studentNum}
                 />
-                {formErrors.user_studentNum && (
+                {formData.user_studentNum === '' && (
                   <ErrorMessage>학번은 필수 입력 항목입니다.</ErrorMessage>
                 )}
               </InputDiv>
@@ -211,8 +220,7 @@ const Label = styled.label`
   padding-left: 15px;
 `;
 
-const Input = styled.input<{ isError: boolean }>`
-  border: 1px solid ${({ isError }) => (isError ? 'red' : '#ccc')};
+const Input = styled.input`
   margin-top: 10px;
   padding-left: 20px;
   height: 60px;

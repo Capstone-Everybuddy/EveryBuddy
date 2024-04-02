@@ -9,9 +9,12 @@ import { FaArrowLeft } from 'react-icons/fa';
 const SignUp = () => {
   return (
     <MainWrapper>
-      <ArrowWrapper>
-        <FaArrowLeft color="white" size="22px" />
-      </ArrowWrapper>
+      <Link to="/">
+        <ArrowWrapper>
+          <FaArrowLeft color="white" size="22px" />
+        </ArrowWrapper>
+      </Link>
+
       <ContentWrapper>
         <BackgroundCircle>
           <h1>회원가입</h1>
