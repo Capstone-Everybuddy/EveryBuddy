@@ -1,9 +1,12 @@
+import Dropdown from 'components/Dropdown/Dropdown';
 import MatchingHeader from 'components/MatchingHeader';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+const preferenceOptions = ['언어', '성격', '취미', '활동'];
+
 const MatchingStart = () => {
-  const [order, setOrder] = useState<number>(1);
+  const [order, setOrder] = useState(1);
   return (
     <Wrapper>
       <MatchingHeader order={order} />
@@ -13,6 +16,7 @@ const MatchingStart = () => {
           <br />
           선택해주세요
         </MainTextWrapper>
+        <Dropdown list={preferenceOptions} />
       </Container>
     </Wrapper>
   );
