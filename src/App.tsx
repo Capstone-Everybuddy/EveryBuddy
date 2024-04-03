@@ -6,6 +6,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Main from 'pages/Main';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
+import BottomNav from 'components/BottomNav';
+import Matching from 'pages/Matching';
+import Chatting from 'pages/Chatting';
+import Profile from 'pages/Profile';
+import MatchingStart from 'pages/MatchingStart';
 import Register from 'pages/Register';
 
 function App() {
@@ -17,6 +22,12 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route element={<BottomNav />}>
+            <Route path="/matching" element={<Matching />} />
+            <Route path="/chatting" element={<Chatting />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+          <Route path="/matching-start" element={<MatchingStart />} />
           <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>
