@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Styled from './Select.styled';
 
 interface SelectItemProps {
   text: string;
+  selected: boolean;
+  onClick: () => void;
 }
-const SelectItem: React.FC<SelectItemProps> = ({ text }) => {
-  const [selected, setSelected] = useState(false);
+const SelectItem: React.FC<SelectItemProps> = ({ text, selected, onClick }) => {
   return (
-    <Styled.SelectItem
-      onClick={() => setSelected((prev) => !prev)}
-      selected={selected}
-    >
+    <Styled.SelectItem selected={selected} onClick={onClick}>
       {text}
     </Styled.SelectItem>
   );

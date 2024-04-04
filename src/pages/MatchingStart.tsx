@@ -1,15 +1,16 @@
-import Dropdown from 'components/MatchingStart/Dropdown/Dropdown';
-import MatchingHeader from 'components/MatchingHeader';
-import PreferenceSelector from 'components/MatchingStart/PreferenceSelector';
+import MatchingHeader from 'components/MatchingStart/MatchingHeader';
+import PreferenceSelectList from 'components/MatchingStart/PreferenceSelectList';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from 'components/Button';
+import Dropdown from 'components/MatchingStart/Dropdown/Dropdown';
 
 const preferenceOptions = ['언어', '성격', '취미', '활동'];
 
 const MatchingStart = () => {
   const [order, setOrder] = useState(1);
   const [currentValue, setCurrentValue] = useState(preferenceOptions[0]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const handleCurrentValue = (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>,
@@ -17,9 +18,26 @@ const MatchingStart = () => {
     setCurrentValue(e.currentTarget.title);
   };
 
+  const decreaseOrder = () => {
+    setOrder((prev) => prev - 1);
+  };
+
+  const increaseOrder = () => {
+    setOrder((prev) => prev + 1);
+  };
+
+  const handleButtonDisabled = (value: boolean) => {
+    if (value) setIsButtonDisabled(false);
+    else setIsButtonDisabled(true);
+  };
+
+  const clickButton = () => {
+    if (order === 4) console.log('완료');
+    else increaseOrder();
+  };
   return (
     <Wrapper>
-      <MatchingHeader order={order} />
+      <MatchingHeader order={order} handleOrder={decreaseOrder} />
       <Container>
         <div style={{ paddingBottom: '30px' }}>
           <MainText>
@@ -34,10 +52,17 @@ const MatchingStart = () => {
           />
         </div>
         <Line />
-        <PreferenceSelector currentValue={currentValue} />
+        <PreferenceSelectList
+          currentValue={currentValue}
+          handleButtondDisabled={handleButtonDisabled}
+        />
       </Container>
       <ButtonWrapper>
-        <Button text="다음" />
+        <Button
+          text={order === 4 ? '완료' : '다음'}
+          disabled={isButtonDisabled}
+          onClick={clickButton}
+        />
       </ButtonWrapper>
     </Wrapper>
   );

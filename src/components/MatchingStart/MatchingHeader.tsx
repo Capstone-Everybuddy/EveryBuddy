@@ -6,13 +6,25 @@ import { useNavigate } from 'react-router-dom';
 
 interface MatchingHeaderProps {
   order: number;
+  handleOrder: () => void;
 }
 
-const MatchingHeader: React.FC<MatchingHeaderProps> = ({ order }) => {
+const MatchingHeader: React.FC<MatchingHeaderProps> = ({
+  order,
+  handleOrder,
+}) => {
   const navigate = useNavigate();
+
+  const handleArrowClick = () => {
+    if (order === 1) {
+      navigate('/matching');
+    } else {
+      handleOrder(); // order가 1이 아닐 때 handleOrder를 실행
+    }
+  };
   return (
     <Wrapper>
-      <ArrowLeft style={{ cursor: 'pointer' }} />
+      <ArrowLeft style={{ cursor: 'pointer' }} onClick={handleArrowClick} />
       <Close
         style={{ cursor: 'pointer' }}
         onClick={() => navigate('/matching')}
