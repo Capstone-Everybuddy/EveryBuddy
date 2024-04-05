@@ -3,15 +3,21 @@ import styled from 'styled-components';
 
 interface ButtonProps {
   text: string;
+  disabled?: boolean;
   onClick?: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
-  return <ButtonWrapper onClick={onClick}>{text}</ButtonWrapper>;
+const Button: React.FC<ButtonProps> = ({ text, disabled, onClick }) => {
+  return (
+    <ButtonWrapper disabled={disabled} onClick={onClick}>
+      {text}
+    </ButtonWrapper>
+  );
 };
 
 const ButtonWrapper = styled.button`
-  background-color: ${(props) => props.theme.colors.orange};
+  background-color: ${(props) =>
+    props.disabled ? props.theme.colors.gray : props.theme.colors.orange};
   border: none;
   border-radius: 100px;
   padding: 16px;

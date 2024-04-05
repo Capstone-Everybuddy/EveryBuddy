@@ -1,15 +1,36 @@
-import Dropdown from 'components/MatchingStart/Dropdown/Dropdown';
-import MatchingHeader from 'components/MatchingHeader';
-import PreferenceSelector from 'components/MatchingStart/PreferenceSelector';
-import React, { useState } from 'react';
+import MatchingHeader from 'components/Matching/MatchingStart/MatchingHeader';
+import PreferenceSelectList from 'components/Matching/MatchingStart/SelectList';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'components/Button';
+import Dropdown from 'components/Matching/MatchingStart/Dropdown/Dropdown';
+import Modal from 'components/Modal';
 
-const preferenceOptions = ['언어', '성격', '취미', '활동'];
+const preferenceOptions: { [key: string]: number } = {
+  언어: 0,
+  성격: 0,
+  취미: 0,
+  활동: 0,
+};
+
+const maxOrder = 4;
 
 const MatchingStart = () => {
   const [order, setOrder] = useState(1);
-  const [currentValue, setCurrentValue] = useState(preferenceOptions[0]);
+  const [options, setOptions] = useState(preferenceOptions);
+  const [currentValue, setCurrentValue] = useState(
+    Object.keys(preferenceOptions).find((key) => preferenceOptions[key] === 0)!,
+  );
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleOptions = (key: string) => {
+    setOptions((prev) => {
+      const updatedOptions = { ...prev };
+      updatedOptions[key] = order;
+      return updatedOptions;
+    });
+  };
 
   const handleCurrentValue = (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>,
@@ -17,9 +38,51 @@ const MatchingStart = () => {
     setCurrentValue(e.currentTarget.title);
   };
 
+  const decreaseOrder = () => {
+    setOrder((prev) => prev - 1);
+  };
+
+  const increaseOrder = () => {
+    setOrder((prev) => prev + 1);
+  };
+
+  const handleButtonDisabled = (value: boolean) => {
+    if (value) setIsButtonDisabled(false);
+    else setIsButtonDisabled(true);
+  };
+
+  const clickNextButton = () => {
+    if (order === maxOrder) console.log('완료');
+    else {
+      handleOptions(currentValue);
+      increaseOrder();
+    }
+  };
+
+  const clickBackButton = () => {
+    setOptions((prev) => {
+      const updatedOptions = { ...prev };
+      Object.keys(updatedOptions).forEach((key) => {
+        if (updatedOptions[key] >= order - 1) {
+          updatedOptions[key] = 0;
+        }
+      });
+      return updatedOptions;
+    });
+    decreaseOrder();
+  };
+
+  const submitCompleted = () => {
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    setCurrentValue(Object.keys(options).find((key) => options[key] === 0)!);
+    console.log(options);
+  }, [order]);
   return (
     <Wrapper>
-      <MatchingHeader order={order} />
+      <MatchingHeader order={order} handleOrder={clickBackButton} />
       <Container>
         <div style={{ paddingBottom: '30px' }}>
           <MainText>
@@ -28,17 +91,27 @@ const MatchingStart = () => {
             선택해주세요
           </MainText>
           <Dropdown
-            list={preferenceOptions}
+            order={order}
+            options={options}
             currentValue={currentValue}
-            handleValue={handleCurrentValue}
+            handleOptions={handleOptions}
+            handleCurrentValue={handleCurrentValue}
           />
         </div>
         <Line />
-        <PreferenceSelector currentValue={currentValue} />
+        <PreferenceSelectList
+          currentValue={currentValue}
+          handleButtondDisabled={handleButtonDisabled}
+        />
       </Container>
       <ButtonWrapper>
-        <Button text="다음" />
+        <Button
+          text={order === maxOrder ? '완료' : '다음'}
+          disabled={isButtonDisabled}
+          onClick={order === maxOrder ? submitCompleted : clickNextButton}
+        />
       </ButtonWrapper>
+      <Modal show={showModal} />
     </Wrapper>
   );
 };

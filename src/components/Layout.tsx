@@ -4,7 +4,6 @@ const Layout = {
   PageContent: styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
     background-color: white;
     height: 100vh;
