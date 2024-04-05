@@ -6,6 +6,7 @@ const colors = {
   background_orange: '#FFF8EC',
   gray: '#D0D0D0',
   lightgray: '#E7E7E7',
+  green: '#ADD974',
 };
 
 export type ColorTypes = typeof colors;

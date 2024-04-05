@@ -11,6 +11,7 @@ import Matching from 'pages/Matching';
 import Chatting from 'pages/Chatting';
 import Profile from 'pages/Profile';
 import MatchingStart from 'pages/MatchingStart';
+import Register from 'pages/Register';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/matching-start" element={<MatchingStart />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
