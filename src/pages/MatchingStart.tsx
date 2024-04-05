@@ -1,9 +1,9 @@
-import MatchingHeader from 'components/MatchingStart/MatchingHeader';
-import PreferenceSelectList from 'components/MatchingStart/PreferenceSelectList';
+import MatchingHeader from 'components/Matching/MatchingStart/MatchingHeader';
+import PreferenceSelectList from 'components/Matching/MatchingStart/SelectList';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'components/Button';
-import Dropdown from 'components/MatchingStart/Dropdown/Dropdown';
+import Dropdown from 'components/Matching/MatchingStart/Dropdown/Dropdown';
 import Modal from 'components/Modal';
 
 const preferenceOptions: { [key: string]: number } = {
