@@ -71,7 +71,7 @@ const NavWrapper = styled.div`
   padding: 22px 0px;
   margin: 0px 20px;
   position: absolute;
-  bottom: 60px;
+  bottom: 30px;
   left: 0;
   right: 0;
   background: #ffffff;
