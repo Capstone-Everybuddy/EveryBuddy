@@ -2,15 +2,19 @@ import React, { useState } from 'react';
 import Styled from './Dropdown.styled';
 
 interface DropdownProps {
-  list: string[];
+  order: number;
+  options: { [key: string]: number };
   currentValue: string;
-  handleValue: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+  handleOptions: (key: string) => void;
+  handleCurrentValue: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
-  list,
+  order,
+  options,
   currentValue,
-  handleValue,
+  handleOptions,
+  handleCurrentValue,
 }) => {
   const [isShowOptions, setShowOptions] = useState(false);
 
@@ -18,11 +22,17 @@ const Dropdown: React.FC<DropdownProps> = ({
     <Styled.SelectBox onClick={() => setShowOptions((prev) => !prev)}>
       <Styled.Label>{currentValue}</Styled.Label>
       <Styled.SelectOptions show={isShowOptions}>
-        {list.map((name) => (
-          <Styled.Option key={name} title={name} onClick={handleValue}>
-            {name}
-          </Styled.Option>
-        ))}
+        {Object.keys(options)
+          .filter((option) => options[option] === 0) // option이 0인 값만 반환
+          .map((option) => (
+            <Styled.Option
+              key={option}
+              title={option}
+              onClick={handleCurrentValue}
+            >
+              {option}
+            </Styled.Option>
+          ))}
       </Styled.SelectOptions>
     </Styled.SelectBox>
   );

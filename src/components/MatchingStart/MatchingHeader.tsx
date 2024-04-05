@@ -16,19 +16,14 @@ const MatchingHeader: React.FC<MatchingHeaderProps> = ({
   const navigate = useNavigate();
 
   const handleArrowClick = () => {
-    if (order === 1) {
-      navigate('/matching');
-    } else {
+    if (order !== 1) {
       handleOrder(); // order가 1이 아닐 때 handleOrder를 실행
     }
   };
   return (
     <Wrapper>
-      <ArrowLeft style={{ cursor: 'pointer' }} onClick={handleArrowClick} />
-      <Close
-        style={{ cursor: 'pointer' }}
-        onClick={() => navigate('/matching')}
-      />
+      <ArrowLeftIcon onClick={handleArrowClick} order={order} />
+      <CloseIcon onClick={() => navigate('/matching')} />
     </Wrapper>
   );
 };
@@ -38,6 +33,15 @@ const Wrapper = styled.div`
   justify-content: space-between;
   background-color: white;
   padding: 26px;
+`;
+
+const ArrowLeftIcon = styled(ArrowLeft)<{ order: number }>`
+  cursor: ${({ order }) => (order === 1 ? 'default' : 'pointer')};
+  opacity: ${({ order }) => (order === 1 ? 0 : 1)};
+`;
+
+const CloseIcon = styled(Close)`
+  cursor: pointer;
 `;
 
 export default MatchingHeader;

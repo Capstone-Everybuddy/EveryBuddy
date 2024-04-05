@@ -74,7 +74,6 @@ const SelectGrid: React.FC<SelectGridProps> = ({
 
   useEffect(() => {
     setList(getList(currentValue));
-    console.log(list);
   }, [currentValue]);
 
   useEffect(() => {
