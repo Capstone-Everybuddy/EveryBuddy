@@ -11,18 +11,20 @@ const Matching = () => {
   return (
     <Layout.PageContent>
       <Header title="Matching" />
-      <SvgWrapper>
-        <MatchingSvg width={300} height={300} />
-      </SvgWrapper>
-      <TextWrapper>
-        자신의 선호도를 입력하고
-        <br />
-        나에게 맞는 서울메이트/버디를 찾아보세요!
-      </TextWrapper>
-      <Button
-        text="매칭 시작하기"
-        onClick={() => navigate('/matching-start')}
-      />
+      <>
+        <SvgWrapper>
+          <MatchingSvg width={300} height={300} />
+        </SvgWrapper>
+        <TextWrapper>
+          자신의 선호도를 입력하고
+          <br />
+          나에게 맞는 서울메이트/버디를 찾아보세요!
+        </TextWrapper>
+        <Button
+          text="매칭 시작하기"
+          onClick={() => navigate('/matching-start')}
+        />
+      </>
     </Layout.PageContent>
   );
 };

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'components/Button';
 import Dropdown from 'components/MatchingStart/Dropdown/Dropdown';
+import Modal from 'components/Modal';
 
 const preferenceOptions: { [key: string]: number } = {
   언어: 0,
@@ -21,6 +22,7 @@ const MatchingStart = () => {
     Object.keys(preferenceOptions).find((key) => preferenceOptions[key] === 0)!,
   );
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const handleOptions = (key: string) => {
     setOptions((prev) => {
@@ -70,6 +72,10 @@ const MatchingStart = () => {
     decreaseOrder();
   };
 
+  const submitCompleted = () => {
+    setShowModal(true);
+  };
+
   useEffect(() => {
     setCurrentValue(Object.keys(options).find((key) => options[key] === 0)!);
     console.log(options);
@@ -100,11 +106,12 @@ const MatchingStart = () => {
       </Container>
       <ButtonWrapper>
         <Button
-          text={order === 4 ? '완료' : '다음'}
+          text={order === maxOrder ? '완료' : '다음'}
           disabled={isButtonDisabled}
-          onClick={clickNextButton}
+          onClick={order === maxOrder ? submitCompleted : clickNextButton}
         />
       </ButtonWrapper>
+      <Modal show={showModal} />
     </Wrapper>
   );
 };
