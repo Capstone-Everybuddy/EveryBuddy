@@ -8,10 +8,11 @@ import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
 import BottomNav from 'components/BottomNav';
 import Matching from 'pages/Matching';
-import Chatting from 'pages/Chatting';
+import Chat from 'pages/Chat';
 import Profile from 'pages/Profile';
 import MatchingStart from 'pages/MatchingStart';
 import Register from 'pages/Register';
+import ChatRoom from 'pages/ChatRoom';
 
 function App() {
   return (
@@ -24,11 +25,12 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route element={<BottomNav />}>
             <Route path="/matching" element={<Matching />} />
-            <Route path="/chatting" element={<Chatting />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/matching-start" element={<MatchingStart />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/chat/room" element={<ChatRoom />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

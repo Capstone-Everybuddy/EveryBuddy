@@ -7,6 +7,7 @@ const colors = {
   gray: '#D0D0D0',
   lightgray: '#E7E7E7',
   green: '#ADD974',
+  darkgray: '#7E7E7E',
 };
 
 export type ColorTypes = typeof colors;
