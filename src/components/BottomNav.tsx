@@ -14,7 +14,7 @@ const BottomNav = () => {
       case '/matching':
         setActiveNav(1);
         break;
-      case '/chatting':
+      case '/chat':
         setActiveNav(2);
         break;
       case '/profile':
@@ -37,7 +37,7 @@ const BottomNav = () => {
             <img src="images/bottom_matching.svg" alt="matching_icon" />
           )}
         </Link>
-        <Link to="/chatting" onClick={() => setActiveNav(2)}>
+        <Link to="/chat" onClick={() => setActiveNav(2)}>
           {activeNav === 2 ? (
             <img
               src="images/bottom_chatting_orange.svg"

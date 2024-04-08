@@ -1,5 +1,5 @@
 import MatchingHeader from 'components/Matching/MatchingStart/MatchingHeader';
-import PreferenceSelectList from 'components/Matching/MatchingStart/SelectList';
+import SelectList from 'components/Matching/MatchingStart/SelectList';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from 'components/Button';
@@ -99,7 +99,7 @@ const MatchingStart = () => {
           />
         </div>
         <Line />
-        <PreferenceSelectList
+        <SelectList
           currentValue={currentValue}
           handleButtondDisabled={handleButtonDisabled}
         />
