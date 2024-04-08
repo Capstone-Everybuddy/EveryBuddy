@@ -1,10 +1,17 @@
 package everybuddy.project.domain.seoulmate;
 
+import everybuddy.project.domain.seoulmate.dto.PostLoginReq;
+import everybuddy.project.domain.seoulmate.dto.PostLoginRes;
 import everybuddy.project.domain.seoulmate.dto.PostSeoulmateReq;
+import everybuddy.project.domain.seoulmate.entity.Seoulmate;
+import everybuddy.project.global.config.BaseException;
+import everybuddy.project.global.config.BaseResponseStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+
+import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Repository
 public class SeoulmateDao {
@@ -22,4 +29,26 @@ public class SeoulmateDao {
         int seoulmateIdx = this.jdbctemplate.queryForObject(selectlastIdx, int.class);
         return seoulmateIdx;
     }
+
+    public Seoulmate getPwd(PostLoginReq postLoginReq) throws BaseException {
+        try {
+            String getPwdQuery = "SELECT seoulmateIdx,name, ID, password, certified, profileImg, `state` FROM seoulmate WHERE ID = ?";
+            String getPwdParams = postLoginReq.getID();
+            return this.jdbctemplate.queryForObject(getPwdQuery,
+                    (rs, rowNum) -> new Seoulmate(
+                            rs.getInt("seoulmateIdx"),
+                            rs.getString("name"),
+                            rs.getString("ID"),
+                            rs.getString("password"),
+                            rs.getInt("certified"),
+                            rs.getString("profileImg"),
+                            rs.getInt("state")
+                    ),
+                    getPwdParams
+            );
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }

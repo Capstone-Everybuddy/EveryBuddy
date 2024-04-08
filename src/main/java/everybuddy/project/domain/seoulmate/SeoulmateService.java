@@ -1,8 +1,12 @@
 package everybuddy.project.domain.seoulmate;
 
-import everybuddy.project.domain.seoulmate.dto.PostSeoulmateReq;
-import everybuddy.project.domain.seoulmate.dto.PostSeoulmateRes;
+import everybuddy.project.domain.seoulmate.dto.*;
+import everybuddy.project.domain.seoulmate.entity.Seoulmate;
+import everybuddy.project.global.config.BaseException;
 import org.springframework.stereotype.Service;
+
+import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR;
+import static everybuddy.project.global.config.BaseResponseStatus.POST_USERS_FAIL_LOGIN;
 
 @Service
 public class SeoulmateService {
@@ -15,5 +19,20 @@ public class SeoulmateService {
     public PostSeoulmateRes createSeoulmate(PostSeoulmateReq postSeoulmateReq) {
         int seoulmateIdx = seoulmateDao.createSeoulmate(postSeoulmateReq);
         return new PostSeoulmateRes(seoulmateIdx);
+    }
+
+    public PostLoginRes loginSeoulmate(PostLoginReq postLoginReq) throws BaseException {
+        try {
+            Seoulmate seoulmate = seoulmateDao.getPwd(postLoginReq);
+            if (seoulmate.getPassword().equals(postLoginReq.getPassword())) {
+                return new PostLoginRes(seoulmate.getSeoulmateIdx(), seoulmate.getName());
+            } else {
+                throw new BaseException(POST_USERS_FAIL_LOGIN);
+            }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+
     }
 }
