@@ -1,10 +1,15 @@
 package everybuddy.project.domain.buddy;
 
 import everybuddy.project.domain.buddy.dto.*;
+import everybuddy.project.domain.buddy.entity.Buddy;
+import everybuddy.project.global.config.BaseException;
+import everybuddy.project.global.config.BaseResponseStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+
+import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Repository
 public class BuddyDao {
@@ -22,5 +27,26 @@ public class BuddyDao {
 
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+    }
+
+    public Buddy getPwd(PostLoginReq postLoginReq) throws BaseException {
+        try {
+            String getPwdQuery = "SELECT buddyIdx, `name`, ID, password, certified, profileImg, state FROM buddy WHERE ID = ?";
+            String getPwdParams = postLoginReq.getID();
+            return this.jdbcTemplate.queryForObject(getPwdQuery,
+                    (rs, rowNum) -> new Buddy(
+                            rs.getInt("buddyIdx"),
+                            rs.getString("name"),
+                            rs.getString("ID"),
+                            rs.getString("password"),
+                            rs.getInt("certified"),
+                            rs.getString("profileImg"),
+                            rs.getInt("state")
+                    ),
+                    getPwdParams);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
     }
 }

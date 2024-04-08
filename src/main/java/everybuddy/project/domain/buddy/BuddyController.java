@@ -30,4 +30,15 @@ public class BuddyController {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+
+    @ResponseBody
+    @PostMapping("/log-in")
+    public BaseResponse<PostLoginRes> loginBuddy(@RequestBody PostLoginReq postLoginReq) {
+        try {
+            PostLoginRes postLoginRes = buddyService.loginBuddy(postLoginReq);
+            return new BaseResponse<>(postLoginRes);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 }
