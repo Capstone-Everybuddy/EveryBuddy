@@ -32,7 +32,7 @@ public class SeoulmateDao {
 
     public Seoulmate getPwd(PostLoginReq postLoginReq) throws BaseException {
         try {
-            String getPwdQuery = "SELECT seoulmateIdx,name, ID, password, certified, profileImg, `state` FROM seoulmate WHERE ID = ?";
+            String getPwdQuery = "SELECT seoulmateIdx,name, ID, password, studentId, sex, major, certified, profileImg, `state` FROM seoulmate WHERE ID = ?";
             String getPwdParams = postLoginReq.getID();
             return this.jdbctemplate.queryForObject(getPwdQuery,
                     (rs, rowNum) -> new Seoulmate(
@@ -40,6 +40,9 @@ public class SeoulmateDao {
                             rs.getString("name"),
                             rs.getString("ID"),
                             rs.getString("password"),
+                            rs.getString("studentId"),
+                            rs.getInt("sex"),
+                            rs.getString("major"),
                             rs.getInt("certified"),
                             rs.getString("profileImg"),
                             rs.getInt("state")
