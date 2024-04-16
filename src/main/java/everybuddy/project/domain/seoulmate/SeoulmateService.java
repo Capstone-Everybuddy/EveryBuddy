@@ -32,7 +32,22 @@ public class SeoulmateService {
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
 
+    public PostPreferRes savePreference(PostPreferReq postPreferReq, int seoulmateIdx) throws BaseException{
+        try {
+            int preferrankIdx = seoulmateDao.savePreference(postPreferReq, seoulmateIdx);
+            return new PostPreferRes(preferrankIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
+    public void saveInfo(PostInfoReq postInfoReq, int seoulmateIdx) throws BaseException {
+        try {
+            seoulmateDao.saveInfo(postInfoReq, seoulmateIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

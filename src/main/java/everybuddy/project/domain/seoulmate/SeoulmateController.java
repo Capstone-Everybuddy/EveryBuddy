@@ -34,4 +34,27 @@ public class SeoulmateController {
         }
 
     }
+
+    @ResponseBody
+    @PostMapping("/preference/{seoulmateIdx}")
+    public BaseResponse<PostPreferRes> savePreference(@RequestBody PostPreferReq postPreferReq, @PathVariable int seoulmateIdx) {
+        try {
+            PostPreferRes postPreferRes = seoulmateService.savePreference(postPreferReq, seoulmateIdx);
+            return new BaseResponse<>(postPreferRes);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/info/{seoulmateIdx}")
+    public BaseResponse<String> saveInfo(@RequestBody PostInfoReq postInfoReq, @PathVariable int seoulmateIdx) {
+        try {
+            seoulmateService.saveInfo(postInfoReq, seoulmateIdx);
+            String result = "정보 저장에 성공하였습니다.";
+            return new BaseResponse<>(result);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 }
