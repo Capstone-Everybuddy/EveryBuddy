@@ -54,7 +54,7 @@ const BackgroundCircle = styled.div`
   box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  height: 950px;
+  height: 850px;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
   padding: 35px 30px 0px 30px;
