@@ -1,6 +1,7 @@
 package everybuddy.project.domain.buddy;
 
 import everybuddy.project.domain.buddy.dto.*;
+import everybuddy.project.domain.seoulmate.dto.GetSeoulmateProfileRes;
 import everybuddy.project.global.config.BaseException;
 import everybuddy.project.global.config.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,5 +41,14 @@ public class BuddyController {
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
+    }
+
+    /*프로필 조회*/
+    @ResponseBody
+    @GetMapping("/{buddyId}")
+    @Operation(summary = "버디 프로필 조회 API", description = "버디의 프로필을 조회하는 API")
+    public GetBuddyProfileRes getBuddyProfile(@PathVariable("buddyId") String buddyId) {
+        GetBuddyProfileRes buddyProfileRes = buddyService.getBuddyProfile(buddyId);
+        return buddyProfileRes;
     }
 }

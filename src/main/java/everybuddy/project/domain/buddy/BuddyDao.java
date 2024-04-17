@@ -2,6 +2,8 @@ package everybuddy.project.domain.buddy;
 
 import everybuddy.project.domain.buddy.dto.*;
 import everybuddy.project.domain.buddy.entity.Buddy;
+import everybuddy.project.domain.buddy.entity.BuddyProfile;
+import everybuddy.project.domain.seoulmate.entity.SeoulmateProfile;
 import everybuddy.project.global.config.BaseException;
 import everybuddy.project.global.config.BaseResponseStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,5 +50,19 @@ public class BuddyDao {
             throw new BaseException(DATABASE_ERROR);
         }
 
+    }
+    public BuddyProfile getBuddyProfile(String buddyId) {
+        String profileQuery = "SELECT buddyIdx, `name`, ID, password, studentId, nationality, profileImg FROM buddy WHERE ID = ?";
+        return this.jdbcTemplate.queryForObject(profileQuery,
+                (rs, rowNum) -> new BuddyProfile (
+                        rs.getInt("buddyIdx"),
+                        rs.getString("name"),
+                        rs.getString("ID"),
+                        rs.getString("password"),
+                        rs.getString("studentId"),
+                        rs.getString("nationality"),
+                        rs.getString("profileImg")
+                ),
+                buddyId);
     }
 }

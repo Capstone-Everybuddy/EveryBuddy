@@ -2,6 +2,7 @@ package everybuddy.project.domain.seoulmate;
 
 import everybuddy.project.domain.seoulmate.dto.*;
 import everybuddy.project.domain.seoulmate.entity.Seoulmate;
+import everybuddy.project.domain.seoulmate.entity.SeoulmateProfile;
 import everybuddy.project.global.config.BaseException;
 import org.springframework.stereotype.Service;
 
@@ -50,4 +51,10 @@ public class SeoulmateService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public GetSeoulmateProfileRes getSeoulmateProfile(String seoulmateId) {
+        SeoulmateProfile seoulmate = seoulmateDao.getSeoulmateProfile(seoulmateId);
+        return new GetSeoulmateProfileRes(seoulmate.getName(), seoulmate.getID(), seoulmate.getPassword(), seoulmate.getStudentId(), seoulmate.getSex(), seoulmate.getMajor(), seoulmate.getProfileImg());
+    }
+
 }
