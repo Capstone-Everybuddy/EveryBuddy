@@ -4,7 +4,12 @@ import everybuddy.project.domain.buddy.dto.PostBuddyReq;
 import everybuddy.project.domain.buddy.dto.PostBuddyRes;
 import everybuddy.project.domain.buddy.dto.PostLoginReq;
 import everybuddy.project.domain.buddy.dto.PostLoginRes;
+import everybuddy.project.domain.buddy.dto.GetBuddyProfileReq;
+import everybuddy.project.domain.buddy.dto.GetBuddyProfileRes;
 import everybuddy.project.domain.buddy.entity.Buddy;
+import everybuddy.project.domain.buddy.entity.BuddyProfile;
+import everybuddy.project.domain.seoulmate.dto.GetSeoulmateProfileRes;
+import everybuddy.project.domain.seoulmate.entity.SeoulmateProfile;
 import everybuddy.project.global.config.BaseException;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +41,10 @@ public class BuddyService {
         } catch (BaseException exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public GetBuddyProfileRes getBuddyProfile(String buddyId) {
+        BuddyProfile buddy = buddyDao.getBuddyProfile(buddyId);
+        return new GetBuddyProfileRes(buddy.getName(), buddy.getID(), buddy.getPassword(), buddy.getStudentId(), buddy.getNationality(), buddy.getProfileImg());
     }
 }
