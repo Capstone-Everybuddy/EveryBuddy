@@ -1,6 +1,7 @@
 package everybuddy.project.domain.matching;
 
-import everybuddy.project.domain.matching.dto.GetMatchingRes;
+import everybuddy.project.domain.matching.dto.*;
+import everybuddy.project.domain.matching.entity.*;
 import everybuddy.project.global.config.BaseException;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,16 @@ public class MatchingService {
         try {
             List<GetMatchingRes> getMatchingsRes = matchingDao.getMatchings(seoulmateIdx);
             return getMatchingsRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
+    public List<Team> getEntire() throws BaseException {
+        try {
+            List<Team> teams = matchingDao.getEntire();
+            return teams;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

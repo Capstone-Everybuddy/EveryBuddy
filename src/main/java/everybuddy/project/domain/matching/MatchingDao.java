@@ -1,11 +1,12 @@
 package everybuddy.project.domain.matching;
 
-import everybuddy.project.domain.matching.dto.GetMatchingRes;
+import everybuddy.project.domain.matching.dto.*;
+import everybuddy.project.domain.matching.entity.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class MatchingDao {
@@ -58,4 +59,54 @@ public class MatchingDao {
         );
         return getMatchingsRes;
     }
+
+    public List<Team> getEntire() {
+        String getSeoulmateIdxQuery = "SELECT seoulmateIdx FROM seoulmate";
+        List<Integer> seoulmateIdxs = this.jdbcTemplate.query(getSeoulmateIdxQuery,
+                (rs, rowNum) -> (rs.getInt("seoulmateIdx"))
+        );
+        List<Team> teams = new ArrayList<>();
+        for (int i=0; i<seoulmateIdxs.size(); i++) {
+            int seoulmateIdx = seoulmateIdxs.get(i);
+            String getSeoulmateQuery = "SELECT * FROM seoulmate WHERE seoulmateIdx = ?";
+            Seoulmate seoulmate = this.jdbcTemplate.queryForObject(
+                    getSeoulmateQuery,
+                    (rs, rowNum) -> new Seoulmate(
+                            rs.getInt("seoulmateIdx"),
+                            rs.getString("name"),
+                            rs.getString("ID"),
+                            rs.getString("password"),
+                            rs.getString("studentId"),
+                            rs.getInt("sex"),
+                            rs.getInt("major"),
+                            rs.getInt("certified"),
+                            rs.getString("profileImg"),
+                            rs.getInt("state")
+                    ),
+                    seoulmateIdx);
+            String getBuddiesQuery = "SELECT w.buddyIdx, w.name, w.ID, w.studentId, w.sex, w.major, w.continent,w.certified, w.profileImg, w.state FROM " +
+                    "(SELECT s.seoulmateIdx, b.buddyIdx, b.name, b.ID, b.studentId, b.sex, b.major, b.continent, b.certified, b.profileImg, b.state FROM buddy AS b " +
+                    "INNER JOIN matching AS m ON b.buddyIdx=m.buddyIdx INNER JOIN seoulmate AS s ON m.seoulmateIdx=s.seoulmateIdx) w WHERE seoulmateIdx=?";
+            List<Buddy> buddies = this.jdbcTemplate.query(
+                    getBuddiesQuery,
+                    (rs, rowNum) -> new Buddy(
+                            rs.getInt("buddyIdx"),
+                            rs.getString("name"),
+                            rs.getString("ID"),
+                            rs.getString("studentId"),
+                            rs.getInt("sex"),
+                            rs.getInt("major"),
+                            rs.getString("continent"),
+                            rs.getInt("certified"),
+                            rs.getString("profileImg"),
+                            rs.getInt("state")
+                    ),
+                    seoulmateIdx);
+            Team team = new Team(seoulmate, buddies);
+            teams.add(team);
+        }
+        return teams;
+    }
+
+
 }

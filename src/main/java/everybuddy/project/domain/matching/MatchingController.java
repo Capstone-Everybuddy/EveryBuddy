@@ -1,6 +1,7 @@
 package everybuddy.project.domain.matching;
 
-import everybuddy.project.domain.matching.dto.GetMatchingRes;
+import everybuddy.project.domain.matching.dto.*;
+import everybuddy.project.domain.matching.entity.*;
 import everybuddy.project.global.config.*;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -43,6 +44,18 @@ public class MatchingController {
         try {
             List<GetMatchingRes> getMatchingsRes = matchingService.getMatchings(seoulmateIdx);
             return new BaseResponse<>(getMatchingsRes);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/entire")
+    @Operation(summary = "전체 매칭 결과 조회 API", description = "전체 매칭 결과 조회: 서울메이트 -> 버디들 순")
+    public BaseResponse<List<Team>> getEntire() {
+        try {
+            List<Team> teams = matchingService.getEntire();
+            return new BaseResponse<>(teams);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
