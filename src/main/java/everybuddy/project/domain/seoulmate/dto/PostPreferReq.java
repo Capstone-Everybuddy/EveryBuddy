@@ -16,4 +16,10 @@ public class PostPreferReq {
     private List<Integer> thirdList;
     private String fourth;
     private List<Integer> fourthList;
+    private String fifth;
+    private List<Integer> fifthList;
+    private String sixth;
+    private List<Integer> sixthList;
+    private String seventh;
+    private List<Integer> seventhList;
 }

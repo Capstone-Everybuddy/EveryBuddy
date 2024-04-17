@@ -11,4 +11,6 @@ public class PostInfoReq {
     private List<Integer> personality;
     private List<Integer> hobby;
     private List<Integer> wanttodo;
+    private int sex;
+    private int major;
 }

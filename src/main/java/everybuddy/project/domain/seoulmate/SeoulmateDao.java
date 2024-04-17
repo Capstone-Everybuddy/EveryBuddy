@@ -54,8 +54,9 @@ public class SeoulmateDao {
 
     public int savePreference(PostPreferReq postPreferReq, int seoulmateIdx) throws BaseException {
         try {
-            String savePreferrankQeury = "INSERT INTO preferrank_s (seoulmateIdx, `first`, `second`, `third`, `fourth`) values (?, ?, ?, ?, ?)";
-            Object[] savePreferrankParams = new Object[]{seoulmateIdx, postPreferReq.getFirst(), postPreferReq.getSecond(), postPreferReq.getThird(), postPreferReq.getFirst()};
+            String savePreferrankQeury = "INSERT INTO preferrank_s (seoulmateIdx, `first`, `second`, `third`, `fourth`, `fifth`, `sixth`, `seventh`) values (?, ?, ?, ?, ?, ?, ?, ?)";
+            Object[] savePreferrankParams = new Object[]{seoulmateIdx, postPreferReq.getFirst(), postPreferReq.getSecond(), postPreferReq.getThird(), postPreferReq.getFirst()
+            , postPreferReq.getFifth(), postPreferReq.getSixth(), postPreferReq.getSeventh()};
             this.jdbctemplate.update(savePreferrankQeury, savePreferrankParams);
             String selectlastIdx = "select last_insert_id()";
             int result = this.jdbctemplate.queryForObject(selectlastIdx, int.class);
@@ -80,8 +81,21 @@ public class SeoulmateDao {
                 Object[] savePreferenceParams = new Object[]{seoulmateIdx, postPreferReq.getFourthList().get(i)};
                 this.jdbctemplate.update(savePreferenceQeury, savePreferenceParams);
             }
-
-
+            for (int i = 0; i < postPreferReq.getFifthList().size(); i++) {
+                String savePreferenceQeury = "INSERT INTO "+ postPreferReq.getFifth() +"_s (seoulmateIdx, `no`) values (?, ?)";
+                Object[] savePreferenceParams = new Object[]{seoulmateIdx, postPreferReq.getFifthList().get(i)};
+                this.jdbctemplate.update(savePreferenceQeury, savePreferenceParams);
+            }
+            for (int i = 0; i < postPreferReq.getSixthList().size(); i++) {
+                String savePreferenceQeury = "INSERT INTO " + postPreferReq.getSixth() + "_s (seoulmateIdx, `no`) values (?, ?)";
+                Object[] savePreferenceParams = new Object[]{seoulmateIdx, postPreferReq.getSixthList().get(i)};
+                this.jdbctemplate.update(savePreferenceQeury, savePreferenceParams);
+            }
+            for (int i = 0; i < postPreferReq.getSeventhList().size(); i++) {
+                String savePreferenceQeury = "INSERT INTO " + postPreferReq.getSeventh() + "_s (seoulmateIdx, `no`) values (?, ?)";
+                Object[] savePreferenceParams = new Object[]{seoulmateIdx, postPreferReq.getSeventhList().get(i)};
+                this.jdbctemplate.update(savePreferenceQeury, savePreferenceParams);
+            }
             return result;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
@@ -111,6 +125,8 @@ public class SeoulmateDao {
                 Object[] savePreferenceParams = new Object[]{seoulmateIdx, postInfoReq.getWanttodo().get(i)};
                 this.jdbctemplate.update(savePreferenceQeury, savePreferenceParams);
             }
+            String saveSexMajorQuery = "UPDATE seoulmate SET sex = ?, major = ? WHERE seoulmateIdx = ?";
+            this.jdbctemplate.update(saveSexMajorQuery, postInfoReq.getSex(), postInfoReq.getMajor(), seoulmateIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
