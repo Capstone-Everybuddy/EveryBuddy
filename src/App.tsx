@@ -13,8 +13,11 @@ import Profile from 'pages/Profile';
 import MatchingStart from 'pages/MatchingStart';
 import Register from 'pages/Register';
 import ChatRoom from 'pages/ChatRoom';
+import UserUpdate from 'pages/UserUpdate';
 
 function App() {
+  const name = 'user_name';
+  const token = 'token';
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
@@ -31,6 +34,10 @@ function App() {
           <Route path="/matching-start" element={<MatchingStart />} />
           <Route path="/register" element={<Register />} />
           <Route path="/chat/room" element={<ChatRoom />} />
+          <Route
+            path="/userupdate"
+            element={<UserUpdate name={name} token={token ?? null} />}
+          />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

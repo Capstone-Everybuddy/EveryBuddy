@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface ButtonProps {
+  type?: 'button' | 'submit';
   text: string;
   disabled?: boolean;
   onClick?: () => void;
