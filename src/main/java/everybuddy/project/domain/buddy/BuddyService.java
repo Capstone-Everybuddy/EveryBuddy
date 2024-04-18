@@ -1,15 +1,7 @@
 package everybuddy.project.domain.buddy;
 
-import everybuddy.project.domain.buddy.dto.PostBuddyReq;
-import everybuddy.project.domain.buddy.dto.PostBuddyRes;
-import everybuddy.project.domain.buddy.dto.PostLoginReq;
-import everybuddy.project.domain.buddy.dto.PostLoginRes;
-import everybuddy.project.domain.buddy.dto.GetBuddyProfileReq;
-import everybuddy.project.domain.buddy.dto.GetBuddyProfileRes;
-import everybuddy.project.domain.buddy.entity.Buddy;
-import everybuddy.project.domain.buddy.entity.BuddyProfile;
-import everybuddy.project.domain.seoulmate.dto.GetSeoulmateProfileRes;
-import everybuddy.project.domain.seoulmate.entity.SeoulmateProfile;
+import everybuddy.project.domain.buddy.dto.*;
+import everybuddy.project.domain.buddy.entity.*;
 import everybuddy.project.global.config.BaseException;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +34,25 @@ public class BuddyService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public PostPreferRes savePreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException{
+        try {
+            int preferrankIdx = buddyDao.savePreference(postPreferReq, buddyIdx);
+            return new PostPreferRes(preferrankIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void saveInfo(PostInfoReq postInfoReq, int buddyIdx) throws BaseException {
+        try {
+            buddyDao.saveInfo(postInfoReq, buddyIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
 
     public GetBuddyProfileRes getBuddyProfile(String buddyId) {
         BuddyProfile buddy = buddyDao.getBuddyProfile(buddyId);
