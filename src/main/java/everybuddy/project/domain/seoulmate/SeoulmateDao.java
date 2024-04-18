@@ -20,7 +20,7 @@ public class SeoulmateDao {
     }
 
     public int createSeoulmate(PostSeoulmateReq postSeoulmateReq) {
-        String createSeoulmateQuery = "insert into seoulmate (name, ID, password, profileImg) values (?, ?, ?, ?)";
+        String createSeoulmateQuery = "insert into seoulmate (`name`, ID, password, profileImg) values (?, ?, ?, ?)";
         Object[] createSeoulmateParams = new Object[]{postSeoulmateReq.getName(), postSeoulmateReq.getID(), postSeoulmateReq.getPassword1(), postSeoulmateReq.getProfileImg()};
         this.jdbcTemplate.update(createSeoulmateQuery, createSeoulmateParams);
         String selectlastIdx = "select last_insert_id()";

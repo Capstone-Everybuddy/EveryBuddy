@@ -22,7 +22,25 @@ public class MatchingController {
         this.matchingService = matchingService;
     }
 
-    // [GET] 버디) 담당 서울메이트 조회 API
+    // [POST] 매칭 결과 저장 API
+    @ResponseBody
+    @PostMapping("/save")
+    @Operation(summary = "매칭 결과 저장 API", description = "전체 매칭 결과 저장 API\n" +
+            "서울메이트 : 버디 = 1 : n명의 쌍으로 저장됩니다.\n" +
+            "이 API를 호출하면, 매칭 상태를 나타내는 seoulmateIdx = 1 의 state 값이 0에서 1로 변경됩니다.")
+    public BaseResponse<String> postMatching(@RequestBody List<Matching> postMatchingReq) {
+        try {
+            String result = "매칭 결과가 성공적으로 저장되었습니다.";
+            matchingService.postMatching(postMatchingReq);
+            return new BaseResponse<>(result);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+
+    }
+
+
+        // [GET] 버디) 담당 서울메이트 조회 API
     @ResponseBody
     @GetMapping("/seoulmate/{buddyIdx}")
     @Operation(summary = "서울메이트 조회 API", description = "버디) 담당 서울메이트 조회 API")
@@ -79,10 +97,10 @@ public class MatchingController {
     // [DELETE] 매칭 결과 테이블 제거 및 생성 API
     @ResponseBody
     @DeleteMapping("/delete")
-    @Operation(summary = "매칭 상태 조회 API", description = "매칭 상태를 변경합니다 ( 0: 매칭 전, 1: 매칭 완료 )/n" +
-            "1) seoulmateIdx = 1의 state를 임의로 사용. state 값 1 -> 0로 변경/n" +
-            "2) DROP matching TABLE && CREATE matching TABLE/n" +
-            "1) 2) 가 동시에 진행됩니다.")
+    @Operation(summary = "매칭 상태 조회 API", description = "매칭 상태를 변경합니다 ( 0: 매칭 전, 1: 매칭 완료 )\n" +
+            "- seoulmateIdx = 1의 state를 임의로 사용. state 값 1 -> 0로 변경\n" +
+            "- DROP matching TABLE && CREATE matching TABLE\n" +
+            "두 가지 동작이 동시에 진행됩니다.")
     public BaseResponse<String> deleteMatching() {
         try {
             String result = "매칭이 초기화되었습니다.";

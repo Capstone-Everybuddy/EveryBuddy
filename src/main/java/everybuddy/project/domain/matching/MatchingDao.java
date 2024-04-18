@@ -16,6 +16,16 @@ public class MatchingDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    public void postMatching(List<Matching> postMatchingReq) {
+        for (int i=0; i<postMatchingReq.size(); i++) {
+            for (int j=0; j<postMatchingReq.get(i).getBuddyIdxs().size(); j++) {
+                String postMatchingQuery = "INSERT INTO matching (seoulmateIdx, buddyIdx) VALUES (?, ?)";
+                Object[] postMatchingParams = new Object[]{postMatchingReq.get(i).getSeoulmateIdx(), postMatchingReq.get(i).getBuddyIdxs().get(j)};
+                this.jdbcTemplate.update(postMatchingQuery, postMatchingParams);
+            }
+        }
+        this.jdbcTemplate.update("UPDATE seoulmate SET state = 1 WHERE seoulmateIdx = 1");
+    }
 
     // queryForObject: 단일 결과 행을 반환하는 쿼리를 실행할 때 주로 사용된다.
     // ✔ <T> T queryForObject(String sql, Class<T> requiredType)

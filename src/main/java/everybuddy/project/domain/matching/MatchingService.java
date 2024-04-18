@@ -17,7 +17,13 @@ public class MatchingService {
         this.matchingDao = matchingDao;
     }
 
-
+    public void postMatching(List<Matching> postMatchingReq) throws BaseException {
+        try {
+            matchingDao.postMatching(postMatchingReq);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
     public GetMatchingRes getMatching(Integer buddyIdx) throws BaseException {
         try {
