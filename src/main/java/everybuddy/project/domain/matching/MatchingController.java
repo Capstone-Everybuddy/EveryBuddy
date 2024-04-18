@@ -49,6 +49,7 @@ public class MatchingController {
         }
     }
 
+    // [GET] 전체 매칭 결과 조회 API
     @ResponseBody
     @GetMapping("/entire")
     @Operation(summary = "전체 매칭 결과 조회 API", description = "전체 매칭 결과 조회: 서울메이트 -> 버디들 순")
@@ -61,4 +62,34 @@ public class MatchingController {
         }
     }
 
+
+    // [GET] 매칭 상태 조회 API
+    @ResponseBody
+    @GetMapping("/state")
+    @Operation(summary = "매칭 상태 조회 API", description = "매칭 상태를 조회합니다 ( 0: 매칭 전, 1: 매칭 완료 )")
+    public BaseResponse<GetStatusRes> getState() {
+        try {
+            int state = matchingService.getState();
+            return new BaseResponse<>(new GetStatusRes(state));
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
+
+    // [DELETE] 매칭 결과 테이블 제거 및 생성 API
+    @ResponseBody
+    @DeleteMapping("/delete")
+    @Operation(summary = "매칭 상태 조회 API", description = "매칭 상태를 변경합니다 ( 0: 매칭 전, 1: 매칭 완료 )/n" +
+            "1) seoulmateIdx = 1의 state를 임의로 사용. state 값 1 -> 0로 변경/n" +
+            "2) DROP matching TABLE && CREATE matching TABLE/n" +
+            "1) 2) 가 동시에 진행됩니다.")
+    public BaseResponse<String> deleteMatching() {
+        try {
+            String result = "매칭이 초기화되었습니다.";
+            matchingService.deleteMatching();
+            return new BaseResponse<>(result);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+    }
 }

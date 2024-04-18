@@ -108,5 +108,32 @@ public class MatchingDao {
         return teams;
     }
 
+    public int getState() {
+        return this.jdbcTemplate.queryForObject("SELECT state FROM seoulmate WHERE seoulmateIdx = 1", int.class);
+    }
 
+    public void deleteMatching() {
+        this.jdbcTemplate.update("UPDATE seoulmate SET state = 0 WHERE seoulmateIdx = 1");
+        /* execute() 메서드
+        이외에 임의의 SQL을 실행할 때는 execute() 메서드를 사용할 수 있다. 테이블을 생성하는 DDL 등에 사용할 수 있다.
+        */
+        this.jdbcTemplate.execute("DROP TABLE if exists `matching`");
+        this.jdbcTemplate.execute("CREATE TABLE if not exists `matching` (\n" +
+                "                            `matchingIdx` INT NOT NULL AUTO_INCREMENT,\n" +
+                "                            `buddyIdx` INT NOT NULL,\n" +
+                "                            `seoulmateIdx` INT NOT NULL,\n" +
+                "                            `state` INT NOT NULL DEFAULT 1,\n" +
+                "                            PRIMARY KEY (`matchingIdx`),\n" +
+                "                            UNIQUE INDEX `matchingIdx_UNIQUE` (`matchingIdx` ASC) VISIBLE,\n" +
+                "                            CONSTRAINT `fk_matching_buddy`\n" +
+                "                                FOREIGN KEY (`buddyIdx`)\n" +
+                "                                    REFERENCES `buddy` (`buddyIdx`)\n" +
+                "                                    ON DELETE NO ACTION\n" +
+                "                                    ON UPDATE NO ACTION,\n" +
+                "                            CONSTRAINT `fk_matching_seoulmate1`\n" +
+                "                                FOREIGN KEY (`seoulmateIdx`)\n" +
+                "                                    REFERENCES `seoulmate` (`seoulmateIdx`)\n" +
+                "                                    ON DELETE NO ACTION\n" +
+                "                                    ON UPDATE NO ACTION)");
+    }
 }

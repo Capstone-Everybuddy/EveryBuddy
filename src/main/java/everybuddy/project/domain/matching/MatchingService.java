@@ -37,11 +37,27 @@ public class MatchingService {
         }
     }
 
-
     public List<Team> getEntire() throws BaseException {
         try {
             List<Team> teams = matchingDao.getEntire();
             return teams;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int getState() throws BaseException {
+        try {
+            int state = matchingDao.getState();
+            return state;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void deleteMatching() throws BaseException {
+        try {
+            matchingDao.deleteMatching();
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
