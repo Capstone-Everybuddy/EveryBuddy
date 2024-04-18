@@ -13,6 +13,7 @@ const ChatList = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 15px;
   padding: 40px 0 150px 0;
 `;
