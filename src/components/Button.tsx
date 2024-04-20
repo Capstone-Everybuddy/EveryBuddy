@@ -27,6 +27,7 @@ const ButtonWrapper = styled.button`
   font-size: 20px;
   cursor: pointer;
   width: 100%;
+  transition: all 0.2s ease-in-out;
 `;
 
 export default Button;
