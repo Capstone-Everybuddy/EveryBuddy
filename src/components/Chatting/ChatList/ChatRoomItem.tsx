@@ -24,6 +24,7 @@ const Container = styled.div`
   padding: 22px 26px;
   background-color: white;
   box-shadow: 0px 4px 10px rgba(161, 161, 161, 0.1);
+  cursor: pointer;
   &:active {
     transition: all 0.2s ease-in-out;
     scale: 0.99;

@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom';
 
 interface ModalProps {
   show: boolean;
+  submitCompleted: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ show }) => {
+const Modal: React.FC<ModalProps> = ({ show, submitCompleted }) => {
   const navigate = useNavigate();
   return (
     <>
@@ -23,7 +24,10 @@ const Modal: React.FC<ModalProps> = ({ show }) => {
             </SubText>
             <Button
               text="메인으로 돌아가기"
-              onClick={() => navigate('/matching')}
+              onClick={() => {
+                submitCompleted();
+                navigate('/matching');
+              }}
             />
           </ModalContainer>
         </>

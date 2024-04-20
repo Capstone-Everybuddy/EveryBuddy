@@ -11,14 +11,20 @@ const MatchingStartContainer = () => {
         <MatchingSvg width={300} height={300} />
       </SvgWrapper>
       <TextWrapper>
-        자신의 선호도를 입력하고
+        Enter your information and preferences,
         <br />
-        나에게 맞는 서울메이트/버디를 찾아보세요!
+        Find the right SeoulMate / Buddy for you!
       </TextWrapper>
-      <Button
-        text="매칭 시작하기"
-        onClick={() => navigate('/matching-start')}
-      />
+      <ButtonWrapper>
+        <Button
+          text="Enter Preferences"
+          onClick={() => navigate('/matching-info', { state: 'preference' })}
+        />
+        <Button
+          text="Enter Information"
+          onClick={() => navigate('/matching-info', { state: 'information' })}
+        />
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -28,7 +34,7 @@ const SvgWrapper = styled.div`
 `;
 
 const TextWrapper = styled.div`
-  font-size: 18px;
+  font-size: 16px;
   text-align: center;
   padding: 30px 0px;
 `;
@@ -48,6 +54,13 @@ const Container = styled.div`
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
 export default MatchingStartContainer;
