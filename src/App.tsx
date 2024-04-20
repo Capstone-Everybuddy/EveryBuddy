@@ -10,10 +10,10 @@ import BottomNav from 'components/BottomNav';
 import Matching from 'pages/Matching';
 import Chat from 'pages/Chat';
 import Profile from 'pages/Profile';
-import MatchingPreferences from 'pages/MatchingPreferences';
 import Register from 'pages/Register';
 import ChatRoom from 'pages/ChatRoom';
 import UserUpdate from 'pages/UserUpdate';
+import MatchingInfo from 'pages/MatchingInfo';
 
 function App() {
   const name = 'user_name';
@@ -31,10 +31,7 @@ function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
-          <Route
-            path="/matching-preferences"
-            element={<MatchingPreferences />}
-          />
+          <Route path="/matching-info" element={<MatchingInfo />} />
           <Route path="/register" element={<Register />} />
           <Route path="/chat/room" element={<ChatRoom />} />
           <Route

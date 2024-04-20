@@ -10,6 +10,7 @@ import {
   preferenceOptions,
   preferenceOptionsList,
 } from 'data/matching';
+import { useLocation } from 'react-router-dom';
 
 const maxOrder = Object.keys(preferenceOptions).length;
 
@@ -63,7 +64,7 @@ const convertToPreferenceFormat = (
   );
 };
 
-const MatchingPreferences = () => {
+const MatchingInfo = () => {
   const [order, setOrder] = useState(1);
   const [rankingOptions, setRankingOptions] = useState(preferenceOptions);
   const [currentValue, setCurrentValue] =
@@ -72,6 +73,8 @@ const MatchingPreferences = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
+  const location = useLocation();
+  const enterType = location.state;
   const handleOptions = (key: MatchingInfoKeys) => {
     setRankingOptions((prev) => {
       const updatedOptions = { ...prev };
@@ -121,7 +124,9 @@ const MatchingPreferences = () => {
   };
 
   const submitCompleted = () => {
-    console.log(convertToPreferenceFormat(rankingOptions, lists));
+    if (enterType === 'information') console.log(lists);
+    else if (enterType === 'preference')
+      console.log(convertToPreferenceFormat(rankingOptions, lists));
   };
 
   const getRankingDescription = (order: number): string => {
@@ -162,21 +167,24 @@ const MatchingPreferences = () => {
     <Wrapper>
       <MatchingHeader order={order} handleOrder={clickBackButton} />
       <Container>
-        <div style={{ paddingBottom: '30px' }}>
-          <MainText>
-            Please select your preferred item as your{' '}
-            {getRankingDescription(order)} choice.
-          </MainText>
-          <Dropdown
-            options={rankingOptions}
-            currentValue={currentValue}
-            handleCurrentValue={handleCurrentValue}
-          />
-        </div>
-        <Line />
+        {enterType === 'preference' && (
+          <div>
+            <MainText>
+              Please select your preferred item as your{' '}
+              {getRankingDescription(order)} choice.
+            </MainText>
+            <Dropdown
+              options={rankingOptions}
+              currentValue={currentValue}
+              handleCurrentValue={handleCurrentValue}
+            />
+            <Line />
+          </div>
+        )}
         <SelectList
           lists={lists}
           setLists={setLists}
+          enterType={enterType}
           currentValue={currentValue}
           handleButtondDisabled={handleButtonDisabled}
         />
@@ -215,7 +223,8 @@ const MainText = styled.div`
 `;
 
 const Line = styled.div`
-  border: 1px solid ${(props) => props.theme.colors.lightgray};
+  padding-top: 30px;
+  border-bottom: 1px solid ${(props) => props.theme.colors.lightgray};
 `;
 
 const ButtonWrapper = styled.div`
@@ -230,4 +239,4 @@ const ButtonWrapper = styled.div`
     #ffffff 70.61%
   );
 `;
-export default MatchingPreferences;
+export default MatchingInfo;

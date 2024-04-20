@@ -15,10 +15,16 @@ const MatchingStartContainer = () => {
         <br />
         Find the right SeoulMate / Buddy for you!
       </TextWrapper>
-      <Button
-        text="Enter preferences"
-        onClick={() => navigate('/matching-preferences')}
-      />
+      <ButtonWrapper>
+        <Button
+          text="Enter Preferences"
+          onClick={() => navigate('/matching-info', { state: 'preference' })}
+        />
+        <Button
+          text="Enter Information"
+          onClick={() => navigate('/matching-info', { state: 'information' })}
+        />
+      </ButtonWrapper>
     </Container>
   );
 };
@@ -28,7 +34,7 @@ const SvgWrapper = styled.div`
 `;
 
 const TextWrapper = styled.div`
-  font-size: 18px;
+  font-size: 16px;
   text-align: center;
   padding: 30px 0px;
 `;
@@ -48,6 +54,13 @@ const Container = styled.div`
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const ButtonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `;
 
 export default MatchingStartContainer;
