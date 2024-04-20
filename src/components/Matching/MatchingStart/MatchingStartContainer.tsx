@@ -11,13 +11,13 @@ const MatchingStartContainer = () => {
         <MatchingSvg width={300} height={300} />
       </SvgWrapper>
       <TextWrapper>
-        자신의 선호도를 입력하고
+        Enter your information and preferences,
         <br />
-        나에게 맞는 서울메이트/버디를 찾아보세요!
+        Find the right SeoulMate / Buddy for you!
       </TextWrapper>
       <Button
-        text="매칭 시작하기"
-        onClick={() => navigate('/matching-start')}
+        text="Enter preferences"
+        onClick={() => navigate('/matching-preferences')}
       />
     </Container>
   );
