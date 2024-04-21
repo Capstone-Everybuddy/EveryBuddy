@@ -286,7 +286,7 @@ export class HttpClient<SecurityDataType = unknown> {
   }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({
       ...axiosConfig,
-      baseURL: axiosConfig.baseURL || 'http://3.35.84.54:8080',
+      baseURL: axiosConfig.baseURL || 'http://13.124.56.183:8080',
     });
     this.secure = secure;
     this.format = format;
@@ -401,7 +401,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title 24년도 1학기 캡스톤 에브리버디 API docs
  * @version 1.0.0
- * @baseUrl http://3.35.84.54:8080
+ * @baseUrl http://13.124.56.183:8080
  *
  * OCR API와 선호도 기반 알고리즘을 활용한 교환학생 플랫폼, ‘에브리버디’
  */
