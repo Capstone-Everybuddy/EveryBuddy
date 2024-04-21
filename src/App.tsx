@@ -14,6 +14,7 @@ import Register from 'pages/Register';
 import ChatRoom from 'pages/ChatRoom';
 import UserUpdate from 'pages/UserUpdate';
 import MatchingInfo from 'pages/MatchingInfo';
+import Admin from 'pages/Admin';
 
 function App() {
   const name = 'user_name';
@@ -38,6 +39,7 @@ function App() {
             path="/userupdate"
             element={<UserUpdate name={name} token={token ?? null} />}
           />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
