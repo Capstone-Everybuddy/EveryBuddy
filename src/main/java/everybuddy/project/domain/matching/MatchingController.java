@@ -97,7 +97,7 @@ public class MatchingController {
     // [DELETE] 매칭 결과 테이블 제거 및 생성 API
     @ResponseBody
     @DeleteMapping("/delete")
-    @Operation(summary = "매칭 상태 조회 API", description = "매칭 상태를 변경합니다 ( 0: 매칭 전, 1: 매칭 완료 )\n" +
+    @Operation(summary = "매칭 전 상태로 변경 API", description = "매칭 상태를 변경합니다 ( 0: 매칭 전, 1: 매칭 완료 )\n" +
             "- seoulmateIdx = 1의 state를 임의로 사용. state 값 1 -> 0로 변경\n" +
             "- DROP matching TABLE && CREATE matching TABLE\n" +
             "두 가지 동작이 동시에 진행됩니다.")
