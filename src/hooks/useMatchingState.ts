@@ -8,7 +8,7 @@ const useMatchingState = () => {
     queryFn: () => api.matchings.getState(),
   });
 
-  return { data };
+  return { isMatchingComplete: data?.result?.state };
 };
 
 export default useMatchingState;

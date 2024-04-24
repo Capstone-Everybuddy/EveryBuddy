@@ -6,7 +6,7 @@ import Main from 'components/Main';
 import useMatchingState from 'hooks/useMatchingState';
 
 const Matching = () => {
-  const { data: isMatchingComplete } = useMatchingState();
+  const { isMatchingComplete } = useMatchingState();
 
   return (
     <Main.Wrapper>
