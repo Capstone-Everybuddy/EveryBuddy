@@ -11,6 +11,7 @@ import {
   preferenceOptionsList,
 } from 'data/matching';
 import { useLocation } from 'react-router-dom';
+import useSeoulmates from 'hooks/useSeoulmates';
 
 const maxOrder = Object.keys(preferenceOptions).length;
 
@@ -72,6 +73,7 @@ const MatchingInfo = () => {
   const [lists, setLists] = useState(preferenceOptionsList);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const { savePreferenceSeoulmates } = useSeoulmates();
 
   const location = useLocation();
   const enterType = location.state;
@@ -125,8 +127,13 @@ const MatchingInfo = () => {
 
   const submitCompleted = () => {
     if (enterType === 'information') console.log(lists);
-    else if (enterType === 'preference')
+    else if (enterType === 'preference') {
+      savePreferenceSeoulmates({
+        seoulmateIdx: 1, //TODO: 임시로 idx 넣음
+        data: convertToPreferenceFormat(rankingOptions, lists),
+      });
       console.log(convertToPreferenceFormat(rankingOptions, lists));
+    }
   };
 
   const getRankingDescription = (order: number): string => {
