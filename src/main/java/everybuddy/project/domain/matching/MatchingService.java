@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static everybuddy.project.global.config.BaseResponseStatus.BEFORE_MATCHING;
 import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
@@ -26,6 +27,8 @@ public class MatchingService {
     }
 
     public GetMatchingRes getMatching(Integer buddyIdx) throws BaseException {
+        int state = matchingDao.getState();
+        if (state == 0) throw new BaseException(BEFORE_MATCHING);
         try {
             GetMatchingRes getMatchingRes = matchingDao.getMatching(buddyIdx);
             return getMatchingRes;
@@ -35,6 +38,8 @@ public class MatchingService {
     }
 
     public List<GetMatchingRes> getMatchings(Integer seoulmateIdx) throws BaseException {
+        int state = matchingDao.getState();
+        if (state == 0) throw new BaseException(BEFORE_MATCHING);
         try {
             List<GetMatchingRes> getMatchingsRes = matchingDao.getMatchings(seoulmateIdx);
             return getMatchingsRes;
@@ -44,6 +49,8 @@ public class MatchingService {
     }
 
     public List<Team> getEntire() throws BaseException {
+        int state = matchingDao.getState();
+        if (state == 0) throw new BaseException(BEFORE_MATCHING);
         try {
             List<Team> teams = matchingDao.getEntire();
             return teams;

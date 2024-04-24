@@ -46,6 +46,8 @@ public enum BaseResponseStatus {
     GET_USERS_USERIDX_IS_NULL(false, 2026, "user 인덱스 값이 널입니다."),
     POST_USERS_FAIL_LOGIN(false, 2027, "계정이 존재하지 않거나 비밀번호가 틀렸습니다."),
 
+    BEFORE_MATCHING(false, 2030, "매칭이 완료되지 않았습니다."),
+
     /**
      * 4000 : Database, Server 오류
      */

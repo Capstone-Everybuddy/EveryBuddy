@@ -2,11 +2,14 @@ package everybuddy.project.domain.matching;
 
 import everybuddy.project.domain.matching.dto.*;
 import everybuddy.project.domain.matching.entity.*;
+import everybuddy.project.global.config.BaseException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.*;
+
+import static everybuddy.project.global.config.BaseResponseStatus.*;
 
 @Repository
 public class MatchingDao {
@@ -128,22 +131,16 @@ public class MatchingDao {
         이외에 임의의 SQL을 실행할 때는 execute() 메서드를 사용할 수 있다. 테이블을 생성하는 DDL 등에 사용할 수 있다.
         */
         this.jdbcTemplate.execute("DROP TABLE if exists `matching`");
-        this.jdbcTemplate.execute("CREATE TABLE if not exists `matching` (\n" +
-                "                            `matchingIdx` INT NOT NULL AUTO_INCREMENT,\n" +
-                "                            `buddyIdx` INT NOT NULL,\n" +
-                "                            `seoulmateIdx` INT NOT NULL,\n" +
-                "                            `state` INT NOT NULL DEFAULT 1,\n" +
-                "                            PRIMARY KEY (`matchingIdx`),\n" +
-                "                            UNIQUE INDEX `matchingIdx_UNIQUE` (`matchingIdx` ASC) VISIBLE,\n" +
-                "                            CONSTRAINT `fk_matching_buddy`\n" +
-                "                                FOREIGN KEY (`buddyIdx`)\n" +
-                "                                    REFERENCES `buddy` (`buddyIdx`)\n" +
-                "                                    ON DELETE NO ACTION\n" +
-                "                                    ON UPDATE NO ACTION,\n" +
-                "                            CONSTRAINT `fk_matching_seoulmate1`\n" +
-                "                                FOREIGN KEY (`seoulmateIdx`)\n" +
-                "                                    REFERENCES `seoulmate` (`seoulmateIdx`)\n" +
-                "                                    ON DELETE NO ACTION\n" +
-                "                                    ON UPDATE NO ACTION)");
+        this.jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS `matching` " +
+                        "(`buddyIdx` INT NOT NULL, " +
+                        "`seoulmateIdx` INT NOT NULL, " +
+                        "PRIMARY KEY (`buddyIdx`, `seoulmateIdx`), " +
+                        "INDEX `fk_matching_buddy_idx` (`buddyIdx` ASC) VISIBLE, " +
+                        "INDEX `fk_matching_seoulmate1_idx` (`seoulmateIdx` ASC) VISIBLE, " +
+                        "CONSTRAINT `fk_matching_buddy` FOREIGN KEY (`buddyIdx`) " +
+                        "REFERENCES `buddy` (`buddyIdx`) ON DELETE NO ACTION ON UPDATE NO ACTION, " +
+                        "CONSTRAINT `fk_matching_seoulmate1` " +
+                        "FOREIGN KEY (`seoulmateIdx`) " +
+                        "REFERENCES `seoulmate` (`seoulmateIdx`) ON DELETE NO ACTION ON UPDATE NO ACTION)");
     }
 }
