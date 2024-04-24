@@ -117,6 +117,15 @@ public class SeoulmateDao {
 
     public void saveInfo(PostInfoReq postInfoReq, int seoulmateIdx) throws BaseException {
         try {
+            List<String> queries = Arrays.asList(
+                    "DELETE FROM personalityInfo_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM languageInfo_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM wanttodoInfo_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM hobbyInfo_s WHERE seoulmateIdx = ?"
+            );
+            for (String query : queries) {
+                this.jdbcTemplate.update(query, seoulmateIdx);
+            }
             for (int i = 0; i < postInfoReq.getLanguage().size(); i++) {
                 String savePreferenceQeury = "INSERT INTO languageInfo_s (seoulmateIdx, `no`) values (?, ?)";
                 Object[] savePreferenceParams = new Object[]{seoulmateIdx, postInfoReq.getLanguage().get(i)};
