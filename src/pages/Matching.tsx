@@ -3,9 +3,11 @@ import Layout from 'components/Layout';
 import MatchingStartContainer from 'components/Matching/MatchingStart/MatchingStartContainer';
 import MatchingCompleteContainer from 'components/Matching/MatchingComplete/MatchingCompleteContainer';
 import Main from 'components/Main';
+import useMatchingState from 'hooks/useMatchingState';
 
 const Matching = () => {
-  const isMatchingComplete = false;
+  const { isMatchingComplete } = useMatchingState();
+
   return (
     <Main.Wrapper>
       <Layout.PageContent>
