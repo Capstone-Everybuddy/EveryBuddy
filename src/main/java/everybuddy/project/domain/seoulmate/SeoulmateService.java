@@ -35,10 +35,11 @@ public class SeoulmateService {
         }
     }
 
-    public PostPreferRes savePreference(PostPreferReq postPreferReq, int seoulmateIdx) throws BaseException{
+    public String savePreference(PostPreferReq postPreferReq, int seoulmateIdx) throws BaseException{
         try {
-            int preferrankIdx = seoulmateDao.savePreference(postPreferReq, seoulmateIdx);
-            return new PostPreferRes(preferrankIdx);
+            seoulmateDao.savePreference(postPreferReq, seoulmateIdx);
+            String result = "요청에 성공했습니다.";
+            return result;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

@@ -17,15 +17,16 @@ public class SeoulmateController {
 
     @ResponseBody
     @PostMapping("/sign-up")
-    @Operation(summary = "서울메이트 sign-up API", description = "서울메이트 회원가입 API")
-    public PostSeoulmateRes createSeoulmate(PostSeoulmateReq postSeoulmateReq) {
+    @Operation(summary = "서울메이트 sign-up API", description = "서울메이트 회원가입 API\nswagger 대문자 반영이 안됩니다! id(x) -> ID(o) !!")
+    public BaseResponse<PostSeoulmateRes> createSeoulmate(@RequestBody PostSeoulmateReq postSeoulmateReq) {
         PostSeoulmateRes postSeoulmateRes = seoulmateService.createSeoulmate(postSeoulmateReq);
-        return postSeoulmateRes;
+        return new BaseResponse<>(postSeoulmateRes);
     }
 
     @ResponseBody
     @PostMapping("/log-in")
-    public BaseResponse<PostLoginRes> loginSeoulmate(PostLoginReq postLoginReq) {
+    @Operation(summary = "서울메이트 log-in API", description = "서울메이트 로그인 API\nswagger 대문자 반영이 안됩니다! id(x) -> ID(o) !!")
+    public BaseResponse<PostLoginRes> loginSeoulmate(@RequestBody PostLoginReq postLoginReq) {
         try {
             PostLoginRes postLoginRes = seoulmateService.loginSeoulmate(postLoginReq);
             return new BaseResponse<>(postLoginRes);
@@ -37,10 +38,10 @@ public class SeoulmateController {
 
     @ResponseBody
     @PostMapping("/preference/{seoulmateIdx}")
-    public BaseResponse<PostPreferRes> savePreference(@RequestBody PostPreferReq postPreferReq, @PathVariable int seoulmateIdx) {
+    public BaseResponse<String> savePreference(@RequestBody PostPreferReq postPreferReq, @PathVariable int seoulmateIdx) {
         try {
-            PostPreferRes postPreferRes = seoulmateService.savePreference(postPreferReq, seoulmateIdx);
-            return new BaseResponse<>(postPreferRes);
+            String result = seoulmateService.savePreference(postPreferReq, seoulmateIdx);
+            return new BaseResponse<>(result);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
