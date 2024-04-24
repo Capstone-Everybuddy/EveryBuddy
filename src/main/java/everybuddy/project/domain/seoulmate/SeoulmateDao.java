@@ -9,6 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Repository
@@ -54,7 +57,21 @@ public class SeoulmateDao {
 
     public int savePreference(PostPreferReq postPreferReq, int seoulmateIdx) throws BaseException {
         try {
-            String savePreferrankQeury = "INSERT INTO preferrank_s (seoulmateIdx, `first`, `second`, `third`, `fourth`, `fifth`, `sixth`, `seventh`) values (?, ?, ?, ?, ?, ?, ?, ?)";
+            List<String> queries = Arrays.asList(
+                    "DELETE FROM preferrank_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM personality_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM language_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM wanttodo_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM hobby_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM sex_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM major_s WHERE seoulmateIdx = ?",
+                    "DELETE FROM continent_s WHERE seoulmateIdx = ?"
+            );
+            for (String query : queries) {
+                this.jdbcTemplate.update(query, seoulmateIdx);
+            }
+            String savePreferrankQeury =
+                    "INSERT INTO preferrank_s (seoulmateIdx, `first`, `second`, `third`, `fourth`, `fifth`, `sixth`, `seventh`) values (?, ?, ?, ?, ?, ?, ?, ?)";
             Object[] savePreferrankParams = new Object[]{seoulmateIdx, postPreferReq.getFirst(), postPreferReq.getSecond(), postPreferReq.getThird(),
                     postPreferReq.getFourth(), postPreferReq.getFifth(), postPreferReq.getSixth(), postPreferReq.getSeventh()};
             this.jdbcTemplate.update(savePreferrankQeury, savePreferrankParams);
