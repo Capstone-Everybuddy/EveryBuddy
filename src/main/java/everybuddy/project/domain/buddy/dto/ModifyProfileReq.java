@@ -7,7 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostLoginRes {
-    private int buddyIdx;
+public class ModifyProfileReq {
     private String name;
+    private String ID;
+    private String password;
+    private String studentId;
+    private String profileImg;
+    private String nationality;
 }

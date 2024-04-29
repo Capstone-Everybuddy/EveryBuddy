@@ -6,6 +6,8 @@ import everybuddy.project.global.config.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -75,5 +77,18 @@ public class BuddyController {
     public GetBuddyProfileRes getBuddyProfile(@PathVariable("buddyId") String buddyId) {
         GetBuddyProfileRes buddyProfileRes = buddyService.getBuddyProfile(buddyId);
         return buddyProfileRes;
+    }
+
+    @ResponseBody
+    @PutMapping("/modify/{buddyId}")
+    @Operation(summary = "버디 프로필 수정 API", description = "버디 프로필을 수정하는 API")
+    public ResponseEntity<BaseResponse<String>> modifyBuddyProfile(@PathVariable("buddyId") String buddyId, @RequestBody everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) {
+        try {
+            buddyService.modifyBuddyProfile(buddyId, modifyProfileReq);
+            String message = "프로필이 성공적으로 수정되었습니다.";
+            return ResponseEntity.ok(new BaseResponse<>(message));
+        } catch (BaseException baseException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(baseException.getStatus()));
+        }
     }
 }

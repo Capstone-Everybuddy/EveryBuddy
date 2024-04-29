@@ -2,6 +2,7 @@ package everybuddy.project.domain.buddy;
 
 import everybuddy.project.domain.buddy.dto.*;
 import everybuddy.project.domain.buddy.entity.*;
+import everybuddy.project.domain.seoulmate.entity.SeoulmateProfile;
 import everybuddy.project.global.config.BaseException;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +58,18 @@ public class BuddyService {
     public GetBuddyProfileRes getBuddyProfile(String buddyId) {
         BuddyProfile buddy = buddyDao.getBuddyProfile(buddyId);
         return new GetBuddyProfileRes(buddy.getName(), buddy.getID(), buddy.getPassword(), buddy.getStudentId(), buddy.getNationality(), buddy.getProfileImg());
+    }
+
+    public void modifyBuddyProfile(String buddyId, everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) throws BaseException {
+        try {
+            BuddyProfile buddyProfile = buddyDao.getBuddyProfile(buddyId);
+            if (buddyProfile != null) {
+                buddyDao.updateProfileById(buddyId, modifyProfileReq);
+            } else {
+                throw new BaseException(DATABASE_ERROR);
+            }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

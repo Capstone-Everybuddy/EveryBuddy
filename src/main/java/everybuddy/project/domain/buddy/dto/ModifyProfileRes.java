@@ -7,6 +7,5 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostBuddyRes {
-    int preferenceIdx;
+public class ModifyProfileRes {
 }

@@ -139,4 +139,13 @@ public class BuddyDao {
                 ),
                 buddyId);
     }
+    public void updateProfileById(String buddyId, everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) throws BaseException {
+        try {
+            String updateProfileQuery = "UPDATE buddy SET nationality = ?, profileImg = ? WHERE ID = ?";
+            Object[] updateProfileParams = new Object[]{modifyProfileReq.getNationality(), modifyProfileReq.getProfileImg(), buddyId};
+            this.jdbcTemplate.update(updateProfileQuery, updateProfileParams);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
