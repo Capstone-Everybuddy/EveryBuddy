@@ -169,4 +169,13 @@ public class SeoulmateDao {
                 ),
                 seoulmateId);
     }
+    public void updateProfileById(String seoulmateId, ModifyProfileReq modifyProfileReq) throws BaseException {
+        try {
+            String updateProfileQuery = "UPDATE seoulmate SET sex = ?, major = ?, profileImg = ? WHERE ID = ?";
+            Object[] updateProfileParams = new Object[]{modifyProfileReq.getSex(), modifyProfileReq.getMajor(), modifyProfileReq.getProfileImg(), seoulmateId};
+            this.jdbcTemplate.update(updateProfileQuery, updateProfileParams);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
