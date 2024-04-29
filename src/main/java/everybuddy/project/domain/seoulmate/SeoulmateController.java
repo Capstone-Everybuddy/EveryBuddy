@@ -5,6 +5,8 @@ import everybuddy.project.global.config.BaseException;
 import everybuddy.project.global.config.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/seoulmates")
@@ -66,5 +68,18 @@ public class SeoulmateController {
     public GetSeoulmateProfileRes getSeoulmateProfile(@PathVariable("seoulmateId") String seoulmateId) {
         GetSeoulmateProfileRes seoulmateProfileRes = seoulmateService.getSeoulmateProfile(seoulmateId);
         return seoulmateProfileRes;
+    }
+
+    @ResponseBody
+    @PutMapping("/modify/{seoulmateId}")
+    @Operation(summary = "서울메이트 프로필 수정 API", description = "서울메이트 프로필을 수정하는 API")
+    public ResponseEntity<BaseResponse<String>> modifySeoulmateProfile(@PathVariable("seoulmateId") String seoulmateId, @RequestBody ModifyProfileReq modifyProfileReq) {
+        try {
+            seoulmateService.modifySeoulmateProfile(seoulmateId, modifyProfileReq);
+            String message = "프로필이 성공적으로 수정되었습니다.";
+            return ResponseEntity.ok(new BaseResponse<>(message));
+        } catch (BaseException baseException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new BaseResponse<>(baseException.getStatus()));
+        }
     }
 }
