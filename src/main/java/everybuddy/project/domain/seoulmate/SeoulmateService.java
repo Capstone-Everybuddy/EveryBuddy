@@ -57,5 +57,21 @@ public class SeoulmateService {
         SeoulmateProfile seoulmate = seoulmateDao.getSeoulmateProfile(seoulmateId);
         return new GetSeoulmateProfileRes(seoulmate.getName(), seoulmate.getID(), seoulmate.getPassword(), seoulmate.getStudentId(), seoulmate.getSex(), seoulmate.getMajor(), seoulmate.getProfileImg());
     }
+    
+    public void modifySeoulmateProfile(String seoulmateId, ModifyProfileReq modifyProfileReq) throws BaseException {
+        try {
+            // 서울메이트의 아이디(seoulmateId)를 통해 프로필을 가져옵니다.
+            SeoulmateProfile seoulmateProfile = seoulmateDao.getSeoulmateProfile(seoulmateId);
+            if (seoulmateProfile != null) {
+                // 프로필을 가져왔다면 수정을 수행합니다.
+                seoulmateDao.updateProfileById(seoulmateId, modifyProfileReq);
+            } else {
+                // 프로필을 찾을 수 없을 때 예외를 발생시킵니다.
+                throw new BaseException(DATABASE_ERROR);
+            }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }
