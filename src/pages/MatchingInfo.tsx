@@ -11,7 +11,8 @@ import {
   preferenceOptionsList,
 } from 'data/matching';
 import { useLocation } from 'react-router-dom';
-import useSeoulmates from 'hooks/useSeoulmates';
+import useSeoulmate from 'hooks/useSeoulmate';
+import useBuddy from 'hooks/useBuddy';
 
 enum Role {
   SEOULMATE,
@@ -114,7 +115,8 @@ const MatchingInfo = () => {
   const [showModal, setShowModal] = useState(false);
 
   // api
-  const { savePreferenceSeoulmates, saveInfoSeoulmates } = useSeoulmates();
+  const { savePreferenceSeoulmate, saveInfoSeoulmate } = useSeoulmate();
+  const { savePreferenceBuddy, saveInfoBuddy } = useBuddy();
 
   // preference OR information
   const location = useLocation();
@@ -175,12 +177,12 @@ const MatchingInfo = () => {
 
   const submitCompleted = () => {
     if (enterType === 'information') {
-      saveInfoSeoulmates({
+      saveInfoSeoulmate({
         seoulmateIdx: 1, //TODO: 임시로 idx 넣음
         data: convertToInfoFormat(lists, role),
       });
     } else if (enterType === 'preference') {
-      savePreferenceSeoulmates({
+      savePreferenceSeoulmate({
         seoulmateIdx: 1, //TODO: 임시로 idx 넣음
         data: convertToPreferenceFormat(rankingOptions, lists, role),
       });

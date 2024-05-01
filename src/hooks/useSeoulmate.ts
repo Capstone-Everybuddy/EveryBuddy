@@ -13,8 +13,8 @@ interface SeoulmatesInfo {
 }
 
 /** 서울메이트 정보 입력 훅 */
-const useSeoulmates = () => {
-  const { mutate: savePreferenceSeoulmates } = useMutation({
+const useSeoulmate = () => {
+  const { mutate: savePreferenceSeoulmate } = useMutation({
     mutationFn: (seoulmatesPreference: SeoulmatesPreference) =>
       api.seoulmates.savePreference(
         seoulmatesPreference.seoulmateIdx,
@@ -25,7 +25,7 @@ const useSeoulmates = () => {
     },
   });
 
-  const { mutate: saveInfoSeoulmates } = useMutation({
+  const { mutate: saveInfoSeoulmate } = useMutation({
     mutationFn: (seoulmatesInfo: SeoulmatesInfo) =>
       api.seoulmates.saveInfo(seoulmatesInfo.seoulmateIdx, seoulmatesInfo.data),
     onSuccess: (data: any) => {
@@ -34,9 +34,9 @@ const useSeoulmates = () => {
   });
 
   return {
-    savePreferenceSeoulmates,
-    saveInfoSeoulmates,
+    savePreferenceSeoulmate,
+    saveInfoSeoulmate,
   };
 };
 
-export default useSeoulmates;
+export default useSeoulmate;
