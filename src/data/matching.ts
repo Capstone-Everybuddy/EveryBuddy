@@ -1,5 +1,5 @@
 export const matchingInfo = {
-  language: ['Korean', 'English', 'Chinese', 'Japanese', 'French', 'Spanish'],
+  language: ['English', 'Chinese', 'Japanese', 'French', 'Spanish'],
   personality: [
     'Calm',
     'Active',
