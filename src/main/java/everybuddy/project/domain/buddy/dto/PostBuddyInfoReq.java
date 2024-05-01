@@ -17,4 +17,5 @@ public class PostBuddyInfoReq {
     private int sex;
     private int major;
     private int continent;
+    private int motherTongue;
 }

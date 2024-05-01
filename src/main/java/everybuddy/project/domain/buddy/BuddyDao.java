@@ -140,8 +140,8 @@ public class BuddyDao {
                 Object[] savePreferenceParams = new Object[]{buddyIdx, postBuddyInfoReq.getWanttodo().get(i)};
                 this.jdbcTemplate.update(savePreferenceQeury, savePreferenceParams);
             }
-            String saveMajorSexQuery = "UPDATE buddy SET sex = ?, major = ?, continent = ? WHERE buddyIdx = ?";
-            Object[] saveMajorSexParams = new Object[]{postBuddyInfoReq.getSex(), postBuddyInfoReq.getMajor(), postBuddyInfoReq.getContinent(), buddyIdx};
+            String saveMajorSexQuery = "UPDATE buddy SET sex = ?, major = ?, continent = ?, motherTongue = ? WHERE buddyIdx = ?";
+            Object[] saveMajorSexParams = new Object[]{postBuddyInfoReq.getSex(), postBuddyInfoReq.getMajor(), postBuddyInfoReq.getContinent(), postBuddyInfoReq.getMotherTongue(), buddyIdx};
             this.jdbcTemplate.update(saveMajorSexQuery, saveMajorSexParams);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
