@@ -35,6 +35,7 @@ public class BuddyController {
 
     @ResponseBody
     @PostMapping("/log-in")
+    @Operation(summary = "버디 log-in API", description = "버디 로그인 API\nswagger 대문자 반영이 안됩니다! id(x) -> ID(o) !!")
     public BaseResponse<PostLoginRes> loginBuddy(@RequestBody PostLoginReq postLoginReq) {
         try {
             PostLoginRes postLoginRes = buddyService.loginBuddy(postLoginReq);
@@ -47,9 +48,10 @@ public class BuddyController {
 
     @ResponseBody
     @PostMapping("/preference/{buddyIdx}")
-    public BaseResponse<PostPreferRes> savePreference(@RequestBody PostPreferReq postPreferReq, @PathVariable int buddyIdx) {
+    @Operation(summary = "버디 선호도 반영 API", description = "버디 선호도반영 API")
+    public BaseResponse<PostPreferRes> saveBuddyPreference(@RequestBody PostPreferReq postPreferReq, @PathVariable int buddyIdx) {
         try {
-            PostPreferRes postPreferRes = buddyService.savePreference(postPreferReq, buddyIdx);
+            PostPreferRes postPreferRes = buddyService.saveBuddyPreference(postPreferReq, buddyIdx);
             return new BaseResponse<>(postPreferRes);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
@@ -58,17 +60,16 @@ public class BuddyController {
 
     @ResponseBody
     @PostMapping("/info/{buddyIdx}")
-    public BaseResponse<String> saveInfo(@RequestBody PostInfoReq postInfoReq, @PathVariable int buddyIdx) {
+    @Operation(summary = "버디 정보 입력 API", description = "버디 정보 입력 API")
+    public BaseResponse<String> saveBuddyInfo(@RequestBody PostBuddyInfoReq postBuddyInfoReq, @PathVariable int buddyIdx) {
         try {
-            buddyService.saveInfo(postInfoReq, buddyIdx);
+            buddyService.saveBuddyInfo(postBuddyInfoReq, buddyIdx);
             String result = "정보 저장에 성공하였습니다.";
             return new BaseResponse<>(result);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
-
-
 
     /*프로필 조회*/
     @ResponseBody

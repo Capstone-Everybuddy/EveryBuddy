@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostInfoReq {
+public class PostBuddyInfoReq {
     private List<Integer> language;
     private List<Integer> personality;
     private List<Integer> hobby;

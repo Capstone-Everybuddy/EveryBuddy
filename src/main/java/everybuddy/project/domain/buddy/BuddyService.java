@@ -2,7 +2,6 @@ package everybuddy.project.domain.buddy;
 
 import everybuddy.project.domain.buddy.dto.*;
 import everybuddy.project.domain.buddy.entity.*;
-import everybuddy.project.domain.seoulmate.entity.SeoulmateProfile;
 import everybuddy.project.global.config.BaseException;
 import org.springframework.stereotype.Service;
 
@@ -36,18 +35,18 @@ public class BuddyService {
         }
     }
 
-    public PostPreferRes savePreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException{
+    public PostPreferRes saveBuddyPreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException{
         try {
-            int preferrankIdx = buddyDao.savePreference(postPreferReq, buddyIdx);
+            int preferrankIdx = buddyDao.saveBuddyPreference(postPreferReq, buddyIdx);
             return new PostPreferRes(preferrankIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public void saveInfo(PostInfoReq postInfoReq, int buddyIdx) throws BaseException {
+    public void saveBuddyInfo(PostBuddyInfoReq postBuddyInfoReq, int buddyIdx) throws BaseException {
         try {
-            buddyDao.saveInfo(postInfoReq, buddyIdx);
+            buddyDao.saveBuddyInfo(postBuddyInfoReq, buddyIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

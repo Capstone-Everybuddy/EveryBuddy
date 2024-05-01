@@ -3,11 +3,13 @@ package everybuddy.project.domain.buddy;
 import everybuddy.project.domain.buddy.dto.*;
 import everybuddy.project.domain.buddy.entity.*;
 import everybuddy.project.global.config.BaseException;
-import everybuddy.project.global.config.BaseResponseStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR;
 
@@ -21,7 +23,7 @@ public class BuddyDao {
 
 
     public int createBuddy(PostBuddyReq postBuddyReq) {
-        String savePreferenceQuery = "insert into `buddy` (name, ID, password, profileImg) values (?,?,?,?)";
+        String savePreferenceQuery = "insert into `buddy` (`name`, ID, password, profileImg) values (?,?,?,?)";
         Object[] savePreferenceParams = new Object[]{postBuddyReq.getName(), postBuddyReq.getID(), postBuddyReq.getPassword1(), postBuddyReq.getProfileImg()};
         this.jdbcTemplate.update(savePreferenceQuery, savePreferenceParams);
 
@@ -49,8 +51,21 @@ public class BuddyDao {
         }
     }
 
-    public int savePreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException {
+    public int saveBuddyPreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException {
         try {
+            List<String> queries = Arrays.asList(
+                    "DELETE FROM preferrank_b WHERE buddyIdx = ?",
+                    "DELETE FROM personality_b WHERE buddyIdx = ?",
+                    "DELETE FROM language_b WHERE buddyIdx = ?",
+                    "DELETE FROM wanttodo_b WHERE buddyIdx = ?",
+                    "DELETE FROM hobby_b WHERE buddyIdx = ?",
+                    "DELETE FROM sex_b WHERE buddyIdx = ?",
+                    "DELETE FROM major_b WHERE buddyIdx = ?",
+                    "DELETE FROM continent_b WHERE buddyIdx = ?"
+            );
+            for (String query : queries) {
+                this.jdbcTemplate.update(query, buddyIdx);
+            }
             String savePreferrankQeury = "INSERT INTO preferrank_b (buddyIdx, `first`, `second`, `third`, `fourth`, `fifth`, `sixth`) values (?, ?, ?, ?, ?, ? ,?)";
             Object[] savePreferrankParams = new Object[]{buddyIdx, postPreferReq.getFirst(), postPreferReq.getSecond(), postPreferReq.getThird(), postPreferReq.getFourth(),
                     postPreferReq.getFifth(), postPreferReq.getSixth()};
@@ -93,31 +108,40 @@ public class BuddyDao {
         }
     }
 
-    public void saveInfo(PostInfoReq postInfoReq, int buddyIdx) throws BaseException {
+    public void saveBuddyInfo(PostBuddyInfoReq postBuddyInfoReq, int buddyIdx) throws BaseException {
         try {
-            for (int i = 0; i < postInfoReq.getLanguage().size(); i++) {
+            List<String> queries = Arrays.asList(
+                    "DELETE FROM personalityInfo_b WHERE buddyIdx = ?",
+                    "DELETE FROM languageInfo_b WHERE buddyIdx = ?",
+                    "DELETE FROM wanttodoInfo_b WHERE buddyIdx = ?",
+                    "DELETE FROM hobbyInfo_b WHERE buddyIdx = ?"
+            );
+            for (String query : queries) {
+                this.jdbcTemplate.update(query, buddyIdx);
+            }
+            for (int i = 0; i < postBuddyInfoReq.getLanguage().size(); i++) {
                 String savePreferenceQeury = "INSERT INTO languageInfo_b (buddyIdx, `no`) values (?, ?)";
-                Object[] savePreferenceParams = new Object[]{buddyIdx, postInfoReq.getLanguage().get(i)};
+                Object[] savePreferenceParams = new Object[]{buddyIdx, postBuddyInfoReq.getLanguage().get(i)};
                 this.jdbcTemplate.update(savePreferenceQeury, savePreferenceParams);
             }
 
-            for (int i = 0; i < postInfoReq.getPersonality().size(); i++) {
+            for (int i = 0; i < postBuddyInfoReq.getPersonality().size(); i++) {
                 String savePreferenceQeury = "INSERT INTO personalityInfo_b (buddyIdx, `no`) values (?, ?)";
-                Object[] savePreferenceParams = new Object[]{buddyIdx, postInfoReq.getPersonality().get(i)};
+                Object[] savePreferenceParams = new Object[]{buddyIdx, postBuddyInfoReq.getPersonality().get(i)};
                 this.jdbcTemplate.update(savePreferenceQeury, savePreferenceParams);
             }
-            for (int i = 0; i < postInfoReq.getHobby().size(); i++) {
+            for (int i = 0; i < postBuddyInfoReq.getHobby().size(); i++) {
                 String savePreferenceQeury = "INSERT INTO hobbyInfo_b (buddyIdx, `no`) values (?, ?)";
-                Object[] savePreferenceParams = new Object[]{buddyIdx, postInfoReq.getHobby().get(i)};
+                Object[] savePreferenceParams = new Object[]{buddyIdx, postBuddyInfoReq.getHobby().get(i)};
                 this.jdbcTemplate.update(savePreferenceQeury, savePreferenceParams);
             }
-            for (int i = 0; i < postInfoReq.getWanttodo().size(); i++) {
+            for (int i = 0; i < postBuddyInfoReq.getWanttodo().size(); i++) {
                 String savePreferenceQeury = "INSERT INTO wanttodoInfo_b (buddyIdx, `no`) values (?, ?)";
-                Object[] savePreferenceParams = new Object[]{buddyIdx, postInfoReq.getWanttodo().get(i)};
+                Object[] savePreferenceParams = new Object[]{buddyIdx, postBuddyInfoReq.getWanttodo().get(i)};
                 this.jdbcTemplate.update(savePreferenceQeury, savePreferenceParams);
             }
             String saveMajorSexQuery = "UPDATE buddy SET sex = ?, major = ?, continent = ? WHERE buddyIdx = ?";
-            Object[] saveMajorSexParams = new Object[]{postInfoReq.getSex(), postInfoReq.getMajor(), postInfoReq.getContinent(), buddyIdx};
+            Object[] saveMajorSexParams = new Object[]{postBuddyInfoReq.getSex(), postBuddyInfoReq.getMajor(), postBuddyInfoReq.getContinent(), buddyIdx};
             this.jdbcTemplate.update(saveMajorSexQuery, saveMajorSexParams);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
