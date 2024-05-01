@@ -12,7 +12,12 @@ public class Buddy {
     private String name;
     private String ID;
     private String password;
-    private int certified;
+    private String studentId;
     private String profileImg;
+    private int major;
+    private int sex;
+    private int continent;
+    private int motherTongue;
+    private int certified;
     private int state;
 }

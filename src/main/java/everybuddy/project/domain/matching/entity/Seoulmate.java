@@ -13,9 +13,9 @@ public class Seoulmate {
     private String ID;
     private String password;
     private String studentId;
-    private int sex;
-    private int major;
-    private int certified;
     private String profileImg;
+    private int major;
+    private int sex;
+    private int certified;
     private int state;
 }

@@ -90,15 +90,15 @@ public class MatchingDao {
                             rs.getString("ID"),
                             rs.getString("password"),
                             rs.getString("studentId"),
-                            rs.getInt("sex"),
-                            rs.getInt("major"),
-                            rs.getInt("certified"),
                             rs.getString("profileImg"),
+                            rs.getInt("major"),
+                            rs.getInt("sex"),
+                            rs.getInt("certified"),
                             rs.getInt("state")
                     ),
                     seoulmateIdx);
-            String getBuddiesQuery = "SELECT w.buddyIdx, w.name, w.ID, w.studentId, w.sex, w.major, w.continent,w.certified, w.profileImg, w.state FROM " +
-                    "(SELECT s.seoulmateIdx, b.buddyIdx, b.name, b.ID, b.studentId, b.sex, b.major, b.continent, b.certified, b.profileImg, b.state FROM buddy AS b " +
+            String getBuddiesQuery = "SELECT w.buddyIdx, w.name, w.ID, w.password, w.studentId, w.profileImg, w.major, w.sex, w.continent, w. motherTongue, w.certified, w.state FROM " +
+                    "(SELECT s.seoulmateIdx, b.buddyIdx, b.name, b.ID, b.password, b.studentId, b.profileImg, b.major, b.sex, b.continent, b. motherTongue, b.certified, b.state FROM buddy AS b " +
                     "INNER JOIN matching AS m ON b.buddyIdx=m.buddyIdx INNER JOIN seoulmate AS s ON m.seoulmateIdx=s.seoulmateIdx) w WHERE seoulmateIdx=?";
             List<Buddy> buddies = this.jdbcTemplate.query(
                     getBuddiesQuery,
@@ -106,12 +106,14 @@ public class MatchingDao {
                             rs.getInt("buddyIdx"),
                             rs.getString("name"),
                             rs.getString("ID"),
+                            rs.getString("password"),
                             rs.getString("studentId"),
-                            rs.getInt("sex"),
-                            rs.getInt("major"),
-                            rs.getString("continent"),
-                            rs.getInt("certified"),
                             rs.getString("profileImg"),
+                            rs.getInt("major"),
+                            rs.getInt("sex"),
+                            rs.getInt("continent"),
+                            rs.getInt("motherTongue"),
+                            rs.getInt("certified"),
                             rs.getInt("state")
                     ),
                     seoulmateIdx);

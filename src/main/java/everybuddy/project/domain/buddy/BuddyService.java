@@ -35,10 +35,11 @@ public class BuddyService {
         }
     }
 
-    public PostPreferRes saveBuddyPreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException{
+    public String saveBuddyPreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException{
         try {
-            int preferrankIdx = buddyDao.saveBuddyPreference(postPreferReq, buddyIdx);
-            return new PostPreferRes(preferrankIdx);
+            buddyDao.saveBuddyPreference(postPreferReq, buddyIdx);
+            String result = "요청에 성공했습니다.";
+            return result;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

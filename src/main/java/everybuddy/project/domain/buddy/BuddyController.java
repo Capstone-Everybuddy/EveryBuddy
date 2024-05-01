@@ -49,10 +49,10 @@ public class BuddyController {
     @ResponseBody
     @PostMapping("/preference/{buddyIdx}")
     @Operation(summary = "버디 선호도 반영 API", description = "버디 선호도반영 API")
-    public BaseResponse<PostPreferRes> saveBuddyPreference(@RequestBody PostPreferReq postPreferReq, @PathVariable int buddyIdx) {
+    public BaseResponse<String> saveBuddyPreference(@RequestBody PostPreferReq postPreferReq, @PathVariable int buddyIdx) {
         try {
-            PostPreferRes postPreferRes = buddyService.saveBuddyPreference(postPreferReq, buddyIdx);
-            return new BaseResponse<>(postPreferRes);
+            String result = buddyService.saveBuddyPreference(postPreferReq, buddyIdx);
+            return new BaseResponse<>(result);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }

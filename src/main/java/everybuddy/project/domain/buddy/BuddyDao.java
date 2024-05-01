@@ -33,7 +33,7 @@ public class BuddyDao {
 
     public Buddy getPwd(PostLoginReq postLoginReq) throws BaseException {
         try {
-            String getPwdQuery = "SELECT buddyIdx, `name`, ID, password, certified, profileImg, state FROM buddy WHERE ID = ?";
+            String getPwdQuery = "SELECT buddyIdx, `name`, ID, password, studentId, profileImg, major, sex, continent, motherTongue, certified, `state` FROM buddy WHERE ID = ?";
             String getPwdParams = postLoginReq.getID();
             return this.jdbcTemplate.queryForObject(getPwdQuery,
                     (rs, rowNum) -> new Buddy(
@@ -41,8 +41,13 @@ public class BuddyDao {
                             rs.getString("name"),
                             rs.getString("ID"),
                             rs.getString("password"),
-                            rs.getInt("certified"),
+                            rs.getString("studentId"),
                             rs.getString("profileImg"),
+                            rs.getInt("major"),
+                            rs.getInt("sex"),
+                            rs.getInt("continent"),
+                            rs.getInt("motherTongue"),
+                            rs.getInt("certified"),
                             rs.getInt("state")
                     ),
                     getPwdParams);
@@ -51,7 +56,7 @@ public class BuddyDao {
         }
     }
 
-    public int saveBuddyPreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException {
+    public void saveBuddyPreference(PostPreferReq postPreferReq, int buddyIdx) throws BaseException {
         try {
             List<String> queries = Arrays.asList(
                     "DELETE FROM preferrank_b WHERE buddyIdx = ?",
@@ -60,8 +65,7 @@ public class BuddyDao {
                     "DELETE FROM wanttodo_b WHERE buddyIdx = ?",
                     "DELETE FROM hobby_b WHERE buddyIdx = ?",
                     "DELETE FROM sex_b WHERE buddyIdx = ?",
-                    "DELETE FROM major_b WHERE buddyIdx = ?",
-                    "DELETE FROM continent_b WHERE buddyIdx = ?"
+                    "DELETE FROM major_b WHERE buddyIdx = ?"
             );
             for (String query : queries) {
                 this.jdbcTemplate.update(query, buddyIdx);
@@ -70,8 +74,6 @@ public class BuddyDao {
             Object[] savePreferrankParams = new Object[]{buddyIdx, postPreferReq.getFirst(), postPreferReq.getSecond(), postPreferReq.getThird(), postPreferReq.getFourth(),
                     postPreferReq.getFifth(), postPreferReq.getSixth()};
             this.jdbcTemplate.update(savePreferrankQeury, savePreferrankParams);
-            String selectlastIdx = "select last_insert_id()";
-            int result = this.jdbcTemplate.queryForObject(selectlastIdx, int.class);
             for (int i = 0; i < postPreferReq.getFirstList().size(); i++) {
                 String savePreferenceQeury = "INSERT INTO "+ postPreferReq.getFirst() +"_b (buddyIdx, `no`) values (?, ?)";
                 Object[] savePreferenceParams = new Object[]{buddyIdx, postPreferReq.getFirstList().get(i)};
@@ -102,7 +104,6 @@ public class BuddyDao {
                 Object[] savePreferenceParams = new Object[]{buddyIdx, postPreferReq.getSixthList().get(i)};
                 this.jdbcTemplate.update(savePreferenceQeury, savePreferenceParams);
             }
-            return result;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -147,8 +148,6 @@ public class BuddyDao {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-
-
     public BuddyProfile getBuddyProfile(String buddyId) {
         String profileQuery = "SELECT buddyIdx, `name`, ID, password, studentId, continent, profileImg FROM buddy WHERE ID = ?";
         return this.jdbcTemplate.queryForObject(profileQuery,
