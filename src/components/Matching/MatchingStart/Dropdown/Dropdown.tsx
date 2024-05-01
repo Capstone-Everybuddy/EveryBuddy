@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Styled from './Dropdown.styled';
-import { MatchingInfoKeys, preferenceOptions } from 'data/matching';
+import { MatchingInfoKeys, getPreferenceOptions } from 'data/matching';
 
 interface DropdownProps {
-  options: typeof preferenceOptions;
+  options: ReturnType<typeof getPreferenceOptions>;
   currentValue: MatchingInfoKeys;
   handleCurrentValue: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }

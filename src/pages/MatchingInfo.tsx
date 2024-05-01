@@ -7,7 +7,7 @@ import Dropdown from 'components/Matching/MatchingStart/Dropdown/Dropdown';
 import Modal from 'components/Modal';
 import {
   MatchingInfoKeys,
-  preferenceOptions,
+  getPreferenceOptions,
   preferenceOptionsList,
 } from 'data/matching';
 import { useLocation } from 'react-router-dom';
@@ -31,11 +31,11 @@ const maxOrderValues = {
 };
 
 const convertToPreferenceFormat = (
-  options: typeof preferenceOptions,
+  options: ReturnType<typeof getPreferenceOptions>,
   lists: typeof preferenceOptionsList,
-  role: number,
+  role: Role,
 ) => {
-  const preferenceFormat = {
+  const preferenceFormat: { [key: string]: string } = {
     first:
       Object.keys(options).find(
         (key) => options[key as MatchingInfoKeys] === 1,
@@ -60,11 +60,14 @@ const convertToPreferenceFormat = (
       Object.keys(options).find(
         (key) => options[key as MatchingInfoKeys] === 6,
       ) || '',
-    seventh:
+  };
+
+  if (role === Role.SEOULMATE) {
+    preferenceFormat.seventh =
       Object.keys(options).find(
         (key) => options[key as MatchingInfoKeys] === 7,
-      ) || '',
-  };
+      ) || '';
+  }
 
   return Object.keys(preferenceFormat).reduce(
     (acc, key) => {
@@ -98,6 +101,7 @@ const convertToInfoFormat = (
   } else {
     const modifedBuddy = {
       ...lists,
+      continent: lists.continent[0],
       major: lists.major[0],
       sex: lists.sex[0],
     };
@@ -106,13 +110,9 @@ const convertToInfoFormat = (
 };
 
 const MatchingInfo = () => {
-  const [order, setOrder] = useState(1);
-  const [rankingOptions, setRankingOptions] = useState(preferenceOptions);
-  const [currentValue, setCurrentValue] =
-    useState<MatchingInfoKeys>('language');
-  const [lists, setLists] = useState(preferenceOptionsList);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [showModal, setShowModal] = useState(false);
+  // role
+  let role: Role = Role.SEOULMATE;
+  role = Role.BUDDY;
 
   // api
   const { savePreferenceSeoulmate, saveInfoSeoulmate } = useSeoulmate();
@@ -122,8 +122,15 @@ const MatchingInfo = () => {
   const location = useLocation();
   const enterType: 'preference' | 'information' = location.state;
 
-  // role
-  const role = Role.BUDDY;
+  const [order, setOrder] = useState(1);
+  const [rankingOptions, setRankingOptions] = useState(
+    getPreferenceOptions(role, enterType),
+  );
+  const [currentValue, setCurrentValue] =
+    useState<MatchingInfoKeys>('language');
+  const [lists, setLists] = useState(preferenceOptionsList);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const maxOrder = maxOrderValues[role][enterType];
 
@@ -165,7 +172,7 @@ const MatchingInfo = () => {
       const updatedOptions = { ...prev };
       Object.keys(updatedOptions).forEach((key) => {
         const tempKey = key as MatchingInfoKeys;
-        if (updatedOptions[tempKey] >= order - 1) {
+        if ((updatedOptions[tempKey] as number) >= order - 1) {
           updatedOptions[tempKey] = 0;
         }
       });
@@ -177,15 +184,29 @@ const MatchingInfo = () => {
 
   const submitCompleted = () => {
     if (enterType === 'information') {
-      saveInfoSeoulmate({
-        seoulmateIdx: 1, //TODO: 임시로 idx 넣음
-        data: convertToInfoFormat(lists, role),
-      });
+      if (role === Role.SEOULMATE)
+        saveInfoSeoulmate({
+          seoulmateIdx: 1, //TODO: 임시로 idx 넣음
+          data: convertToInfoFormat(lists, role),
+        });
+      else if (role === Role.BUDDY)
+        saveInfoBuddy({
+          buddyIdx: 2,
+          data: convertToInfoFormat(lists, role),
+        });
     } else if (enterType === 'preference') {
-      savePreferenceSeoulmate({
-        seoulmateIdx: 1, //TODO: 임시로 idx 넣음
-        data: convertToPreferenceFormat(rankingOptions, lists, role),
-      });
+      if (role === Role.SEOULMATE)
+        savePreferenceSeoulmate({
+          seoulmateIdx: 1, //TODO: 임시로 idx 넣음
+          data: convertToPreferenceFormat(rankingOptions, lists, role),
+        });
+      else if (role === Role.BUDDY) {
+        savePreferenceBuddy({
+          buddyIdx: 2,
+          data: convertToPreferenceFormat(rankingOptions, lists, role),
+        });
+        console.log(convertToPreferenceFormat(rankingOptions, lists, role));
+      }
     }
   };
 
@@ -221,7 +242,6 @@ const MatchingInfo = () => {
         return acc;
       }, preferenceOptionsList),
     }));
-    console.log(lists);
   }, [currentValue]);
   return (
     <Wrapper>
