@@ -13,11 +13,26 @@ import {
 import { useLocation } from 'react-router-dom';
 import useSeoulmates from 'hooks/useSeoulmates';
 
-const maxOrder = Object.keys(preferenceOptions).length;
+enum Role {
+  SEOULMATE,
+  BUDDY,
+}
+
+const maxOrderValues = {
+  [Role.SEOULMATE]: {
+    preference: 7,
+    information: 6,
+  },
+  [Role.BUDDY]: {
+    preference: 6,
+    information: 7,
+  },
+};
 
 const convertToPreferenceFormat = (
   options: typeof preferenceOptions,
   lists: typeof preferenceOptionsList,
+  role: number,
 ) => {
   const preferenceFormat = {
     first:
@@ -65,6 +80,30 @@ const convertToPreferenceFormat = (
   );
 };
 
+const convertToInfoFormat = (
+  lists: typeof preferenceOptionsList,
+  role: number,
+) => {
+  if (role === Role.SEOULMATE) {
+    const modifiedSeoulmate = {
+      language: lists.language,
+      personality: lists.personality,
+      hobby: lists.hobby,
+      wanttodo: lists.wanttodo,
+      major: lists.major[0],
+      sex: lists.sex[0],
+    };
+    return modifiedSeoulmate;
+  } else {
+    const modifedBuddy = {
+      ...lists,
+      major: lists.major[0],
+      sex: lists.sex[0],
+    };
+    return modifedBuddy;
+  }
+};
+
 const MatchingInfo = () => {
   const [order, setOrder] = useState(1);
   const [rankingOptions, setRankingOptions] = useState(preferenceOptions);
@@ -73,10 +112,19 @@ const MatchingInfo = () => {
   const [lists, setLists] = useState(preferenceOptionsList);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const { savePreferenceSeoulmates } = useSeoulmates();
 
+  // api
+  const { savePreferenceSeoulmates, saveInfoSeoulmates } = useSeoulmates();
+
+  // preference OR information
   const location = useLocation();
-  const enterType = location.state;
+  const enterType: 'preference' | 'information' = location.state;
+
+  // role
+  const role = Role.BUDDY;
+
+  const maxOrder = maxOrderValues[role][enterType];
+
   const handleOptions = (key: MatchingInfoKeys) => {
     setRankingOptions((prev) => {
       const updatedOptions = { ...prev };
@@ -126,13 +174,16 @@ const MatchingInfo = () => {
   };
 
   const submitCompleted = () => {
-    if (enterType === 'information') console.log(lists);
-    else if (enterType === 'preference') {
+    if (enterType === 'information') {
+      saveInfoSeoulmates({
+        seoulmateIdx: 1, //TODO: 임시로 idx 넣음
+        data: convertToInfoFormat(lists, role),
+      });
+    } else if (enterType === 'preference') {
       savePreferenceSeoulmates({
         seoulmateIdx: 1, //TODO: 임시로 idx 넣음
-        data: convertToPreferenceFormat(rankingOptions, lists),
+        data: convertToPreferenceFormat(rankingOptions, lists, role),
       });
-      console.log(convertToPreferenceFormat(rankingOptions, lists));
     }
   };
 
