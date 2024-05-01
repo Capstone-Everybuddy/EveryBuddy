@@ -26,7 +26,7 @@ const maxOrderValues = {
   },
   [Role.BUDDY]: {
     preference: 6,
-    information: 7,
+    information: 8,
   },
 };
 
@@ -101,6 +101,7 @@ const convertToInfoFormat = (
   } else {
     const modifedBuddy = {
       ...lists,
+      motherTongue: lists.motherTongue[0],
       continent: lists.continent[0],
       major: lists.major[0],
       sex: lists.sex[0],
