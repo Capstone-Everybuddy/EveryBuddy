@@ -7,19 +7,35 @@ import Dropdown from 'components/Matching/MatchingStart/Dropdown/Dropdown';
 import Modal from 'components/Modal';
 import {
   MatchingInfoKeys,
-  preferenceOptions,
+  getPreferenceOptions,
   preferenceOptionsList,
 } from 'data/matching';
 import { useLocation } from 'react-router-dom';
-import useSeoulmates from 'hooks/useSeoulmates';
+import useSeoulmate from 'hooks/useSeoulmate';
+import useBuddy from 'hooks/useBuddy';
 
-const maxOrder = Object.keys(preferenceOptions).length;
+enum Role {
+  SEOULMATE,
+  BUDDY,
+}
+
+const maxOrderValues = {
+  [Role.SEOULMATE]: {
+    preference: 7,
+    information: 6,
+  },
+  [Role.BUDDY]: {
+    preference: 6,
+    information: 8,
+  },
+};
 
 const convertToPreferenceFormat = (
-  options: typeof preferenceOptions,
+  options: ReturnType<typeof getPreferenceOptions>,
   lists: typeof preferenceOptionsList,
+  role: Role,
 ) => {
-  const preferenceFormat = {
+  const preferenceFormat: { [key: string]: string } = {
     first:
       Object.keys(options).find(
         (key) => options[key as MatchingInfoKeys] === 1,
@@ -44,11 +60,14 @@ const convertToPreferenceFormat = (
       Object.keys(options).find(
         (key) => options[key as MatchingInfoKeys] === 6,
       ) || '',
-    seventh:
+  };
+
+  if (role === Role.SEOULMATE) {
+    preferenceFormat.seventh =
       Object.keys(options).find(
         (key) => options[key as MatchingInfoKeys] === 7,
-      ) || '',
-  };
+      ) || '';
+  }
 
   return Object.keys(preferenceFormat).reduce(
     (acc, key) => {
@@ -65,18 +84,57 @@ const convertToPreferenceFormat = (
   );
 };
 
+const convertToInfoFormat = (
+  lists: typeof preferenceOptionsList,
+  role: number,
+) => {
+  if (role === Role.SEOULMATE) {
+    const modifiedSeoulmate = {
+      language: lists.language,
+      personality: lists.personality,
+      hobby: lists.hobby,
+      wanttodo: lists.wanttodo,
+      major: lists.major[0],
+      sex: lists.sex[0],
+    };
+    return modifiedSeoulmate;
+  } else {
+    const modifedBuddy = {
+      ...lists,
+      motherTongue: lists.motherTongue[0],
+      continent: lists.continent[0],
+      major: lists.major[0],
+      sex: lists.sex[0],
+    };
+    return modifedBuddy;
+  }
+};
+
 const MatchingInfo = () => {
+  // role
+  let role: Role = Role.SEOULMATE;
+  role = Role.BUDDY;
+
+  // api
+  const { savePreferenceSeoulmate, saveInfoSeoulmate } = useSeoulmate();
+  const { savePreferenceBuddy, saveInfoBuddy } = useBuddy();
+
+  // preference OR information
+  const location = useLocation();
+  const enterType: 'preference' | 'information' = location.state;
+
   const [order, setOrder] = useState(1);
-  const [rankingOptions, setRankingOptions] = useState(preferenceOptions);
+  const [rankingOptions, setRankingOptions] = useState(
+    getPreferenceOptions(role, enterType),
+  );
   const [currentValue, setCurrentValue] =
     useState<MatchingInfoKeys>('language');
   const [lists, setLists] = useState(preferenceOptionsList);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const { savePreferenceSeoulmates } = useSeoulmates();
 
-  const location = useLocation();
-  const enterType = location.state;
+  const maxOrder = maxOrderValues[role][enterType];
+
   const handleOptions = (key: MatchingInfoKeys) => {
     setRankingOptions((prev) => {
       const updatedOptions = { ...prev };
@@ -115,7 +173,7 @@ const MatchingInfo = () => {
       const updatedOptions = { ...prev };
       Object.keys(updatedOptions).forEach((key) => {
         const tempKey = key as MatchingInfoKeys;
-        if (updatedOptions[tempKey] >= order - 1) {
+        if ((updatedOptions[tempKey] as number) >= order - 1) {
           updatedOptions[tempKey] = 0;
         }
       });
@@ -126,13 +184,30 @@ const MatchingInfo = () => {
   };
 
   const submitCompleted = () => {
-    if (enterType === 'information') console.log(lists);
-    else if (enterType === 'preference') {
-      savePreferenceSeoulmates({
-        seoulmateIdx: 1, //TODO: 임시로 idx 넣음
-        data: convertToPreferenceFormat(rankingOptions, lists),
-      });
-      console.log(convertToPreferenceFormat(rankingOptions, lists));
+    if (enterType === 'information') {
+      if (role === Role.SEOULMATE)
+        saveInfoSeoulmate({
+          seoulmateIdx: 1, //TODO: 임시로 idx 넣음
+          data: convertToInfoFormat(lists, role),
+        });
+      else if (role === Role.BUDDY)
+        saveInfoBuddy({
+          buddyIdx: 2,
+          data: convertToInfoFormat(lists, role),
+        });
+    } else if (enterType === 'preference') {
+      if (role === Role.SEOULMATE)
+        savePreferenceSeoulmate({
+          seoulmateIdx: 1, //TODO: 임시로 idx 넣음
+          data: convertToPreferenceFormat(rankingOptions, lists, role),
+        });
+      else if (role === Role.BUDDY) {
+        savePreferenceBuddy({
+          buddyIdx: 2,
+          data: convertToPreferenceFormat(rankingOptions, lists, role),
+        });
+        console.log(convertToPreferenceFormat(rankingOptions, lists, role));
+      }
     }
   };
 
@@ -168,7 +243,6 @@ const MatchingInfo = () => {
         return acc;
       }, preferenceOptionsList),
     }));
-    console.log(lists);
   }, [currentValue]);
   return (
     <Wrapper>

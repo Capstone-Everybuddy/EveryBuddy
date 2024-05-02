@@ -1,5 +1,5 @@
 export const matchingInfo = {
-  language: ['Korean', 'English', 'Chinese', 'Japanese', 'French', 'Spanish'],
+  language: ['English', 'Chinese', 'Japanese', 'French', 'Spanish'],
   personality: [
     'Calm',
     'Active',
@@ -42,20 +42,48 @@ export const matchingInfo = {
     'Free Convergence (자유융합대학)',
   ],
   continent: ['Asia'],
+  motherTongue: ['English', 'Chinese', 'Japanese', 'French', 'Spanish'],
 };
 
 export type MatchingInfoKeys = keyof typeof matchingInfo;
 
+enum Role {
+  SEOULMATE,
+  BUDDY,
+}
 // 각 선호 항목의 순위를 위한 객체
 // 서울메이트와 버디에 따라 달라야함 우선 버디기준으로 (continent 추가)!
-export const preferenceOptions = {
-  language: 0,
-  personality: 0,
-  hobby: 0,
-  wanttodo: 0,
-  sex: 0,
-  major: 0,
-  continent: 0,
+export const getPreferenceOptions = (role: Role, enterType: string) => {
+  if (role === Role.SEOULMATE && enterType === 'preference')
+    return {
+      language: 0,
+      personality: 0,
+      hobby: 0,
+      wanttodo: 0,
+      sex: 0,
+      major: 0,
+      continent: 0,
+    };
+  else if (role === Role.BUDDY && enterType === 'information')
+    return {
+      language: 0,
+      personality: 0,
+      hobby: 0,
+      wanttodo: 0,
+      sex: 0,
+      major: 0,
+      continent: 0,
+      motherTongue: 0,
+    };
+  else
+    return {
+      language: 0,
+      personality: 0,
+      hobby: 0,
+      wanttodo: 0,
+      sex: 0,
+      major: 0,
+    };
 };
 
 export const preferenceOptionsList = {
@@ -66,6 +94,7 @@ export const preferenceOptionsList = {
   sex: [] as number[],
   major: [] as number[],
   continent: [] as number[],
+  motherTongue: [] as number[],
 };
 
 // language ⇒ 1)Korean, 2)English, 3)Chinese, 4)Japanese, 5)French, 6)Spanish

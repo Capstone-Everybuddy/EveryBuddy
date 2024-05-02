@@ -50,6 +50,8 @@ const getMainText = (
         return 'Please select your major.';
       case 'continent':
         return '문구 모르겟음...';
+      case 'motherTongue':
+        return 'Please select your native language.';
       default:
         return null;
     }

@@ -9,12 +9,39 @@
  * ---------------------------------------------------------------
  */
 
+export interface ModifyProfileReq {
+  name?: string;
+  password?: string;
+  studentId?: string;
+  /** @format int32 */
+  sex?: number;
+  major?: string;
+  profileImg?: string;
+  id?: string;
+}
+
+export interface BaseResponseString {
+  isSuccess?: boolean;
+  /** @format int32 */
+  code?: number;
+  message?: string;
+  result?: string;
+}
+
 export interface PostSeoulmateReq {
   name?: string;
   password1?: string;
   password2?: string;
   profileImg?: string;
   id?: string;
+}
+
+export interface BaseResponsePostSeoulmateRes {
+  isSuccess?: boolean;
+  /** @format int32 */
+  code?: number;
+  message?: string;
+  result?: PostSeoulmateRes;
 }
 
 export interface PostSeoulmateRes {
@@ -37,19 +64,6 @@ export interface PostPreferReq {
   sixthList?: number[];
   seventh?: string;
   seventhList?: number[];
-}
-
-export interface BaseResponsePostPreferRes {
-  isSuccess?: boolean;
-  /** @format int32 */
-  code?: number;
-  message?: string;
-  result?: PostPreferRes;
-}
-
-export interface PostPreferRes {
-  /** @format int32 */
-  preferenceIdx?: number;
 }
 
 export interface PostLoginReq {
@@ -82,14 +96,6 @@ export interface PostInfoReq {
   major?: number;
 }
 
-export interface BaseResponseString {
-  isSuccess?: boolean;
-  /** @format int32 */
-  code?: number;
-  message?: string;
-  result?: string;
-}
-
 export interface Matching {
   /** @format int32 */
   seoulmateIdx?: number;
@@ -115,6 +121,34 @@ export interface BaseResponsePostBuddyRes {
 export interface PostBuddyRes {
   /** @format int32 */
   preferenceIdx?: number;
+}
+
+export interface BaseResponsePostPreferRes {
+  isSuccess?: boolean;
+  /** @format int32 */
+  code?: number;
+  message?: string;
+  result?: PostPreferRes;
+}
+
+export interface PostPreferRes {
+  /** @format int32 */
+  preferenceIdx?: number;
+}
+
+export interface PostBuddyInfoReq {
+  language?: number[];
+  personality?: number[];
+  hobby?: number[];
+  wanttodo?: number[];
+  /** @format int32 */
+  sex?: number;
+  /** @format int32 */
+  major?: number;
+  /** @format int32 */
+  continent?: number;
+  /** @format int32 */
+  motherTongue?: number;
 }
 
 export interface GetSeoulmateProfileRes {
@@ -410,23 +444,40 @@ export class Api<
 > extends HttpClient<SecurityDataType> {
   seoulmates = {
     /**
-     * @description 서울메이트 회원가입 API
+     * @description 서울메이트 프로필을 수정하는 API
+     *
+     * @tags seoulmate-controller
+     * @name ModifySeoulmateProfile
+     * @summary 서울메이트 프로필 수정 API
+     * @request PUT:/seoulmates/modify/{seoulmateId}
+     */
+    modifySeoulmateProfile: (
+      seoulmateId: string,
+      data: ModifyProfileReq,
+      params: RequestParams = {},
+    ) =>
+      this.request<BaseResponseString, any>({
+        path: `/seoulmates/modify/${seoulmateId}`,
+        method: 'PUT',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description 서울메이트 회원가입 API swagger 대문자 반영이 안됩니다! id(x) -> ID(o) !!
      *
      * @tags seoulmate-controller
      * @name CreateSeoulmate
      * @summary 서울메이트 sign-up API
      * @request POST:/seoulmates/sign-up
      */
-    createSeoulmate: (
-      query: {
-        postSeoulmateReq: PostSeoulmateReq;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<PostSeoulmateRes, any>({
+    createSeoulmate: (data: PostSeoulmateReq, params: RequestParams = {}) =>
+      this.request<BaseResponsePostSeoulmateRes, any>({
         path: `/seoulmates/sign-up`,
         method: 'POST',
-        query: query,
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -442,7 +493,7 @@ export class Api<
       data: PostPreferReq,
       params: RequestParams = {},
     ) =>
-      this.request<BaseResponsePostPreferRes, any>({
+      this.request<BaseResponseString, any>({
         path: `/seoulmates/preference/${seoulmateIdx}`,
         method: 'POST',
         body: data,
@@ -451,22 +502,19 @@ export class Api<
       }),
 
     /**
-     * No description
+     * @description 서울메이트 로그인 API swagger 대문자 반영이 안됩니다! id(x) -> ID(o) !!
      *
      * @tags seoulmate-controller
      * @name LoginSeoulmate
+     * @summary 서울메이트 log-in API
      * @request POST:/seoulmates/log-in
      */
-    loginSeoulmate: (
-      query: {
-        postLoginReq: PostLoginReq;
-      },
-      params: RequestParams = {},
-    ) =>
+    loginSeoulmate: (data: PostLoginReq, params: RequestParams = {}) =>
       this.request<BaseResponsePostLoginRes, any>({
         path: `/seoulmates/log-in`,
         method: 'POST',
-        query: query,
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -501,6 +549,119 @@ export class Api<
     getSeoulmateProfile: (seoulmateId: string, params: RequestParams = {}) =>
       this.request<GetSeoulmateProfileRes, any>({
         path: `/seoulmates/${seoulmateId}`,
+        method: 'GET',
+        ...params,
+      }),
+  };
+  buddies = {
+    /**
+     * @description 버디 프로필을 수정하는 API
+     *
+     * @tags buddy-controller
+     * @name ModifyBuddyProfile
+     * @summary 버디 프로필 수정 API
+     * @request PUT:/buddies/modify/{buddyId}
+     */
+    modifyBuddyProfile: (
+      buddyId: string,
+      data: ModifyProfileReq,
+      params: RequestParams = {},
+    ) =>
+      this.request<BaseResponseString, any>({
+        path: `/buddies/modify/${buddyId}`,
+        method: 'PUT',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description 버디) 회원가입 API
+     *
+     * @tags buddy-controller
+     * @name CreateBuddy
+     * @summary 버디 sign-up API
+     * @request POST:/buddies/sign-up
+     */
+    createBuddy: (data: PostBuddyReq, params: RequestParams = {}) =>
+      this.request<BaseResponsePostBuddyRes, any>({
+        path: `/buddies/sign-up`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description 버디 선호도반영 API
+     *
+     * @tags buddy-controller
+     * @name SaveBuddyPreference
+     * @summary 버디 선호도 반영 API
+     * @request POST:/buddies/preference/{buddyIdx}
+     */
+    saveBuddyPreference: (
+      buddyIdx: number,
+      data: PostPreferReq,
+      params: RequestParams = {},
+    ) =>
+      this.request<BaseResponsePostPreferRes, any>({
+        path: `/buddies/preference/${buddyIdx}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description 버디 로그인 API swagger 대문자 반영이 안됩니다! id(x) -> ID(o) !!
+     *
+     * @tags buddy-controller
+     * @name LoginBuddy
+     * @summary 버디 log-in API
+     * @request POST:/buddies/log-in
+     */
+    loginBuddy: (data: PostLoginReq, params: RequestParams = {}) =>
+      this.request<BaseResponsePostLoginRes, any>({
+        path: `/buddies/log-in`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description 버디 정보 입력 API
+     *
+     * @tags buddy-controller
+     * @name SaveBuddyInfo
+     * @summary 버디 정보 입력 API
+     * @request POST:/buddies/info/{buddyIdx}
+     */
+    saveBuddyInfo: (
+      buddyIdx: number,
+      data: PostBuddyInfoReq,
+      params: RequestParams = {},
+    ) =>
+      this.request<BaseResponseString, any>({
+        path: `/buddies/info/${buddyIdx}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description 버디의 프로필을 조회하는 API
+     *
+     * @tags buddy-controller
+     * @name GetBuddyProfile
+     * @summary 버디 프로필 조회 API
+     * @request GET:/buddies/{buddyId}
+     */
+    getBuddyProfile: (buddyId: string, params: RequestParams = {}) =>
+      this.request<GetBuddyProfileRes, any>({
+        path: `/buddies/${buddyId}`,
         method: 'GET',
         ...params,
       }),
@@ -588,102 +749,13 @@ export class Api<
      *
      * @tags matching-controller
      * @name DeleteMatching
-     * @summary 매칭 상태 조회 API
+     * @summary 매칭 전 상태로 변경 API
      * @request DELETE:/matchings/delete
      */
     deleteMatching: (params: RequestParams = {}) =>
       this.request<BaseResponseString, any>({
         path: `/matchings/delete`,
         method: 'DELETE',
-        ...params,
-      }),
-  };
-  buddies = {
-    /**
-     * @description 버디) 회원가입 API
-     *
-     * @tags buddy-controller
-     * @name CreateBuddy
-     * @summary 버디 sign-up API
-     * @request POST:/buddies/sign-up
-     */
-    createBuddy: (data: PostBuddyReq, params: RequestParams = {}) =>
-      this.request<BaseResponsePostBuddyRes, any>({
-        path: `/buddies/sign-up`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags buddy-controller
-     * @name SavePreference1
-     * @request POST:/buddies/preference/{buddyIdx}
-     */
-    savePreference1: (
-      buddyIdx: number,
-      data: PostPreferReq,
-      params: RequestParams = {},
-    ) =>
-      this.request<BaseResponsePostPreferRes, any>({
-        path: `/buddies/preference/${buddyIdx}`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags buddy-controller
-     * @name LoginBuddy
-     * @request POST:/buddies/log-in
-     */
-    loginBuddy: (data: PostLoginReq, params: RequestParams = {}) =>
-      this.request<BaseResponsePostLoginRes, any>({
-        path: `/buddies/log-in`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags buddy-controller
-     * @name SaveInfo1
-     * @request POST:/buddies/info/{buddyIdx}
-     */
-    saveInfo1: (
-      buddyIdx: number,
-      data: PostInfoReq,
-      params: RequestParams = {},
-    ) =>
-      this.request<BaseResponseString, any>({
-        path: `/buddies/info/${buddyIdx}`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * @description 버디의 프로필을 조회하는 API
-     *
-     * @tags buddy-controller
-     * @name GetBuddyProfile
-     * @summary 버디 프로필 조회 API
-     * @request GET:/buddies/{buddyId}
-     */
-    getBuddyProfile: (buddyId: string, params: RequestParams = {}) =>
-      this.request<GetBuddyProfileRes, any>({
-        path: `/buddies/${buddyId}`,
-        method: 'GET',
         ...params,
       }),
   };
