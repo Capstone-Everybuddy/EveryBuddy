@@ -155,7 +155,7 @@ public class SeoulmateDao {
         }
     }
     public SeoulmateProfile getSeoulmateProfile(String seoulmateId) {
-        String profileQuery = "SELECT seoulmateIdx, name, ID, password, studentId, sex, major, profileImg FROM seoulmate WHERE ID = ?";
+        String profileQuery = "SELECT seoulmateIdx, `name`, ID, password, studentId, sex, major, profileImg FROM seoulmate WHERE ID = ?";
         return this.jdbcTemplate.queryForObject(profileQuery,
                 (rs, rowNum) -> new SeoulmateProfile (
                         rs.getInt("seoulmateIdx"),

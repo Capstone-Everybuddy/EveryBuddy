@@ -1,9 +1,11 @@
+package everybuddy.project.domain.matching;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 public class GaleShapley {
-    static Map<String, Integer> calculateProviderCapacity(Map<String, List<String>> demanders, Set<String> providers) {
+    public static Map<String, Integer> calculateProviderCapacity(Map<String, List<String>> demanders, Set<String> providers) {
         int numDemanders = demanders.size();
         int numProviders = providers.size();
         int baseCapacity = numDemanders / numProviders;
@@ -18,10 +20,22 @@ public class GaleShapley {
         int remainingCapacity = numDemanders - baseCapacity * numProviders;
 
         for (Map.Entry<String, List<String>> entry : demanders.entrySet()) {
+            // null pointer 오류 처리...
             List<String> preferences = entry.getValue();
             for (int i = 0; i < preferences.size(); i++) {
                 String provider = preferences.get(i);
-                preferenceCount.get(provider)[i]++;
+                if (providers.contains(provider)) {
+                    Integer[] counts = preferenceCount.get(provider);
+                    if (counts != null) {
+                        counts[i]++;
+                    } else {
+                        // 오류 처리 또는 로깅
+                        System.out.println("오류: provider '" + provider + "'의 preferenceCount가 null입니다.");
+                    }
+                } else {
+                    // 오류 처리 또는 로깅
+                    System.out.println("오류: provider '" + provider + "'는 providers 집합에 존재하지 않습니다.");
+                }
             }
         }
 
@@ -41,7 +55,7 @@ public class GaleShapley {
         return providerCapacity;
     }
 
-    static Map<String, List<String>> galeShapleyOneToMany(Map<String, List<String>> providers, Map<String, List<String>> demanders, Map<String, Integer> providerCapacity) {
+    public static Map<String, List<String>> galeShapleyOneToMany(Map<String, List<String>> providers, Map<String, List<String>> demanders, Map<String, Integer> providerCapacity) {
         Map<String, List<String>> matches = new HashMap<>();
         Map<String, Deque<String>> proposals = new HashMap<>();
         Set<String> freeDemanders = new HashSet<>(demanders.keySet());
@@ -83,29 +97,5 @@ public class GaleShapley {
 
         return matches;
     }
+}
 
-    public static void main(String[] args) {
-      Map<String, List<String>> providers = new HashMap<>();
-      providers.put("1", Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"));
-      providers.put("2", Arrays.asList("6", "7", "8", "10", "9", "1", "2", "4", "3", "5"));
-      providers.put("3", Arrays.asList("9", "1", "3", "7", "2", "4", "10", "5", "6", "8"));
-  
-      Map<String, List<String>> demanders = new HashMap<>();
-      demanders.put("1", Arrays.asList("3", "1", "2"));
-      demanders.put("2", Arrays.asList("3", "2", "1"));
-      demanders.put("3", Arrays.asList("1", "2", "3"));
-      demanders.put("4", Arrays.asList("1", "3", "2"));
-      demanders.put("5", Arrays.asList("1", "3", "2"));
-      demanders.put("6", Arrays.asList("2", "3", "1"));
-      demanders.put("7", Arrays.asList("1", "2", "3"));
-      demanders.put("8", Arrays.asList("2", "1", "3"));
-      demanders.put("9", Arrays.asList("2", "1", "3"));
-      demanders.put("10", Arrays.asList("1", "2", "3"));
-  
-      Set<String> providersSet = new HashSet<>(providers.keySet());
-      Map<String, Integer> providerCapacity = calculateProviderCapacity(demanders, providersSet);
-  
-      Map<String, List<String>> matches = galeShapleyOneToMany(providers, demanders, providerCapacity);
-      System.out.println("Matches: " + matches);
-  }
-}  

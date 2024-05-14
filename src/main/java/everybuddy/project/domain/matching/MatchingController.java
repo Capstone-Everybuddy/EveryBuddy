@@ -110,4 +110,19 @@ public class MatchingController {
             return new BaseResponse<>(baseException.getStatus());
         }
     }
+
+    @ResponseBody
+    @PostMapping("/start-matching")
+    @Operation(summary = "매칭 시작하기!! API", description="매칭을 \"드디어!\" 시작합니다.")
+    public BaseResponse<String> applyGaleShapley() {
+        try {
+            matchingService.applyGaleShapley();
+            String result = "성공";
+            return new BaseResponse<>(result);
+        } catch (BaseException baseException) {
+            return new BaseResponse<>(baseException.getStatus());
+        }
+
+
+    }
 }

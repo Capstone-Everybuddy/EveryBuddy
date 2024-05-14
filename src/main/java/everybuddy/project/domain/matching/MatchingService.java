@@ -3,9 +3,10 @@ package everybuddy.project.domain.matching;
 import everybuddy.project.domain.matching.dto.*;
 import everybuddy.project.domain.matching.entity.*;
 import everybuddy.project.global.config.BaseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 import static everybuddy.project.global.config.BaseResponseStatus.BEFORE_MATCHING;
 import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR;
@@ -14,7 +15,10 @@ import static everybuddy.project.global.config.BaseResponseStatus.DATABASE_ERROR
 public class MatchingService {
     private final MatchingDao matchingDao;
 
+    // 의존성 주입
+    @Autowired
     public MatchingService(MatchingDao matchingDao) {
+
         this.matchingDao = matchingDao;
     }
 
@@ -74,5 +78,36 @@ public class MatchingService {
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public void print(Map<String, List<String>> somethings) {
+        for (Map.Entry<String, List<String>> entry: somethings.entrySet()) {
+            String s = entry.getKey();
+            List<String> ls = entry.getValue();
+            System.out.print("key: "+s +", value: ");
+            for (int i=0; i<ls.size(); i++) {
+                System.out.print(ls.get(i) +" ");
+            }
+            System.out.println();
+        }
+    }
+    // practice
+    public void applyGaleShapley() throws BaseException {
+        Map<String, List<String>> providers = matchingDao.Providers();
+        Map<String, List<String>> demanders = matchingDao.Demanders();
+        print(providers);
+        print(demanders);
+
+        Set<String> providersSet = new HashSet<>(providers.keySet());
+        Map<String, Integer> providerCapacity = GaleShapley.calculateProviderCapacity(demanders, providersSet);
+        Map<String, List<String>> matches = GaleShapley.galeShapleyOneToMany(providers, demanders, providerCapacity);
+
+        System.out.println("Matches:");
+        for (Map.Entry<String, List<String>> entry : matches.entrySet()) {
+            String demanderIdx = entry.getKey();
+            List<String> providerIdxs = entry.getValue();
+            System.out.println("Demander Index: " + demanderIdx + ", Providers: " + providerIdxs);
+        }
+        matchingDao.saveMatching(matches);
     }
 }
