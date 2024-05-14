@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import MemberProfile from './MemberProfile';
+import { Role } from 'data/matching';
 
 const MatchingCompleteContainer = () => {
   return (
@@ -8,9 +9,9 @@ const MatchingCompleteContainer = () => {
       <MainText>매칭 정보 확인하기</MainText>
       <SubText>나와 매칭된 사람들의 정보를 확인해보세요</SubText>
       <MemberList>
-        <MemberProfile name="이수빈" />
-        <MemberProfile name="이수빈" />
-        <MemberProfile name="이수빈" />
+        <MemberProfile name="이수빈" memberRole={Role.SEOULMATE} />
+        <MemberProfile name="이수빈" memberRole={Role.BUDDY} />
+        <MemberProfile name="이수빈" memberRole={Role.BUDDY} />
       </MemberList>
     </Container>
   );
