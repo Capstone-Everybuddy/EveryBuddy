@@ -47,7 +47,7 @@ export const matchingInfo = {
 
 export type MatchingInfoKeys = keyof typeof matchingInfo;
 
-enum Role {
+export enum Role {
   SEOULMATE,
   BUDDY,
 }

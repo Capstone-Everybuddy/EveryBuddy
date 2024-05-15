@@ -4,28 +4,36 @@ import Layout from 'components/Layout';
 import Header from 'components/Header';
 import Button from 'components/Button';
 import styled from 'styled-components';
+import useMatchingState from 'hooks/useMatchingState';
+import MatchingList from 'components/Matching/MatchingList';
 
 const Admin = () => {
+  const { isMatchingComplete } = useMatchingState();
   return (
     <Main.Wrapper>
       <Layout.PageContent>
         <Header title="Admin" />
-        <Content>
-          <Button
-            text="매칭 시작하기"
-            onClick={() => console.log('매칭 시작하기!!')}
-          />
-        </Content>
+        {!isMatchingComplete ? (
+          <MatchingList />
+        ) : (
+          <ButtonWrapper>
+            <Button
+              text="매칭 시작하기"
+              onClick={() => console.log('매칭 시작하기!!')}
+            />
+          </ButtonWrapper>
+        )}
       </Layout.PageContent>
     </Main.Wrapper>
   );
 };
 
-const Content = styled.div`
-  height: 100%;
+const ButtonWrapper = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 `;
+
 export default Admin;
