@@ -8,7 +8,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class GetBuddyInfo {
-    private String seoulmateIdx;
+    private String buddyIdx;
     private String major;
     private String sex;
     private String continent;

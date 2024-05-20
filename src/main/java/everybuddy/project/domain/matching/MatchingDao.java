@@ -156,7 +156,71 @@ public class MatchingDao {
         }
         return matches;
     }
+
+    // 1: [1,2,3]
+    // 2: [2,1,3]
     public Map<String, List<String>> Providers() {
+        String getSeoulmatePresQuery = "SELECT sm.seoulmateIdx, maj.majors, se.sexs, cont.continents, lang.languages, pers.personalities, hobb.hobbies, want.wanttodos\n" +
+                "FROM seoulmate sm\n" +
+                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS majors FROM major_s GROUP BY seoulmateIdx) maj ON sm.seoulmateIdx = maj.seoulmateIdx\n" +
+                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS sexs FROM sex_s GROUP BY seoulmateIdx) se ON sm.seoulmateIdx = se.seoulmateIdx\n" +
+                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS continents FROM continent_s GROUP BY seoulmateIdx) cont ON sm.seoulmateIdx = se.seoulmateIdx\n" +
+                "        LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS languages FROM language_s GROUP BY seoulmateIdx) lang ON sm.seoulmateIdx = lang.seoulmateIdx\n" +
+                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS personalities FROM personality_s GROUP BY seoulmateIdx) pers ON sm.seoulmateIdx = pers.seoulmateIdx\n" +
+                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS hobbies FROM hobby_s GROUP BY seoulmateIdx) hobb ON sm.seoulmateIdx = hobb.seoulmateIdx\n" +
+                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS wanttodos FROM wanttodo_s GROUP BY seoulmateIdx) want ON sm.seoulmateIdx = want.seoulmateIdx;\n";
+        List<GetSeoulmatePre> seoulmatePres = this.jdbcTemplate.query(getSeoulmatePresQuery, new SeoulmatePreMapper());
+
+        String getBuddyInfosQuery ="SELECT b.buddyIdx, b.major, b.sex, b.continent, lang.languages, pers.personalities, hobb.hobbies, want.wanttodos\n" +
+                "FROM buddy b\n" +
+                "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS languages FROM languageInfo_b GROUP BY buddyIdx) lang ON b.buddyIdx = lang.buddyIdx\n" +
+                "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS personalities FROM personalityInfo_b GROUP BY buddyIdx) pers ON b.buddyIdx = pers.buddyIdx\n" +
+                "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS hobbies FROM hobbyInfo_b GROUP BY buddyIdx) hobb ON b.buddyIdx = hobb.buddyIdx\n" +
+                "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS wanttodos FROM wanttodoInfo_b GROUP BY buddyIdx) want ON b.buddyIdx = want.buddyIdx";
+        List<GetBuddyInfo> buddyInfos = this.jdbcTemplate.query(getBuddyInfosQuery, new BuddyInfoMapper());
+
+        // Calculate
+        Map<String, List<String>> provider = new HashMap<>();
+        for (GetSeoulmatePre seoulmatePre : seoulmatePres) {
+            String seoulmateIdx = seoulmatePre.getSeoulmateIdx();
+            Map<Integer, Double> buddyScores = new HashMap<>();
+
+            for (GetBuddyInfo buddyInfo : buddyInfos) {
+                String buddyIdx = buddyInfo.getBuddyIdx();
+                double score = 0.0;
+
+                // Calculate compatibility
+                score += calculateMatchScore(seoulmatePre.getLanguages(), buddyInfo.getLanguages());
+                score += calculateMatchScore(seoulmatePre.getPersonalities(), buddyInfo.getPersonalities());
+                score += calculateMatchScore(seoulmatePre.getHobbies(), buddyInfo.getHobbies());
+                score += calculateMatchScore(seoulmatePre.getWanttodos(), buddyInfo.getWanttodos());
+
+                // Considering major and sex as single value fields
+                if (seoulmatePre.getMajors().contains(buddyInfo.getMajor())) {
+                    score += 1.0;
+                }
+                if (seoulmatePre.getSexs().contains(buddyInfo.getSex())) {
+                    score += 1.0;
+                }
+
+                buddyScores.put(Integer.parseInt(buddyIdx), score);  // Total score divided by the number of categories
+            }
+            // Sorting buddyScores by values in descending order
+            List<Map.Entry<Integer, Double>> sortedBuddies = new ArrayList<>(buddyScores.entrySet());
+            sortedBuddies.sort(Map.Entry.<Integer, Double>comparingByValue().reversed());
+
+            // // Store sorted results in the main map
+            List<String> sortedBuddy = new ArrayList<>();
+            for (Map.Entry<Integer, Double> entry : sortedBuddies) {
+                sortedBuddy.add(Integer.toString(entry.getKey()));
+            }
+            provider.put(seoulmateIdx, sortedBuddy);
+        }
+
+        return provider;
+    }
+    public Map<String, List<String>> Demanders() {
+
         String getSeoulmateInfosQuery = "SELECT sm.seoulmateIdx, sm.major, sm.sex, lang.languages, pers.personalities, hobb.hobbies, want.wanttodos " +
                 "FROM seoulmate sm " +
                 "LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS languages FROM languageInfo_s GROUP BY seoulmateIdx) lang ON sm.seoulmateIdx = lang.seoulmateIdx " +
@@ -175,105 +239,29 @@ public class MatchingDao {
                 "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS wanttodos FROM wanttodo_b GROUP BY buddyIdx) want ON b.buddyIdx = want.buddyIdx";
         List<GetBuddyPre> buddyPres = jdbcTemplate.query(getBuddyPresQuery, new BuddyPreMapper());
 
+        // buddy 계산
+
         // calculate
-        Map<String, Map<Integer, Double>> rateBuddyBySeoulmate = new HashMap<>();
+        Map<String, List<String>> demander = new HashMap<>();
+        for (GetBuddyPre buddyPre : buddyPres) {
+            String buddyIdx = buddyPre.getBuddyIdx();
+            Map<Integer, Double> seoulmateScores = new HashMap<>();
 
-        // Calculate scores
-        for (GetSeoulmateInfo seoulmateInfo : seoulmateInfos) {
-            String seoulmateIdx = seoulmateInfo.getSeoulmateIdx();
-            Map<Integer, Double> buddyScores = new HashMap<>();
-
-            for (GetBuddyPre buddyPre : buddyPres) {
-                String buddyIdx = buddyPre.getBuddyIdx();
+            for (GetSeoulmateInfo seoulmateInfo : seoulmateInfos) {
+                String seoulmateIdx = seoulmateInfo.getSeoulmateIdx();
                 double score = 0.0;
 
                 // Calculate compatibility
-                score += calculateMatchScore(seoulmateInfo.getLanguages(), buddyPre.getLanguages());
-                score += calculateMatchScore(seoulmateInfo.getPersonalities(), buddyPre.getPersonalities());
-                score += calculateMatchScore(seoulmateInfo.getHobbies(), buddyPre.getHobbies());
-                score += calculateMatchScore(seoulmateInfo.getWanttodos(), buddyPre.getWanttodos());
+                score += calculateMatchScore(buddyPre.getLanguages(), seoulmateInfo.getLanguages());
+                score += calculateMatchScore(buddyPre.getPersonalities(), seoulmateInfo.getPersonalities());
+                score += calculateMatchScore(buddyPre.getHobbies(), seoulmateInfo.getHobbies());
+                score += calculateMatchScore(buddyPre.getWanttodos(), seoulmateInfo.getWanttodos());
 
                 // Considering major and sex as single value fields
                 if (buddyPre.getMajors().contains(seoulmateInfo.getMajor())) {
                     score += 1.0;
                 }
                 if (buddyPre.getSexs().contains(seoulmateInfo.getSex())) {
-                    score += 1.0;
-                }
-
-                buddyScores.put(Integer.parseInt(buddyIdx), score);  // Total score divided by the number of categories
-            }
-            // Sorting buddyScores by values in descending order
-            List<Map.Entry<Integer, Double>> sortedBuddies = new ArrayList<>(buddyScores.entrySet());
-            sortedBuddies.sort(Map.Entry.<Integer, Double>comparingByValue().reversed());
-
-            // // Store sorted results in the main map
-            LinkedHashMap<Integer, Double> sortedMap = new LinkedHashMap<>();
-            for (Map.Entry<Integer, Double> entry : sortedBuddies) {
-                sortedMap.put(entry.getKey(), entry.getValue());
-            }
-
-            rateBuddyBySeoulmate.put(seoulmateIdx, sortedMap);
-        }
-
-        Map<String, List<String>> provider = new HashMap<>();
-        for (String seoulmateIdx : rateBuddyBySeoulmate.keySet()) {
-            // Create a copy of the key set for each seoulmateIdx
-            List<String> buddyIdxsCopy = new ArrayList<>(rateBuddyBySeoulmate.keySet());
-
-//            // Remove the current seoulmateIdx from the buddyIdxsCopy
-            buddyIdxsCopy.remove(seoulmateIdx);
-
-            // Store the buddy indices list in the provider map
-            provider.put(seoulmateIdx, buddyIdxsCopy);
-        }
-
-        return provider;
-    }
-    public Map<String, List<String>> Demanders() {
-        String getBuddyInfosQuery ="SELECT b.buddyIdx, b.major, b.sex, b.continent, lang.languages, pers.personalities, hobb.hobbies, want.wanttodos\n" +
-                "FROM buddy b\n" +
-                "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS languages FROM languageInfo_b GROUP BY buddyIdx) lang ON b.buddyIdx = lang.buddyIdx\n" +
-                "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS personalities FROM personalityInfo_b GROUP BY buddyIdx) pers ON b.buddyIdx = pers.buddyIdx\n" +
-                "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS hobbies FROM hobbyInfo_b GROUP BY buddyIdx) hobb ON b.buddyIdx = hobb.buddyIdx\n" +
-                "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS wanttodos FROM wanttodoInfo_b GROUP BY buddyIdx) want ON b.buddyIdx = want.buddyIdx";
-        List<GetBuddyInfo> buddyInfos = this.jdbcTemplate.query(getBuddyInfosQuery, new BuddyInfoMapper());
-
-        String getSeoulmatePresQuery = "SELECT sm.seoulmateIdx, maj.majors, se.sexs, cont.continents, lang.languages, pers.personalities, hobb.hobbies, want.wanttodos\n" +
-                "FROM seoulmate sm\n" +
-                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS majors FROM major_s GROUP BY seoulmateIdx) maj ON sm.seoulmateIdx = maj.seoulmateIdx\n" +
-                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS sexs FROM sex_s GROUP BY seoulmateIdx) se ON sm.seoulmateIdx = se.seoulmateIdx\n" +
-                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS continents FROM continent_s GROUP BY seoulmateIdx) cont ON sm.seoulmateIdx = se.seoulmateIdx\n" +
-                "        LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS languages FROM language_s GROUP BY seoulmateIdx) lang ON sm.seoulmateIdx = lang.seoulmateIdx\n" +
-                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS personalities FROM personality_s GROUP BY seoulmateIdx) pers ON sm.seoulmateIdx = pers.seoulmateIdx\n" +
-                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS hobbies FROM hobby_s GROUP BY seoulmateIdx) hobb ON sm.seoulmateIdx = hobb.seoulmateIdx\n" +
-                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS wanttodos FROM wanttodo_s GROUP BY seoulmateIdx) want ON sm.seoulmateIdx = want.seoulmateIdx;\n";
-        List<GetSeoulmatePre> seoulmatePres = this.jdbcTemplate.query(getSeoulmatePresQuery, new SeoulmatePreMapper());
-        // buddy 계산
-
-        // calculate
-        Map<String, Map<Integer, Double>> rateSeoulmateByBuddy = new HashMap<>();
-
-        // Calculate scores
-        for (GetBuddyInfo buddyInfo : buddyInfos) {
-            String buddyIdx = buddyInfo.getSeoulmateIdx();
-            Map<Integer, Double> seoulmateScores = new HashMap<>();
-
-            for (GetSeoulmatePre seoulmatePre : seoulmatePres) {
-                String seoulmateIdx = seoulmatePre.getSeoulmateIdx();
-                double score = 0.0;
-
-                // Calculate compatibility
-                score += calculateMatchScore(buddyInfo.getLanguages(), seoulmatePre.getLanguages());
-                score += calculateMatchScore(buddyInfo.getPersonalities(), seoulmatePre.getPersonalities());
-                score += calculateMatchScore(buddyInfo.getHobbies(), seoulmatePre.getHobbies());
-                score += calculateMatchScore(buddyInfo.getWanttodos(), seoulmatePre.getWanttodos());
-
-                // Considering major and sex as single value fields
-                if (seoulmatePre.getMajors().contains(buddyInfo.getMajor())) {
-                    score += 1.0;
-                }
-                if (seoulmatePre.getSexs().contains(buddyInfo.getSex())) {
                     score += 1.0;
                 }
 
@@ -284,24 +272,11 @@ public class MatchingDao {
             sortedSeoulmates.sort(Map.Entry.<Integer, Double>comparingByValue().reversed());
 
             // // Store sorted results in the main map
-            LinkedHashMap<Integer, Double> sortedMap = new LinkedHashMap<>();
+            List<String> sortedSeoulmate = new ArrayList<>();
             for (Map.Entry<Integer, Double> entry : sortedSeoulmates) {
-                sortedMap.put(entry.getKey(), entry.getValue());
+                sortedSeoulmate.add(Integer.toString(entry.getKey()));
             }
-
-            rateSeoulmateByBuddy.put(buddyIdx, sortedMap);
-        }
-
-        Map<String, List<String>> demander = new HashMap<>();
-        for (String buddyIdx : rateSeoulmateByBuddy.keySet()) {
-            // Create a copy of the key set for each seoulmateIdx
-            List<String> seoulmateIdxsCopy = new ArrayList<>(rateSeoulmateByBuddy.keySet());
-
-//            // Remove the current seoulmateIdx from the buddyIdxsCopy
-            seoulmateIdxsCopy.remove(buddyIdx);
-
-            // Store the buddy indices list in the provider map
-            demander.put(buddyIdx, seoulmateIdxsCopy);
+            demander.put(buddyIdx, sortedSeoulmate);
         }
         return demander;
     }
