@@ -242,11 +242,16 @@ public class MatchingDao {
             sortedBuddies.sort(Map.Entry.<Integer, Double>comparingByValue().reversed());
 
             // // Store sorted results in the main map
+            System.out.println(" -----------------------------------------------");
+            System.out.println("<<Provider>>");
+            System.out.println("seoulmateIdx: " + seoulmateIdx);
             List<String> sortedBuddy = new ArrayList<>();
             for (Map.Entry<Integer, Double> entry : sortedBuddies) {
                 sortedBuddy.add(Integer.toString(entry.getKey()));
+                System.out.println("buddyIdx: " + entry.getKey() + " score: " + entry.getValue());
             }
             provider.put(seoulmateIdx, sortedBuddy);
+
         }
 
         return provider;
@@ -329,9 +334,13 @@ public class MatchingDao {
             sortedSeoulmates.sort(Map.Entry.<Integer, Double>comparingByValue().reversed());
 
             // // Store sorted results in the main map
+            System.out.println(" -----------------------------------------------");
+            System.out.println("<<Demander>>");
+            System.out.println("buddyIdx: " + buddyIdx);
             List<String> sortedSeoulmate = new ArrayList<>();
             for (Map.Entry<Integer, Double> entry : sortedSeoulmates) {
                 sortedSeoulmate.add(Integer.toString(entry.getKey()));
+                System.out.println("seoulmateIdx: " + entry.getKey() + " score: " + entry.getValue());
             }
             demander.put(buddyIdx, sortedSeoulmate);
         }
