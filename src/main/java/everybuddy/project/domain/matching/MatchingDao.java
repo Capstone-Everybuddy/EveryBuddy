@@ -164,7 +164,7 @@ public class MatchingDao {
                 "FROM seoulmate sm\n" +
                 "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS majors FROM major_s GROUP BY seoulmateIdx) maj ON sm.seoulmateIdx = maj.seoulmateIdx\n" +
                 "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS sexs FROM sex_s GROUP BY seoulmateIdx) se ON sm.seoulmateIdx = se.seoulmateIdx\n" +
-                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS continents FROM continent_s GROUP BY seoulmateIdx) cont ON sm.seoulmateIdx = se.seoulmateIdx\n" +
+                "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS continents FROM continent_s GROUP BY seoulmateIdx) cont ON sm.seoulmateIdx = cont.seoulmateIdx\n" +
                 "        LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS languages FROM language_s GROUP BY seoulmateIdx) lang ON sm.seoulmateIdx = lang.seoulmateIdx\n" +
                 "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS personalities FROM personality_s GROUP BY seoulmateIdx) pers ON sm.seoulmateIdx = pers.seoulmateIdx\n" +
                 "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS hobbies FROM hobby_s GROUP BY seoulmateIdx) hobb ON sm.seoulmateIdx = hobb.seoulmateIdx\n" +
