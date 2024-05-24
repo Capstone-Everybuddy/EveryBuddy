@@ -5,8 +5,9 @@ import { FaEarthAmericas } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 
 interface TypeButtonProps {
-  type: '메이트' | '버디';
+  type: 'MATE' | 'BUDDY';
   description: string;
+  onClick: () => void;
 }
 
 const TypeButton: React.FC<TypeButtonProps> = ({ type, description }) => {
@@ -15,13 +16,13 @@ const TypeButton: React.FC<TypeButtonProps> = ({ type, description }) => {
       <TextContainer>
         <ButtonText type={type}>{description}</ButtonText>
         <Description type={type}>
-          {type === '메이트'
-            ? '파견교환학생으로 서울시립대에 오는 외국인 학생'
-            : '버디를 도와 학교 생활에 적응하게끔 도와주는 재학생'}
+          {type === 'MATE'
+            ? 'A foreign exchange student coming to the University of Seoul as a dispatched exchange student'
+            : 'A current student who helps the buddy adapt to school life'}
         </Description>
       </TextContainer>
       <IconWrapper type={type}>
-        {type === '메이트' ? (
+        {type === 'MATE' ? (
           <FaEarthAmericas size="80px" />
         ) : (
           <FaUserAlt size="80px" />
@@ -35,7 +36,7 @@ const ButtonWrapper = styled.button<{ type: string }>`
   width: 100%;
   background: 
     ${(props) =>
-      props.type === '메이트'
+      props.type === 'MATE'
         ? 'linear-gradient(100deg, rgba(173,217,116,1) 0%, rgba(250,253,246,1) 110%)'
         : 'linear-gradient(100deg, rgba(255,199,0,1) 0%, rgba(255,233,154,1) 100%)'};
   );

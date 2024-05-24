@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import TypeButton from 'components/TypeButton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-//Import Icons
+// 아이콘 임포트
 import { FaArrowLeft } from 'react-icons/fa';
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
+  const handleTypeSelection = (type: string) => {
+    navigate('/register', { state: { userType: type } });
+  };
+
   return (
     <MainWrapper>
       <Link to="/">
@@ -17,14 +23,22 @@ const SignUp = () => {
 
       <ContentWrapper>
         <BackgroundCircle>
-          <h1>회원가입</h1>
-          <p color="#B0B0B0">서울메이트와 버디중 본인의 유형을 선택해주세요</p>
+          <h1>Sign Up</h1>
+          <p color="#B0B0B0">Choose your type, SeoulMate or Buddy?</p>
           <TypeButtonWrapper>
             <StyledLink to="/register">
-              <TypeButton type="메이트" description="메이트" />
+              <TypeButton
+                type="MATE"
+                description="MATE"
+                onClick={() => handleTypeSelection('MATE')}
+              />
             </StyledLink>
             <StyledLink to="/register">
-              <TypeButton type="버디" description="버디" />
+              <TypeButton
+                type="BUDDY"
+                description="BUDDY"
+                onClick={() => handleTypeSelection('BUDDY')}
+              />
             </StyledLink>
           </TypeButtonWrapper>
         </BackgroundCircle>
@@ -54,7 +68,7 @@ const BackgroundCircle = styled.div`
   box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  height: 850px;
+  height: 950px;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
   padding: 35px 30px 0px 30px;

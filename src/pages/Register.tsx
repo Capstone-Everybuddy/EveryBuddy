@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 
 interface FormData {
@@ -12,11 +13,11 @@ interface FormData {
 }
 
 interface FormErrors {
-  user_name: boolean;
-  user_id: boolean;
-  user_pwd: boolean;
-  user_pwdCheck: boolean;
-  user_studentNum: boolean;
+  user_name: string;
+  user_id: string;
+  user_pwd: string;
+  user_pwdCheck: string;
+  user_studentNum: string;
 }
 
 const Register = () => {
@@ -29,54 +30,75 @@ const Register = () => {
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
-    user_name: false,
-    user_id: false,
-    user_pwd: false,
-    user_pwdCheck: false,
-    user_studentNum: false,
+    user_name: '',
+    user_id: '',
+    user_pwd: '',
+    user_pwdCheck: '',
+    user_studentNum: '',
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setFormErrors({ ...formErrors, [name]: false });
+
+    // Check for empty fields and set error messages
+    if (value === '') {
+      setFormErrors({ ...formErrors, [name]: 'This field is required.' });
+    } else {
+      setFormErrors({ ...formErrors, [name]: '' });
+    }
+
+    // Additional check for password confirmation field
+    if (name === 'user_pwdCheck' && value !== formData.user_pwd) {
+      setFormErrors({
+        ...formErrors,
+        user_pwdCheck: 'Passwords do not match.',
+      });
+    } else if (name === 'user_pwdCheck') {
+      setFormErrors({ ...formErrors, user_pwdCheck: '' });
+    }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const validateForm = () => {
     let hasErrors = false;
-    const updatedErrors: FormErrors = {
-      user_name: false,
-      user_id: false,
-      user_pwd: false,
-      user_pwdCheck: false,
-      user_studentNum: false,
+    const errors: FormErrors = {
+      user_name: '',
+      user_id: '',
+      user_pwd: '',
+      user_pwdCheck: '',
+      user_studentNum: '',
     };
 
-    // 모든 입력 필드에 대해 빈 값을 체크하여 에러 여부를 업데이트합니다.
     for (const key in formData) {
       if (formData[key as keyof FormData] === '') {
-        updatedErrors[key as keyof FormErrors] = true;
+        errors[key as keyof FormErrors] = 'This field is required.';
         hasErrors = true;
       }
     }
 
-    // 비밀번호 확인 값이 비밀번호 값과 일치하는지 확인
     if (formData.user_pwd !== formData.user_pwdCheck) {
-      updatedErrors.user_pwdCheck = true;
+      errors.user_pwdCheck = 'Passwords do not match.';
       hasErrors = true;
     }
 
-    // 모든 입력 값이 유효한지 확인 후 formErrors 객체 업데이트
-    setFormErrors(updatedErrors);
+    setFormErrors(errors);
+    return !hasErrors;
+  };
 
-    if (!hasErrors) {
-      // 모든 필드가 작성되었으므로 다음 페이지로 이동할 수 있음
-      alert('회원가입이 완료되었습니다.');
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (validateForm()) {
+      alert('Registration completed.');
+      navigate('/login');
     }
   };
 
-  const isFormValid = Object.values(formData).every((value) => value !== '');
+  const isFormValid =
+    !Object.values(formErrors).some((error) => error !== '') &&
+    Object.values(formData).every((value) => value !== '');
+
+  const navigate = useNavigate();
 
   return (
     <MainWrapper>
@@ -87,12 +109,12 @@ const Register = () => {
       </Link>
       <ContentWrapper>
         <BackgroundCircle>
-          <h1>회원가입</h1>
-          <p>정보를 입력해주세요.</p>
+          <h1>Sign Up</h1>
+          <p>Please enter your information.</p>
           <Form onSubmit={handleSubmit}>
             <FormGrid>
               <InputDiv>
-                <Label htmlFor="user_name">이름</Label>
+                <Label htmlFor="user_name">NAME</Label>
                 <Input
                   type="text"
                   id="user_name"
@@ -100,12 +122,12 @@ const Register = () => {
                   value={formData.user_name}
                   onChange={handleInputChange}
                 />
-                {formData.user_name === '' && (
-                  <ErrorMessage>이름은 필수 입력 항목입니다.</ErrorMessage>
+                {formErrors.user_name && (
+                  <ErrorMessage>{formErrors.user_name}</ErrorMessage>
                 )}
               </InputDiv>
               <InputDiv>
-                <Label htmlFor="user_id">아이디</Label>
+                <Label htmlFor="user_id">Id</Label>
                 <Input
                   type="text"
                   id="user_id"
@@ -113,12 +135,12 @@ const Register = () => {
                   value={formData.user_id}
                   onChange={handleInputChange}
                 />
-                {formData.user_id === '' && (
-                  <ErrorMessage>아이디는 필수 입력 항목입니다.</ErrorMessage>
+                {formErrors.user_id && (
+                  <ErrorMessage>{formErrors.user_id}</ErrorMessage>
                 )}
               </InputDiv>
               <InputDiv>
-                <Label htmlFor="user_pwd">비밀번호</Label>
+                <Label htmlFor="user_pwd">PASSWORD</Label>
                 <Input
                   type="password"
                   id="user_pwd"
@@ -126,12 +148,12 @@ const Register = () => {
                   value={formData.user_pwd}
                   onChange={handleInputChange}
                 />
-                {formData.user_pwd === '' && (
-                  <ErrorMessage>비밀번호는 필수 입력 항목입니다.</ErrorMessage>
+                {formErrors.user_pwd && (
+                  <ErrorMessage>{formErrors.user_pwd}</ErrorMessage>
                 )}
               </InputDiv>
               <InputDiv>
-                <Label htmlFor="user_pwdCheck">비밀번호 확인</Label>
+                <Label htmlFor="user_pwdCheck">PASSWORD CHECK</Label>
                 <Input
                   type="password"
                   id="user_pwdCheck"
@@ -139,18 +161,12 @@ const Register = () => {
                   value={formData.user_pwdCheck}
                   onChange={handleInputChange}
                 />
-                {formData.user_pwdCheck === '' && (
-                  <ErrorMessage>
-                    비밀번호 확인은 필수 입력 항목입니다.
-                  </ErrorMessage>
+                {formErrors.user_pwdCheck && (
+                  <ErrorMessage>{formErrors.user_pwdCheck}</ErrorMessage>
                 )}
-                {formData.user_pwdCheck !== '' &&
-                  formData.user_pwd !== formData.user_pwdCheck && (
-                    <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>
-                  )}
               </InputDiv>
               <InputDiv>
-                <Label htmlFor="user_studentNum">학번</Label>
+                <Label htmlFor="user_studentNum">STUDENT NUMBER</Label>
                 <Input
                   type="number"
                   id="user_studentNum"
@@ -158,12 +174,12 @@ const Register = () => {
                   value={formData.user_studentNum}
                   onChange={handleInputChange}
                 />
-                {formData.user_studentNum === '' && (
-                  <ErrorMessage>학번은 필수 입력 항목입니다.</ErrorMessage>
+                {formErrors.user_studentNum && (
+                  <ErrorMessage>{formErrors.user_studentNum}</ErrorMessage>
                 )}
               </InputDiv>
             </FormGrid>
-            <NextButton disabled={!isFormValid}>다음</NextButton>
+            <NextButton disabled={!isFormValid}>NEXT</NextButton>
           </Form>
         </BackgroundCircle>
       </ContentWrapper>
@@ -210,7 +226,7 @@ const Form = styled.form`
 `;
 
 const FormGrid = styled.div`
-  padding: 60px 00px 20px 0px;
+  padding: 60px 0px 20px 0px;
 `;
 
 const InputDiv = styled.div`

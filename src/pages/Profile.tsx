@@ -18,8 +18,8 @@ interface User {
 
 const Profile: React.FC = () => {
   const [user, setUser] = useState<User>({
-    user_name: '유저',
-    user_id: '유저아이디',
+    user_name: 'USER',
+    user_id: 'USERID',
     user_language: 'English',
     user_pwd: 'passwordxxx',
     user_studentNum: '20xxxxxxxxx',
@@ -74,7 +74,7 @@ const Profile: React.FC = () => {
             </UserInfo>
           </ProfileSection>
           <Link to="/userupdate">
-            <Button text="정보 수정하기" />
+            <Button text="Edit Info" />
           </Link>
         </UserProfile>
       </Layout.PageContent>

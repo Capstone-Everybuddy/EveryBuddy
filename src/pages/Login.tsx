@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from 'styled-components';
 import { ReactComponent as Logo } from 'assets/logo.svg';
 import LoginButton from 'components/LoginButton';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
+  const [selectedRole, setSelectedRole] = useState('');
+
+  const handleRoleChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setSelectedRole(event.target.value);
+  };
+
   return (
     <MainWrapper>
       <ContentWrapper>
@@ -13,16 +21,38 @@ const Login = () => {
         </BackgroundCircle>
         <ButtonWrapper>
           <FormGrid>
-            <h1>로그인</h1>
+            <h1>Sign In</h1>
             <InputDiv>
-              <Input type="text" id="user_id" placeholder="아이디" />
+              <Input type="text" id="user_id" placeholder="ID" />
             </InputDiv>
             <InputDiv>
-              <Input type="password" id="user_pwd" placeholder="비밀번호" />
+              <Input type="password" id="user_pwd" placeholder="PASSWORD" />
             </InputDiv>
+            <RadioButtonContainer>
+              <RadioButtonLabel>
+                <RadioButton
+                  type="radio"
+                  name="role"
+                  value="seoulmate"
+                  checked={selectedRole === 'seoulmate'}
+                  onChange={handleRoleChange}
+                />
+                SeoulMate
+              </RadioButtonLabel>
+              <RadioButtonLabel>
+                <RadioButton
+                  type="radio"
+                  name="role"
+                  value="buddy"
+                  checked={selectedRole === 'buddy'}
+                  onChange={handleRoleChange}
+                />
+                Buddy
+              </RadioButtonLabel>
+            </RadioButtonContainer>
           </FormGrid>
           <Link to="/Matching">
-            <LoginButton text={'로그인'} />
+            <LoginButton text={'Sign In'} />
           </Link>
           <TextWrapper>
             <Text>Forgot your Id? Click Here</Text>
@@ -55,7 +85,7 @@ const ContentWrapper = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 650px;
+  height: 600px;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
   gap: 20px;
@@ -67,7 +97,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const FormGrid = styled.form`
-  padding: 60px 10px 20px 10px;
+  padding: 60px 10px 0px 10px;
 `;
 
 const InputDiv = styled.div`
@@ -84,6 +114,22 @@ const Input = styled.input`
   &::placeholder {
     color: #b5b5b5;
   }
+`;
+
+const RadioButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const RadioButtonLabel = styled.label`
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  font-size: 16px;
+`;
+
+const RadioButton = styled.input`
+  margin-right: 10px;
 `;
 
 const TextWrapper = styled.div`

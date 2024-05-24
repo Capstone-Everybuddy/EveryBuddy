@@ -13,10 +13,10 @@ const Main = () => {
         </BackgroundCircle>
         <ButtonWrapper>
           <Link to="/login">
-            <LoginButton text={'로그인'} />
+            <LoginButton text={'Sign In'} />
           </Link>
           <Link to="/signup">
-            <LoginButton text={'회원가입'} />
+            <LoginButton text={'Sign Up'} />
           </Link>
         </ButtonWrapper>
       </ContentWrapper>
