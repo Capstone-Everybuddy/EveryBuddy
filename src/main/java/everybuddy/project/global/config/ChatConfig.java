@@ -1,4 +1,4 @@
-package everybuddy.project.domain.chatting.config;
+package everybuddy.project.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
