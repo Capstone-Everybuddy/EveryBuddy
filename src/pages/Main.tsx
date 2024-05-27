@@ -13,10 +13,10 @@ const Main = () => {
         </BackgroundCircle>
         <ButtonWrapper>
           <Link to="/login">
-            <LoginButton text={'Sign In'} />
+            <LoginButton text="Sign In" />
           </Link>
           <Link to="/signup">
-            <LoginButton text={'Sign Up'} />
+            <LoginButton text="Sign Up" />
           </Link>
         </ButtonWrapper>
       </ContentWrapper>

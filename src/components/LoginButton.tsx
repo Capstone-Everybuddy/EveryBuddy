@@ -3,10 +3,21 @@ import styled from 'styled-components';
 
 interface LoginButtonProps {
   text: 'Sign In' | 'Sign Up';
+  onClick?: () => void; // onClick 핸들러를 선택적으로 만듦
+  children?: React.ReactNode; // children 속성 추가
 }
 
-const LoginButton: React.FC<LoginButtonProps> = ({ text }) => {
-  return <ButtonWrapper text={text}>{text}</ButtonWrapper>;
+const LoginButton: React.FC<LoginButtonProps> = ({
+  text,
+  onClick,
+  children,
+}) => {
+  return (
+    <ButtonWrapper text={text} onClick={onClick}>
+      {children || text}{' '}
+      {/* children이 있으면 children을, 없으면 text를 렌더링 */}
+    </ButtonWrapper>
+  );
 };
 
 const ButtonWrapper = styled.button<{ text: string }>`

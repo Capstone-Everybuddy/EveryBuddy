@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { FaUserAlt } from 'react-icons/fa';
 import { FaEarthAmericas } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
 
 interface TypeButtonProps {
   type: 'MATE' | 'BUDDY';

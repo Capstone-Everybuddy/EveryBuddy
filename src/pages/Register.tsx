@@ -37,18 +37,20 @@ const Register = () => {
     user_studentNum: '',
   });
 
+  const [isChecked] = useState<boolean>(() => {
+    return localStorage.getItem('isChecked') === 'true';
+  });
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    // Check for empty fields and set error messages
     if (value === '') {
       setFormErrors({ ...formErrors, [name]: 'This field is required.' });
     } else {
       setFormErrors({ ...formErrors, [name]: '' });
     }
 
-    // Additional check for password confirmation field
     if (name === 'user_pwdCheck' && value !== formData.user_pwd) {
       setFormErrors({
         ...formErrors,
@@ -97,7 +99,6 @@ const Register = () => {
   const isFormValid =
     !Object.values(formErrors).some((error) => error !== '') &&
     Object.values(formData).every((value) => value !== '');
-
   const navigate = useNavigate();
 
   return (
@@ -179,6 +180,14 @@ const Register = () => {
                 )}
               </InputDiv>
             </FormGrid>
+            <Link to="/check">
+              <CheckButton
+                onClick={() => localStorage.setItem('isChecked', 'true')}
+                isChecked={isChecked}
+              >
+                Go To Student Check
+              </CheckButton>
+            </Link>
             <NextButton disabled={!isFormValid}>NEXT</NextButton>
           </Form>
         </BackgroundCircle>
@@ -259,6 +268,18 @@ const ErrorMessage = styled.span`
   padding-top: 10px;
 `;
 
+const CheckButton = styled.button<{ isChecked: boolean }>`
+  padding: 10px 20px;
+  background-color: ${({ isChecked }) => (isChecked ? '#B2B2B2' : 'orange')};
+  color: white;
+  border: none;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 40px;
+  width: 100%;
+  cursor: ${({ isChecked }) => (isChecked ? 'not-allowed' : 'pointer')};
+`;
+
 const NextButton = styled.button`
   padding: 10px 20px;
   background-color: ${({ disabled }) => (disabled ? '#B2B2B2' : 'orange')};
@@ -268,6 +289,7 @@ const NextButton = styled.button`
   font-weight: 700;
   border-radius: 40px;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  width: 100%;
 `;
 
 export default Register;

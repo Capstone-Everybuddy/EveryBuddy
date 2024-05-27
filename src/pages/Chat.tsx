@@ -1,5 +1,5 @@
 import ChatList from 'components/Chatting/ChatList/ChatList';
-import ChatRoomItem from 'components/Chatting/ChatList/ChatRoomItem';
+
 import Header from 'components/Header';
 import Layout from 'components/Layout';
 import Main from 'components/Main';

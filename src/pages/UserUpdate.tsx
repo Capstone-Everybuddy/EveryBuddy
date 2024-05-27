@@ -101,7 +101,7 @@ const UserUpdate: React.FC<UserUpdateProps> = ({ name, token }) => {
           </UserImg>
           <UserInfo>
             <Edit>
-              <label>이름</label>
+              <label>NAME</label>
               <input
                 type="text"
                 value={user_name}
@@ -111,7 +111,7 @@ const UserUpdate: React.FC<UserUpdateProps> = ({ name, token }) => {
             </Edit>
 
             <Edit>
-              <label>아이디</label>
+              <label>ID</label>
               <input
                 type="text"
                 value={user_id}
@@ -121,7 +121,7 @@ const UserUpdate: React.FC<UserUpdateProps> = ({ name, token }) => {
             </Edit>
 
             <Edit>
-              <label>비밀 번호</label>
+              <label>PASSWORD</label>
               <input
                 type="text"
                 value={user_pwd}
@@ -131,7 +131,7 @@ const UserUpdate: React.FC<UserUpdateProps> = ({ name, token }) => {
             </Edit>
 
             <Edit>
-              <label>사용 언어</label>
+              <label>LANGUAGE</label>
               <input
                 type="text"
                 value={user_language}
@@ -141,7 +141,7 @@ const UserUpdate: React.FC<UserUpdateProps> = ({ name, token }) => {
             </Edit>
 
             <Edit>
-              <label>학과</label>
+              <label>MAJOR</label>
               <input
                 type="text"
                 value={user_major}
@@ -151,7 +151,7 @@ const UserUpdate: React.FC<UserUpdateProps> = ({ name, token }) => {
             </Edit>
 
             <Edit>
-              <label>학번</label>
+              <label>STUDENT NUMBER</label>
               <input
                 type="text"
                 value={user_studentNum}

@@ -1,16 +1,50 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
+import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from 'assets/logo.svg';
 import LoginButton from 'components/LoginButton';
-import { Link } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { PostLoginReq, BaseResponsePostLoginRes } from 'api/Api';
+import { api } from 'api/Client'; // API 클라이언트 import
 
 const Login = () => {
-  const [selectedRole, setSelectedRole] = useState('');
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState<string>('');
 
   const handleRoleChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setSelectedRole(event.target.value);
+  };
+
+  const loginMutation = useMutation<
+    BaseResponsePostLoginRes,
+    Error,
+    { role: string; data: PostLoginReq }
+  >({
+    mutationFn: async ({
+      role,
+      data,
+    }: {
+      role: string;
+      data: PostLoginReq;
+    }) => {
+      if (role === 'seoulmate') {
+        return api.seoulmates.loginSeoulmate(data);
+      } else if (role === 'buddy') {
+        return api.buddies.loginBuddy(data);
+      } else {
+        throw new Error('Invalid role');
+      }
+    },
+  });
+
+  const handleLogin = () => {
+    loginMutation.mutate({
+      role: selectedRole,
+      data: { id: userId, password },
+    });
   };
 
   return (
@@ -23,26 +57,36 @@ const Login = () => {
           <FormGrid>
             <h1>Sign In</h1>
             <InputDiv>
-              <Input type="text" id="user_id" placeholder="ID" />
+              <Input
+                type="text"
+                id="user_id"
+                placeholder="ID"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+              />
             </InputDiv>
             <InputDiv>
-              <Input type="password" id="user_pwd" placeholder="PASSWORD" />
+              <Input
+                type="password"
+                id="user_pwd"
+                placeholder="PASSWORD"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </InputDiv>
             <RadioButtonContainer>
               <RadioButtonLabel>
                 <RadioButton
                   type="radio"
-                  name="role"
                   value="seoulmate"
                   checked={selectedRole === 'seoulmate'}
                   onChange={handleRoleChange}
                 />
-                SeoulMate
+                Seoulmate
               </RadioButtonLabel>
               <RadioButtonLabel>
                 <RadioButton
                   type="radio"
-                  name="role"
                   value="buddy"
                   checked={selectedRole === 'buddy'}
                   onChange={handleRoleChange}
@@ -50,10 +94,14 @@ const Login = () => {
                 Buddy
               </RadioButtonLabel>
             </RadioButtonContainer>
+            <LoginButton text="Sign In" onClick={handleLogin}>
+              Sign In
+            </LoginButton>
+            {loginMutation.isError && (
+              <ErrorMessage>Error: {loginMutation.error?.message}</ErrorMessage>
+            )}
+            {loginMutation.isSuccess && <div>Login successful!</div>}
           </FormGrid>
-          <Link to="/Matching">
-            <LoginButton text={'Sign In'} />
-          </Link>
           <TextWrapper>
             <Text>Forgot your Id? Click Here</Text>
             <Text>Forgot your password? Click Here</Text>
@@ -144,6 +192,13 @@ const Text = styled.span`
   flex-direction: column;
   align-items: center;
   font-size: 14px;
+`;
+
+const ErrorMessage = styled.div`
+  text-align: center;
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
 `;
 
 export default Login;
