@@ -1,15 +1,24 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+} from 'react';
+import { MdEdit } from 'react-icons/md';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import useUserType from 'hooks/useUserType'; // useUserType 훅 import
+import { api } from 'api/Client';
 
 interface FormData {
   user_name: string;
   user_id: string;
   user_pwd: string;
   user_pwdCheck: string;
-  user_studentNum: string;
+  profileImage: string;
 }
 
 interface FormErrors {
@@ -17,7 +26,6 @@ interface FormErrors {
   user_id: string;
   user_pwd: string;
   user_pwdCheck: string;
-  user_studentNum: string;
 }
 
 const Register = () => {
@@ -26,7 +34,7 @@ const Register = () => {
     user_id: '',
     user_pwd: '',
     user_pwdCheck: '',
-    user_studentNum: '',
+    profileImage: 'https://via.placeholder.com/150',
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -34,8 +42,31 @@ const Register = () => {
     user_id: '',
     user_pwd: '',
     user_pwdCheck: '',
-    user_studentNum: '',
   });
+
+  const [userType] = useUserType(); // 사용자 유형 가져오기
+  useEffect(() => {
+    if (userType === 'MATE') {
+      api.seoulmates.createSeoulmate({
+        name: formData.user_name,
+        password1: formData.user_pwd,
+        password2: formData.user_pwdCheck,
+        id: formData.user_id,
+        profileImg: 'path/to/default-image.jpg', // 기본 이미지 경로(필요한 경우)
+      });
+    } else if (userType === 'BUDDY') {
+      api.buddies.createBuddy({
+        name: formData.user_name,
+        password1: formData.user_pwd,
+        password2: formData.user_pwdCheck,
+        id: formData.user_id,
+        profileImg: 'path/to/default-image.jpg', // 기본 이미지 경로(필요한 경우)
+      });
+    }
+  }, [userType, formData, api]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const [isChecked] = useState<boolean>(() => {
     return localStorage.getItem('isChecked') === 'true';
@@ -61,6 +92,19 @@ const Register = () => {
     }
   };
 
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, profileImage: reader.result as string });
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
   const validateForm = () => {
     let hasErrors = false;
     const errors: FormErrors = {
@@ -68,7 +112,6 @@ const Register = () => {
       user_id: '',
       user_pwd: '',
       user_pwdCheck: '',
-      user_studentNum: '',
     };
 
     for (const key in formData) {
@@ -99,7 +142,6 @@ const Register = () => {
   const isFormValid =
     !Object.values(formErrors).some((error) => error !== '') &&
     Object.values(formData).every((value) => value !== '');
-  const navigate = useNavigate();
 
   return (
     <MainWrapper>
@@ -114,6 +156,17 @@ const Register = () => {
           <p>Please enter your information.</p>
           <Form onSubmit={handleSubmit}>
             <FormGrid>
+              <ProfileImage>
+                <img src={formData.profileImage} alt="Profile Preview" />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                />
+                <MdEditIcon onClick={triggerFileInput} />
+              </ProfileImage>
               <InputDiv>
                 <Label htmlFor="user_name">NAME</Label>
                 <Input
@@ -164,19 +217,6 @@ const Register = () => {
                 />
                 {formErrors.user_pwdCheck && (
                   <ErrorMessage>{formErrors.user_pwdCheck}</ErrorMessage>
-                )}
-              </InputDiv>
-              <InputDiv>
-                <Label htmlFor="user_studentNum">STUDENT NUMBER</Label>
-                <Input
-                  type="number"
-                  id="user_studentNum"
-                  name="user_studentNum"
-                  value={formData.user_studentNum}
-                  onChange={handleInputChange}
-                />
-                {formErrors.user_studentNum && (
-                  <ErrorMessage>{formErrors.user_studentNum}</ErrorMessage>
                 )}
               </InputDiv>
             </FormGrid>
@@ -259,6 +299,25 @@ const Input = styled.input`
     -webkit-appearance: none;
     margin: 0;
   }
+`;
+
+const ProfileImage = styled.div`
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+`;
+
+const MdEditIcon = styled(MdEdit)`
+  position: absolute;
+  top: 270px;
+  right: 160px;
+  cursor: pointer;
 `;
 
 const ErrorMessage = styled.span`

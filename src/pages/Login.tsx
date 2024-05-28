@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { styled } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
 import { ReactComponent as Logo } from 'assets/logo.svg';
 import LoginButton from 'components/LoginButton';
 import { useMutation } from '@tanstack/react-query';
 import { PostLoginReq, BaseResponsePostLoginRes } from 'api/Api';
-import { api } from 'api/Client'; // API 클라이언트 import
+import { api } from 'api/Client';
+import useUserType from 'hooks/useUserType';
 
 const Login = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState<string>('');
+  const [userType, setUserType] = useUserType('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [logMessage, setLogMessage] = useState(''); // 로그 메시지 상태 추가
+  const navigate = useNavigate();
 
-  const handleRoleChange = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setSelectedRole(event.target.value);
+  const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserType(event.target.value);
   };
 
   const loginMutation = useMutation<
@@ -23,26 +26,35 @@ const Login = () => {
     Error,
     { role: string; data: PostLoginReq }
   >({
-    mutationFn: async ({
-      role,
-      data,
-    }: {
-      role: string;
-      data: PostLoginReq;
-    }) => {
+    mutationFn: async ({ role, data }) => {
+      const message = `Attempting login with role: ${role}`;
+      setLogMessage((prev) => `${prev}\n${message}`); // 로그 메시지 업데이트
+
       if (role === 'seoulmate') {
+        const apiMessage = 'Calling seoulmate login API';
+        setLogMessage((prev) => `${prev}\n${apiMessage}`); // 로그 메시지 업데이트
         return api.seoulmates.loginSeoulmate(data);
       } else if (role === 'buddy') {
+        const apiMessage = 'Calling buddy login API';
+        setLogMessage((prev) => `${prev}\n${apiMessage}`); // 로그 메시지 업데이트
         return api.buddies.loginBuddy(data);
       } else {
         throw new Error('Invalid role');
       }
     },
+    onSuccess: () => {
+      navigate('/matching');
+    },
+    onError: (error: Error) => {
+      setErrorMessage(error.message);
+    },
   });
 
   const handleLogin = () => {
+    setErrorMessage(''); // 새로운 로그인 시도 전에 에러 메시지 초기화
+    setLogMessage(''); // 새로운 로그인 시도 전에 로그 메시지 초기화
     loginMutation.mutate({
-      role: selectedRole,
+      role: userType,
       data: { id: userId, password },
     });
   };
@@ -50,6 +62,11 @@ const Login = () => {
   return (
     <MainWrapper>
       <ContentWrapper>
+        <Link to="/">
+          <ArrowWrapper>
+            <FaArrowLeft color="white" size="22px" />
+          </ArrowWrapper>
+        </Link>
         <BackgroundCircle>
           <Logo width={240} />
         </BackgroundCircle>
@@ -79,7 +96,7 @@ const Login = () => {
                 <RadioButton
                   type="radio"
                   value="seoulmate"
-                  checked={selectedRole === 'seoulmate'}
+                  checked={userType === 'seoulmate'}
                   onChange={handleRoleChange}
                 />
                 Seoulmate
@@ -88,7 +105,7 @@ const Login = () => {
                 <RadioButton
                   type="radio"
                   value="buddy"
-                  checked={selectedRole === 'buddy'}
+                  checked={userType === 'buddy'}
                   onChange={handleRoleChange}
                 />
                 Buddy
@@ -97,9 +114,8 @@ const Login = () => {
             <LoginButton text="Sign In" onClick={handleLogin}>
               Sign In
             </LoginButton>
-            {loginMutation.isError && (
-              <ErrorMessage>Error: {loginMutation.error?.message}</ErrorMessage>
-            )}
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+            <LogMessage>{logMessage}</LogMessage> {/* 로그 메시지 표시 */}
             {loginMutation.isSuccess && <div>Login successful!</div>}
           </FormGrid>
           <TextWrapper>
@@ -128,6 +144,10 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+`;
+
+const ArrowWrapper = styled.div`
+  padding: 30px 27px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -198,6 +218,13 @@ const ErrorMessage = styled.div`
   text-align: center;
   color: red;
   font-weight: bold;
+  margin-top: 10px;
+`;
+
+const LogMessage = styled.div`
+  text-align: center;
+  color: blue;
+  white-space: pre-wrap;
   margin-top: 10px;
 `;
 

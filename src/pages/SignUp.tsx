@@ -1,7 +1,7 @@
 import React from 'react';
-import { styled } from 'styled-components';
 import TypeButton from 'components/TypeButton';
-
+import useUserType from 'hooks/useUserType'; // useUserType 훅 import
+import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 
 // 아이콘 임포트
@@ -9,9 +9,10 @@ import { FaArrowLeft } from 'react-icons/fa';
 
 const SignUp = () => {
   const navigate = useNavigate();
-
+  const [userType, setUserType] = useUserType(); // 사용자 유형 관리
   const handleTypeSelection = (type: string) => {
-    navigate('/register', { state: { userType: type } });
+    setUserType(type); // 사용자 유형 설정
+    navigate('/register', { state: { userType: type } }); // register 페이지로 이동하면서 userType 상태 전달
   };
 
   return (
