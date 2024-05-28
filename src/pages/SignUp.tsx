@@ -1,17 +1,14 @@
 import React from 'react';
 import TypeButton from 'components/TypeButton';
-import useUserType from 'hooks/useUserType'; // useUserType 훅 import
 import { styled } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-
-// 아이콘 임포트
 import { FaArrowLeft } from 'react-icons/fa';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [userType, setUserType] = useUserType(); // 사용자 유형 관리
+
   const handleTypeSelection = (type: string) => {
-    setUserType(type); // 사용자 유형 설정
+    console.log(`Signup / Type selected: ${type}`); // 콘솔 로그 추가
     navigate('/register', { state: { userType: type } }); // register 페이지로 이동하면서 userType 상태 전달
   };
 
@@ -28,20 +25,16 @@ const SignUp = () => {
           <h1>Sign Up</h1>
           <p color="#B0B0B0">Choose your type, SeoulMate or Buddy?</p>
           <TypeButtonWrapper>
-            <StyledLink to="/register">
-              <TypeButton
-                type="MATE"
-                description="MATE"
-                onClick={() => handleTypeSelection('MATE')}
-              />
-            </StyledLink>
-            <StyledLink to="/register">
-              <TypeButton
-                type="BUDDY"
-                description="BUDDY"
-                onClick={() => handleTypeSelection('BUDDY')}
-              />
-            </StyledLink>
+            <TypeButton
+              type="MATE"
+              description="MATE"
+              onClick={() => handleTypeSelection('MATE')}
+            />
+            <TypeButton
+              type="BUDDY"
+              description="BUDDY"
+              onClick={() => handleTypeSelection('BUDDY')}
+            />
           </TypeButtonWrapper>
         </BackgroundCircle>
       </ContentWrapper>
@@ -80,12 +73,8 @@ const BackgroundCircle = styled.div`
   right: 0;
 `;
 
-const StyledLink = styled(Link)`
-  text-decoration: none; /* Remove underline */
-  color: inherit; /* Inherit text color */
-`;
-
 const TypeButtonWrapper = styled.div`
   padding-top: 60px;
 `;
+
 export default SignUp;

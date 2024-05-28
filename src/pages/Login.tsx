@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { ReactComponent as Logo } from 'assets/logo.svg';
@@ -7,12 +7,11 @@ import LoginButton from 'components/LoginButton';
 import { useMutation } from '@tanstack/react-query';
 import { PostLoginReq, BaseResponsePostLoginRes } from 'api/Api';
 import { api } from 'api/Client';
-import useUserType from 'hooks/useUserType';
 
-const Login = () => {
+const Login: React.FC = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useUserType('');
+  const [userType, setUserType] = useState<string>(''); // useUserType 훅을 대체
   const [errorMessage, setErrorMessage] = useState('');
   const [logMessage, setLogMessage] = useState(''); // 로그 메시지 상태 추가
   const navigate = useNavigate();
@@ -111,9 +110,7 @@ const Login = () => {
                 Buddy
               </RadioButtonLabel>
             </RadioButtonContainer>
-            <LoginButton text="Sign In" onClick={handleLogin}>
-              Sign In
-            </LoginButton>
+            <LoginButton text="Sign In" onClick={handleLogin} />
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
             <LogMessage>{logMessage}</LogMessage> {/* 로그 메시지 표시 */}
             {loginMutation.isSuccess && <div>Login successful!</div>}
@@ -129,13 +126,9 @@ const Login = () => {
 };
 
 const MainWrapper = styled.div`
+  overflow-y: auto;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.yellow};
-`;
-
-const BackgroundCircle = styled.div`
-  height: 65%;
-  padding: 60px 35px;
 `;
 
 const ContentWrapper = styled.div`
@@ -150,22 +143,22 @@ const ArrowWrapper = styled.div`
   padding: 30px 27px;
 `;
 
-const ButtonWrapper = styled.div`
+const BackgroundCircle = styled.div`
+  box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 100vh;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
-  gap: 20px;
-  padding: 0px 20px;
+  padding: 35px 30px 0px 30px;
   position: absolute;
   bottom: 0px;
   left: 0;
   right: 0;
 `;
 
-const FormGrid = styled.form`
-  padding: 60px 10px 0px 10px;
+const FormGrid = styled.div`
+  padding: 60px 0px 20px 0px;
 `;
 
 const InputDiv = styled.div`
@@ -173,26 +166,29 @@ const InputDiv = styled.div`
 `;
 
 const Input = styled.input`
+  margin-top: 10px;
   padding-left: 20px;
   height: 60px;
   width: 100%;
   background-color: #f8f8f8;
   border-radius: 40px;
   border: none;
-  &::placeholder {
-    color: #b5b5b5;
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 `;
 
 const RadioButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  margin: 20px 0;
 `;
 
 const RadioButtonLabel = styled.label`
   display: flex;
   align-items: center;
-  margin: 10px;
   font-size: 16px;
 `;
 
@@ -200,32 +196,31 @@ const RadioButton = styled.input`
   margin-right: 10px;
 `;
 
-const TextWrapper = styled.div`
-  padding-top: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const Text = styled.span`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 14px;
-`;
-
 const ErrorMessage = styled.div`
-  text-align: center;
   color: red;
-  font-weight: bold;
   margin-top: 10px;
 `;
 
-const LogMessage = styled.div`
-  text-align: center;
-  color: blue;
+const LogMessage = styled.pre`
+  background: #f1f1f1;
+  padding: 10px;
   white-space: pre-wrap;
+  word-wrap: break-word;
   margin-top: 10px;
+`;
+
+const TextWrapper = styled.div`
+  margin-top: 20px;
+  text-align: center;
+`;
+
+const Text = styled.p`
+  color: blue;
+  cursor: pointer;
+`;
+
+const ButtonWrapper = styled.div`
+  padding: 20px;
 `;
 
 export default Login;
