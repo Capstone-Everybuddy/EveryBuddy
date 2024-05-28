@@ -12,5 +12,6 @@ public class PostBuddyReq {
     private String ID;
     private String password1;
     private String password2;
+    private String studentId;
     private String profileImg;
 }

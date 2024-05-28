@@ -23,8 +23,8 @@ public class BuddyDao {
 
 
     public int createBuddy(PostBuddyReq postBuddyReq) {
-        String savePreferenceQuery = "insert into `buddy` (`name`, ID, password, profileImg) values (?,?,?,?)";
-        Object[] savePreferenceParams = new Object[]{postBuddyReq.getName(), postBuddyReq.getID(), postBuddyReq.getPassword1(), postBuddyReq.getProfileImg()};
+        String savePreferenceQuery = "insert into `buddy` (`name`, ID, password, studentId, profileImg) values (?,?,?,?,?)";
+        Object[] savePreferenceParams = new Object[]{postBuddyReq.getName(), postBuddyReq.getID(), postBuddyReq.getPassword1(), postBuddyReq.getStudentId(), postBuddyReq.getProfileImg()};
         this.jdbcTemplate.update(savePreferenceQuery, savePreferenceParams);
 
         String lastInsertIdQuery = "select last_insert_id()";

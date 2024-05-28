@@ -23,8 +23,8 @@ public class SeoulmateDao {
     }
 
     public int createSeoulmate(PostSeoulmateReq postSeoulmateReq) {
-        String createSeoulmateQuery = "insert into seoulmate (`name`, ID, password, profileImg) values (?, ?, ?, ?)";
-        Object[] createSeoulmateParams = new Object[]{postSeoulmateReq.getName(), postSeoulmateReq.getID(), postSeoulmateReq.getPassword1(), postSeoulmateReq.getProfileImg()};
+        String createSeoulmateQuery = "insert into seoulmate (`name`, ID, password, studentId, profileImg) values (?, ?, ?, ?, ?)";
+        Object[] createSeoulmateParams = new Object[]{postSeoulmateReq.getName(), postSeoulmateReq.getID(), postSeoulmateReq.getPassword1(), postSeoulmateReq.getStudentId(), postSeoulmateReq.getProfileImg()};
         this.jdbcTemplate.update(createSeoulmateQuery, createSeoulmateParams);
         String selectlastIdx = "select last_insert_id()";
         int seoulmateIdx = this.jdbcTemplate.queryForObject(selectlastIdx, int.class);
