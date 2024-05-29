@@ -49,8 +49,6 @@ const Register = () => {
     user_studentId: '',
   });
 
-  const [isChecked, setIsChecked] = useState(false);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -76,6 +74,7 @@ const Register = () => {
 
   const studentIdCheckInputChange = (name: string, studentId: string) => {
     setFormData({ ...formData, user_name: name, user_studentId: studentId });
+    setFormErrors((prev) => ({ ...prev, user_name: '', user_studentId: '' }));
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -163,24 +162,6 @@ const Register = () => {
     }
   };
 
-  useEffect(() => {
-    // 페이지가 로드될 때 localStorage에서 데이터를 가져와서 설정합니다.
-    const storedFormData = localStorage.getItem('formData');
-    if (storedFormData) {
-      setFormData(JSON.parse(storedFormData));
-    }
-
-    const storedIsChecked = localStorage.getItem('isChecked');
-    if (storedIsChecked) {
-      setIsChecked(JSON.parse(storedIsChecked));
-    }
-  }, []);
-
-  useEffect(() => {
-    // formData 또는 isChecked가 변경될 때마다 localStorage에 저장합니다.
-    localStorage.setItem('formData', JSON.stringify(formData));
-    localStorage.setItem('isChecked', JSON.stringify(isChecked));
-  }, [formData, isChecked]);
   const isFormValid =
     !Object.values(formErrors).some((error) => error !== '') &&
     Object.values(formData).every((value) => value !== '');

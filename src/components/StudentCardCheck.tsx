@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FormEvent, MouseEventHandler, useState } from 'react';
 import styled from 'styled-components';
 
 interface Props {
@@ -47,21 +47,18 @@ const StudentCardCheck = ({ studentIdCheckInputChange }: Props) => {
 
   return (
     <div>
-      <Title>Please Upload your Student Card</Title>
+      <OcrTitle>
+        <Title>Please Upload your Student Card</Title>
+        <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
+      </OcrTitle>
       <Input type="file" accept="image/*" onChange={handleImageUpload} />
       {image && <Image src={URL.createObjectURL(image)} alt="Uploaded" />}
-      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 };
 
-const Title = styled.p`
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 10px;
-`;
-
 const Input = styled.input`
+  width: 100%;
   margin-bottom: 10px;
   padding: 10px;
   border: 1px solid #ddd;
@@ -71,14 +68,34 @@ const Input = styled.input`
 
 const Image = styled.img`
   width: 200px;
+  margin: 0 auto;
   border-radius: 8px;
   margin-top: 10px;
+  display: block;
 `;
 
-const ExtractedText = styled.p`
-  margin-top: 10px;
+const OcrTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px; /* 간격을 주기 위해 마진 추가 */
+`;
+
+const Title = styled.p`
   font-size: 14px;
-  color: #555;
+  font-weight: 600;
+  color: #333;
+  margin: 0; /* 기본 마진 제거 */
 `;
 
+const SubmitButton = styled.button`
+  padding: 8px 10px;
+  background-color: ${(props) => props.theme.colors.orange};
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+`;
 export default StudentCardCheck;
