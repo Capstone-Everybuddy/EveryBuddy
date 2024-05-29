@@ -32,6 +32,7 @@ export interface PostSeoulmateReq {
   name?: string;
   password1?: string;
   password2?: string;
+  studentId?: string;
   profileImg?: string;
   id?: string;
 }
@@ -106,6 +107,7 @@ export interface PostBuddyReq {
   name?: string;
   password1?: string;
   password2?: string;
+  studentId?: string;
   profileImg?: string;
   id?: string;
 }
@@ -119,19 +121,6 @@ export interface BaseResponsePostBuddyRes {
 }
 
 export interface PostBuddyRes {
-  /** @format int32 */
-  preferenceIdx?: number;
-}
-
-export interface BaseResponsePostPreferRes {
-  isSuccess?: boolean;
-  /** @format int32 */
-  code?: number;
-  message?: string;
-  result?: PostPreferRes;
-}
-
-export interface PostPreferRes {
   /** @format int32 */
   preferenceIdx?: number;
 }
@@ -204,15 +193,19 @@ export interface Buddy {
   /** @format int32 */
   buddyIdx?: number;
   name?: string;
+  password?: string;
   studentId?: string;
+  profileImg?: string;
+  /** @format int32 */
+  major?: number;
   /** @format int32 */
   sex?: number;
   /** @format int32 */
-  major?: number;
-  continent?: string;
+  continent?: number;
+  /** @format int32 */
+  motherTongue?: number;
   /** @format int32 */
   certified?: number;
-  profileImg?: string;
   /** @format int32 */
   state?: number;
   id?: string;
@@ -224,13 +217,13 @@ export interface Seoulmate {
   name?: string;
   password?: string;
   studentId?: string;
-  /** @format int32 */
-  sex?: number;
+  profileImg?: string;
   /** @format int32 */
   major?: number;
   /** @format int32 */
+  sex?: number;
+  /** @format int32 */
   certified?: number;
-  profileImg?: string;
   /** @format int32 */
   state?: number;
   id?: string;
@@ -605,7 +598,7 @@ export class Api<
       data: PostPreferReq,
       params: RequestParams = {},
     ) =>
-      this.request<BaseResponsePostPreferRes, any>({
+      this.request<BaseResponseString, any>({
         path: `/buddies/preference/${buddyIdx}`,
         method: 'POST',
         body: data,
@@ -667,6 +660,21 @@ export class Api<
       }),
   };
   matchings = {
+    /**
+     * @description 매칭을 "드디어!" 시작합니다.
+     *
+     * @tags matching-controller
+     * @name ApplyGaleShapley
+     * @summary 매칭 시작하기!! API
+     * @request POST:/matchings/start-matching
+     */
+    applyGaleShapley: (params: RequestParams = {}) =>
+      this.request<BaseResponseString, any>({
+        path: `/matchings/start-matching`,
+        method: 'POST',
+        ...params,
+      }),
+
     /**
      * @description 전체 매칭 결과 저장 API 서울메이트 : 버디 = 1 : n명의 쌍으로 저장됩니다. 이 API를 호출하면, 매칭 상태를 나타내는 seoulmateIdx = 1 의 state 값이 0에서 1로 변경됩니다.
      *
