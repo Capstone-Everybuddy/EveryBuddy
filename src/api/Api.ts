@@ -32,6 +32,7 @@ export interface PostSeoulmateReq {
   name?: string;
   password1?: string;
   password2?: string;
+  studentId?: string;
   profileImg?: string;
   id?: string;
 }
@@ -106,6 +107,7 @@ export interface PostBuddyReq {
   name?: string;
   password1?: string;
   password2?: string;
+  studentId?: string;
   profileImg?: string;
   id?: string;
 }

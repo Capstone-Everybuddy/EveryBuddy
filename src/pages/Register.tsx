@@ -2,15 +2,13 @@ import React, {
   useState,
   ChangeEvent,
   FormEvent,
-  useEffect,
   useRef,
+  useEffect,
 } from 'react';
 import { MdEdit } from 'react-icons/md';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import useUserType from 'hooks/useUserType'; // useUserType 훅 import
 import { api } from 'api/Client';
 
 interface FormData {
@@ -19,21 +17,26 @@ interface FormData {
   user_pwd: string;
   user_pwdCheck: string;
   profileImage: string;
+  user_studentId: string;
 }
 
 interface FormErrors {
   user_name: string;
   user_id: string;
   user_pwd: string;
+  user_studentId: string;
   user_pwdCheck: string;
 }
 
 const Register = () => {
+  const location = useLocation();
+  const userType = location.state?.userType || '';
   const [formData, setFormData] = useState<FormData>({
     user_name: '',
     user_id: '',
     user_pwd: '',
     user_pwdCheck: '',
+    user_studentId: '',
     profileImage: 'https://via.placeholder.com/150',
   });
 
@@ -42,35 +45,13 @@ const Register = () => {
     user_id: '',
     user_pwd: '',
     user_pwdCheck: '',
+    user_studentId: '',
   });
 
-  const [userType] = useUserType(); // 사용자 유형 가져오기
-  useEffect(() => {
-    if (userType === 'MATE') {
-      api.seoulmates.createSeoulmate({
-        name: formData.user_name,
-        password1: formData.user_pwd,
-        password2: formData.user_pwdCheck,
-        id: formData.user_id,
-        profileImg: 'path/to/default-image.jpg', // 기본 이미지 경로(필요한 경우)
-      });
-    } else if (userType === 'BUDDY') {
-      api.buddies.createBuddy({
-        name: formData.user_name,
-        password1: formData.user_pwd,
-        password2: formData.user_pwdCheck,
-        id: formData.user_id,
-        profileImg: 'path/to/default-image.jpg', // 기본 이미지 경로(필요한 경우)
-      });
-    }
-  }, [userType, formData, api]);
+  const [isChecked, setIsChecked] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-
-  const [isChecked] = useState<boolean>(() => {
-    return localStorage.getItem('isChecked') === 'true';
-  });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -105,6 +86,7 @@ const Register = () => {
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
+
   const validateForm = () => {
     let hasErrors = false;
     const errors: FormErrors = {
@@ -112,6 +94,7 @@ const Register = () => {
       user_id: '',
       user_pwd: '',
       user_pwdCheck: '',
+      user_studentId: '',
     };
 
     for (const key in formData) {
@@ -121,7 +104,10 @@ const Register = () => {
       }
     }
 
-    if (formData.user_pwd !== formData.user_pwdCheck) {
+    if (
+      formData.user_pwd !== formData.user_pwdCheck &&
+      formData.user_pwdCheck !== ''
+    ) {
       errors.user_pwdCheck = 'Passwords do not match.';
       hasErrors = true;
     }
@@ -130,15 +116,66 @@ const Register = () => {
     return !hasErrors;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateForm()) {
-      alert('Registration completed.');
-      navigate('/login');
+      console.log(`User type: ${userType}`);
+      console.log('Form data:', formData);
+
+      try {
+        if (userType === 'MATE') {
+          console.log('Calling createSeoulmate API');
+          const response = await api.seoulmates.createSeoulmate({
+            name: formData.user_name,
+            id: formData.user_id,
+            password1: formData.user_pwd,
+            password2: formData.user_pwdCheck,
+            studentId: formData.user_studentId,
+            profileImg: formData.profileImage,
+          });
+          console.log('createSeoulmate response:', response);
+          alert('Seoulmate registration completed.');
+          navigate('/login');
+        } else if (userType === 'BUDDY') {
+          console.log('Calling createBuddy API');
+          const response = await api.buddies.createBuddy({
+            name: formData.user_name,
+            id: formData.user_id,
+            password1: formData.user_pwd,
+            password2: formData.user_pwdCheck,
+            studentId: formData.user_studentId,
+            profileImg: formData.profileImage,
+          });
+          console.log('createBuddy response:', response);
+          alert('Buddy registration completed.');
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('API call error:', error);
+        alert('Failed to register.');
+      }
     }
   };
 
+  useEffect(() => {
+    // 페이지가 로드될 때 localStorage에서 데이터를 가져와서 설정합니다.
+    const storedFormData = localStorage.getItem('formData');
+    if (storedFormData) {
+      setFormData(JSON.parse(storedFormData));
+    }
+
+    const storedIsChecked = localStorage.getItem('isChecked');
+    if (storedIsChecked) {
+      setIsChecked(JSON.parse(storedIsChecked));
+    }
+  }, []);
+
+  useEffect(() => {
+    // formData 또는 isChecked가 변경될 때마다 localStorage에 저장합니다.
+    localStorage.setItem('formData', JSON.stringify(formData));
+    localStorage.setItem('isChecked', JSON.stringify(isChecked));
+  }, [formData, isChecked]);
   const isFormValid =
     !Object.values(formErrors).some((error) => error !== '') &&
     Object.values(formData).every((value) => value !== '');
@@ -219,10 +256,26 @@ const Register = () => {
                   <ErrorMessage>{formErrors.user_pwdCheck}</ErrorMessage>
                 )}
               </InputDiv>
+              <InputDiv>
+                <Label htmlFor="user_studentId">STUDENT ID</Label>
+                <Input
+                  type="number"
+                  id="user_studentId"
+                  name="user_studentId"
+                  value={formData.user_studentId}
+                  onChange={handleInputChange}
+                />
+                {formErrors.user_studentId && (
+                  <ErrorMessage>{formErrors.user_studentId}</ErrorMessage>
+                )}
+              </InputDiv>
             </FormGrid>
             <Link to="/check">
               <CheckButton
-                onClick={() => localStorage.setItem('isChecked', 'true')}
+                onClick={() => {
+                  localStorage.setItem('isChecked', 'true');
+                  setIsChecked(true);
+                }}
                 isChecked={isChecked}
               >
                 Go To Student Check
@@ -244,10 +297,10 @@ const MainWrapper = styled.div`
 
 const ContentWrapper = styled.div`
   position: relative;
-  height: 100vh;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  overflow: hidden;
 `;
 
 const ArrowWrapper = styled.div`
@@ -255,17 +308,14 @@ const ArrowWrapper = styled.div`
 `;
 
 const BackgroundCircle = styled.div`
+  flex: 1;
   box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  height: 100vh;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
   padding: 35px 30px 0px 30px;
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  right: 0;
+  overflow-y: auto;
 `;
 
 const Form = styled.form`

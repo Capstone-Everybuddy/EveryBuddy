@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { ReactComponent as Logo } from 'assets/logo.svg';
@@ -7,14 +7,11 @@ import LoginButton from 'components/LoginButton';
 import { useMutation } from '@tanstack/react-query';
 import { PostLoginReq, BaseResponsePostLoginRes } from 'api/Api';
 import { api } from 'api/Client';
-import useUserType from 'hooks/useUserType';
 
-const Login = () => {
+const Login: React.FC = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useUserType('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [logMessage, setLogMessage] = useState(''); // 로그 메시지 상태 추가
+  const [userType, setUserType] = useState<string>(''); // useUserType 훅을 대체
   const navigate = useNavigate();
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,31 +25,21 @@ const Login = () => {
   >({
     mutationFn: async ({ role, data }) => {
       const message = `Attempting login with role: ${role}`;
-      setLogMessage((prev) => `${prev}\n${message}`); // 로그 메시지 업데이트
 
       if (role === 'seoulmate') {
-        const apiMessage = 'Calling seoulmate login API';
-        setLogMessage((prev) => `${prev}\n${apiMessage}`); // 로그 메시지 업데이트
         return api.seoulmates.loginSeoulmate(data);
       } else if (role === 'buddy') {
-        const apiMessage = 'Calling buddy login API';
-        setLogMessage((prev) => `${prev}\n${apiMessage}`); // 로그 메시지 업데이트
         return api.buddies.loginBuddy(data);
       } else {
-        throw new Error('Invalid role');
+        throw new Error('Please Check Your Type');
       }
     },
     onSuccess: () => {
       navigate('/matching');
     },
-    onError: (error: Error) => {
-      setErrorMessage(error.message);
-    },
   });
 
   const handleLogin = () => {
-    setErrorMessage(''); // 새로운 로그인 시도 전에 에러 메시지 초기화
-    setLogMessage(''); // 새로운 로그인 시도 전에 로그 메시지 초기화
     loginMutation.mutate({
       role: userType,
       data: { id: userId, password },
@@ -114,8 +101,9 @@ const Login = () => {
             <LoginButton text="Sign In" onClick={handleLogin}>
               Sign In
             </LoginButton>
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-            <LogMessage>{logMessage}</LogMessage> {/* 로그 메시지 표시 */}
+            {loginMutation.isError && (
+              <ErrorMessage>Error: {loginMutation.error?.message}</ErrorMessage>
+            )}
             {loginMutation.isSuccess && <div>Login successful!</div>}
           </FormGrid>
           <TextWrapper>
@@ -146,14 +134,10 @@ const ContentWrapper = styled.div`
   gap: 20px;
 `;
 
-const ArrowWrapper = styled.div`
-  padding: 30px 27px;
-`;
-
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 60%;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
   gap: 20px;
@@ -164,8 +148,8 @@ const ButtonWrapper = styled.div`
   right: 0;
 `;
 
-const FormGrid = styled.form`
-  padding: 60px 10px 0px 10px;
+const FormGrid = styled.div`
+  padding: 60px 0px 20px 0px;
 `;
 
 const InputDiv = styled.div`
@@ -173,31 +157,46 @@ const InputDiv = styled.div`
 `;
 
 const Input = styled.input`
+  margin-top: 10px;
   padding-left: 20px;
   height: 60px;
   width: 100%;
   background-color: #f8f8f8;
   border-radius: 40px;
   border: none;
-  &::placeholder {
-    color: #b5b5b5;
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 `;
 
 const RadioButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
+  margin: 20px 0;
 `;
 
 const RadioButtonLabel = styled.label`
   display: flex;
   align-items: center;
-  margin: 10px;
   font-size: 16px;
+`;
+
+const ArrowWrapper = styled.div`
+  padding: 30px 27px;
 `;
 
 const RadioButton = styled.input`
   margin-right: 10px;
+`;
+
+const LogMessage = styled.pre`
+  background: #f1f1f1;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-top: 10px;
 `;
 
 const TextWrapper = styled.div`
@@ -218,13 +217,6 @@ const ErrorMessage = styled.div`
   text-align: center;
   color: red;
   font-weight: bold;
-  margin-top: 10px;
-`;
-
-const LogMessage = styled.div`
-  text-align: center;
-  color: blue;
-  white-space: pre-wrap;
   margin-top: 10px;
 `;
 
