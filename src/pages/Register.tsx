@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { api } from 'api/Client';
+import StudentCardCheck from 'components/StudentCardCheck';
 
 interface FormData {
   user_name: string;
@@ -48,8 +49,6 @@ const Register = () => {
     user_studentId: '',
   });
 
-  const [isChecked, setIsChecked] = useState(false);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -71,6 +70,11 @@ const Register = () => {
     } else if (name === 'user_pwdCheck') {
       setFormErrors({ ...formErrors, user_pwdCheck: '' });
     }
+  };
+
+  const studentIdCheckInputChange = (name: string, studentId: string) => {
+    setFormData({ ...formData, user_name: name, user_studentId: studentId });
+    setFormErrors((prev) => ({ ...prev, user_name: '', user_studentId: '' }));
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -158,24 +162,6 @@ const Register = () => {
     }
   };
 
-  useEffect(() => {
-    // 페이지가 로드될 때 localStorage에서 데이터를 가져와서 설정합니다.
-    const storedFormData = localStorage.getItem('formData');
-    if (storedFormData) {
-      setFormData(JSON.parse(storedFormData));
-    }
-
-    const storedIsChecked = localStorage.getItem('isChecked');
-    if (storedIsChecked) {
-      setIsChecked(JSON.parse(storedIsChecked));
-    }
-  }, []);
-
-  useEffect(() => {
-    // formData 또는 isChecked가 변경될 때마다 localStorage에 저장합니다.
-    localStorage.setItem('formData', JSON.stringify(formData));
-    localStorage.setItem('isChecked', JSON.stringify(isChecked));
-  }, [formData, isChecked]);
   const isFormValid =
     !Object.values(formErrors).some((error) => error !== '') &&
     Object.values(formData).every((value) => value !== '');
@@ -270,17 +256,9 @@ const Register = () => {
                 )}
               </InputDiv>
             </FormGrid>
-            <Link to="/check">
-              <CheckButton
-                onClick={() => {
-                  localStorage.setItem('isChecked', 'true');
-                  setIsChecked(true);
-                }}
-                isChecked={isChecked}
-              >
-                Go To Student Check
-              </CheckButton>
-            </Link>
+            <StudentCardCheck
+              studentIdCheckInputChange={studentIdCheckInputChange}
+            />
             <NextButton disabled={!isFormValid}>NEXT</NextButton>
           </Form>
         </BackgroundCircle>
@@ -314,7 +292,7 @@ const BackgroundCircle = styled.div`
   flex-direction: column;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
-  padding: 35px 30px 0px 30px;
+  padding: 35px 30px 30px 30px;
   overflow-y: auto;
 `;
 
@@ -325,7 +303,7 @@ const Form = styled.form`
 `;
 
 const FormGrid = styled.div`
-  padding: 60px 0px 20px 0px;
+  padding: 60px 0px 0px 0px;
 `;
 
 const InputDiv = styled.div`
