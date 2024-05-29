@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MemberProfile from './MatchingComplete/MemberProfile';
 import styled from 'styled-components';
 import { Role } from 'data/matching';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 const arr = [
   {
     seoulmate: {
@@ -254,14 +255,16 @@ const MatchingList = () => {
 
   return (
     <Wrapper>
-      <div onClick={clickShowFull}>
-        {showFull ? '전체 접기' : '전체 펼치기'}
-      </div>
+      <Button onClick={clickShowFull}>
+        <span>{showFull ? '전체 접기' : '전체 펼치기'}</span>
+        {showFull ? <FiChevronUp /> : <FiChevronDown />}
+      </Button>
       {arr.map((item) => (
         <GroupList key={item.seoulmate.seoulmateIdx}>
           <MemberProfile
             name={item.seoulmate.name}
             memberRole={Role.SEOULMATE}
+            studentId="2020920044"
             onClick={() => clickSeoulMate(item.seoulmate.seoulmateIdx)}
           />
           {(showFull || selected === item.seoulmate.seoulmateIdx) && (
@@ -270,6 +273,7 @@ const MatchingList = () => {
                 <MemberProfile
                   key={item.buddyIdx}
                   name={item.name}
+                  studentId="2020920044"
                   memberRole={Role.BUDDY}
                 />
               ))}
@@ -296,6 +300,38 @@ const BuddyList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: all;
+`;
+
+const Button = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  background-color: #ffa800; /* 단색 배경 사용 */
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #ff8c00; /* 호버 시 배경색 변화 */
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 168, 0, 0.3);
+  }
+
+  span {
+    margin-right: 0.5rem;
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 `;
 
 export default MatchingList;

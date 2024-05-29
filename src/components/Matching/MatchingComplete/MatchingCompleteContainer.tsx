@@ -9,9 +9,21 @@ const MatchingCompleteContainer = () => {
       <MainText>매칭 정보 확인하기</MainText>
       <SubText>나와 매칭된 사람들의 정보를 확인해보세요</SubText>
       <MemberList>
-        <MemberProfile name="이수빈" memberRole={Role.SEOULMATE} />
-        <MemberProfile name="이수빈" memberRole={Role.BUDDY} />
-        <MemberProfile name="이수빈" memberRole={Role.BUDDY} />
+        <MemberProfile
+          name="이수빈"
+          studentId="2020920044"
+          memberRole={Role.SEOULMATE}
+        />
+        <MemberProfile
+          name="이수빈"
+          studentId="2020920044"
+          memberRole={Role.BUDDY}
+        />
+        <MemberProfile
+          name="이수빈"
+          studentId="2020920044"
+          memberRole={Role.BUDDY}
+        />
       </MemberList>
     </Container>
   );
