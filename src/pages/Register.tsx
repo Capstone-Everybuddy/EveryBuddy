@@ -17,12 +17,14 @@ interface FormData {
   user_pwd: string;
   user_pwdCheck: string;
   profileImage: string;
+  user_studentId: string;
 }
 
 interface FormErrors {
   user_name: string;
   user_id: string;
   user_pwd: string;
+  user_studentId: string;
   user_pwdCheck: string;
 }
 
@@ -34,6 +36,7 @@ const Register = () => {
     user_id: '',
     user_pwd: '',
     user_pwdCheck: '',
+    user_studentId: '',
     profileImage: 'https://via.placeholder.com/150',
   });
 
@@ -42,6 +45,7 @@ const Register = () => {
     user_id: '',
     user_pwd: '',
     user_pwdCheck: '',
+    user_studentId: '',
   });
 
   const [isChecked, setIsChecked] = useState(false);
@@ -90,6 +94,7 @@ const Register = () => {
       user_id: '',
       user_pwd: '',
       user_pwdCheck: '',
+      user_studentId: '',
     };
 
     for (const key in formData) {
@@ -111,11 +116,6 @@ const Register = () => {
     return !hasErrors;
   };
 
-  const transformData = (data: FormData) => {
-    const { user_id, ...rest } = data;
-    return { ID: user_id, ...rest };
-  };
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -124,14 +124,14 @@ const Register = () => {
       console.log('Form data:', formData);
 
       try {
-        const transformedData = transformData(formData);
-
         if (userType === 'MATE') {
           console.log('Calling createSeoulmate API');
           const response = await api.seoulmates.createSeoulmate({
-            ...transformedData,
+            name: formData.user_name,
+            id: formData.user_id,
             password1: formData.user_pwd,
             password2: formData.user_pwdCheck,
+            studentId: formData.user_studentId,
             profileImg: formData.profileImage,
           });
           console.log('createSeoulmate response:', response);
@@ -140,9 +140,11 @@ const Register = () => {
         } else if (userType === 'BUDDY') {
           console.log('Calling createBuddy API');
           const response = await api.buddies.createBuddy({
-            ...transformedData,
+            name: formData.user_name,
+            id: formData.user_id,
             password1: formData.user_pwd,
             password2: formData.user_pwdCheck,
+            studentId: formData.user_studentId,
             profileImg: formData.profileImage,
           });
           console.log('createBuddy response:', response);
@@ -254,6 +256,19 @@ const Register = () => {
                   <ErrorMessage>{formErrors.user_pwdCheck}</ErrorMessage>
                 )}
               </InputDiv>
+              <InputDiv>
+                <Label htmlFor="user_studentId">STUDENT ID</Label>
+                <Input
+                  type="number"
+                  id="user_studentId"
+                  name="user_studentId"
+                  value={formData.user_studentId}
+                  onChange={handleInputChange}
+                />
+                {formErrors.user_studentId && (
+                  <ErrorMessage>{formErrors.user_studentId}</ErrorMessage>
+                )}
+              </InputDiv>
             </FormGrid>
             <Link to="/check">
               <CheckButton
@@ -282,10 +297,10 @@ const MainWrapper = styled.div`
 
 const ContentWrapper = styled.div`
   position: relative;
-  height: 100vh;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  overflow: hidden;
 `;
 
 const ArrowWrapper = styled.div`
@@ -293,17 +308,14 @@ const ArrowWrapper = styled.div`
 `;
 
 const BackgroundCircle = styled.div`
+  flex: 1;
   box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  height: 100vh;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
   padding: 35px 30px 0px 30px;
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  right: 0;
+  overflow-y: auto;
 `;
 
 const Form = styled.form`

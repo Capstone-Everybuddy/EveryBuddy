@@ -12,8 +12,6 @@ const Login: React.FC = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState<string>(''); // useUserType 훅을 대체
-  const [errorMessage, setErrorMessage] = useState('');
-  const [logMessage, setLogMessage] = useState(''); // 로그 메시지 상태 추가
   const navigate = useNavigate();
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,31 +25,21 @@ const Login: React.FC = () => {
   >({
     mutationFn: async ({ role, data }) => {
       const message = `Attempting login with role: ${role}`;
-      setLogMessage((prev) => `${prev}\n${message}`); // 로그 메시지 업데이트
 
       if (role === 'seoulmate') {
-        const apiMessage = 'Calling seoulmate login API';
-        setLogMessage((prev) => `${prev}\n${apiMessage}`); // 로그 메시지 업데이트
         return api.seoulmates.loginSeoulmate(data);
       } else if (role === 'buddy') {
-        const apiMessage = 'Calling buddy login API';
-        setLogMessage((prev) => `${prev}\n${apiMessage}`); // 로그 메시지 업데이트
         return api.buddies.loginBuddy(data);
       } else {
-        throw new Error('Invalid role');
+        throw new Error('Please Check Your Type');
       }
     },
     onSuccess: () => {
       navigate('/matching');
     },
-    onError: (error: Error) => {
-      setErrorMessage(error.message);
-    },
   });
 
   const handleLogin = () => {
-    setErrorMessage(''); // 새로운 로그인 시도 전에 에러 메시지 초기화
-    setLogMessage(''); // 새로운 로그인 시도 전에 로그 메시지 초기화
     loginMutation.mutate({
       role: userType,
       data: { id: userId, password },
@@ -110,9 +98,12 @@ const Login: React.FC = () => {
                 Buddy
               </RadioButtonLabel>
             </RadioButtonContainer>
-            <LoginButton text="Sign In" onClick={handleLogin} />
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-            <LogMessage>{logMessage}</LogMessage> {/* 로그 메시지 표시 */}
+            <LoginButton text="Sign In" onClick={handleLogin}>
+              Sign In
+            </LoginButton>
+            {loginMutation.isError && (
+              <ErrorMessage>Error: {loginMutation.error?.message}</ErrorMessage>
+            )}
             {loginMutation.isSuccess && <div>Login successful!</div>}
           </FormGrid>
           <TextWrapper>
@@ -126,9 +117,13 @@ const Login: React.FC = () => {
 };
 
 const MainWrapper = styled.div`
-  overflow-y: auto;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.yellow};
+`;
+
+const BackgroundCircle = styled.div`
+  height: 65%;
+  padding: 60px 35px;
 `;
 
 const ContentWrapper = styled.div`
@@ -139,18 +134,14 @@ const ContentWrapper = styled.div`
   gap: 20px;
 `;
 
-const ArrowWrapper = styled.div`
-  padding: 30px 27px;
-`;
-
-const BackgroundCircle = styled.div`
-  box-shadow: 0px -6px 10px 0px rgba(0, 0, 0, 0.08);
+const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 60%;
   background-color: white;
   border-radius: 60px 60px 0px 0px;
-  padding: 35px 30px 0px 30px;
+  gap: 20px;
+  padding: 0px 20px;
   position: absolute;
   bottom: 0px;
   left: 0;
@@ -192,13 +183,12 @@ const RadioButtonLabel = styled.label`
   font-size: 16px;
 `;
 
-const RadioButton = styled.input`
-  margin-right: 10px;
+const ArrowWrapper = styled.div`
+  padding: 30px 27px;
 `;
 
-const ErrorMessage = styled.div`
-  color: red;
-  margin-top: 10px;
+const RadioButton = styled.input`
+  margin-right: 10px;
 `;
 
 const LogMessage = styled.pre`
@@ -210,17 +200,24 @@ const LogMessage = styled.pre`
 `;
 
 const TextWrapper = styled.div`
-  margin-top: 20px;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const Text = styled.span`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+`;
+
+const ErrorMessage = styled.div`
   text-align: center;
-`;
-
-const Text = styled.p`
-  color: blue;
-  cursor: pointer;
-`;
-
-const ButtonWrapper = styled.div`
-  padding: 20px;
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
 `;
 
 export default Login;
