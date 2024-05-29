@@ -82,6 +82,7 @@ export interface BaseResponsePostLoginRes {
 
 export interface PostLoginRes {
   /** @format int32 */
+  buddyIdx?: number;
   seoulmateIdx?: number;
   name?: string;
 }
