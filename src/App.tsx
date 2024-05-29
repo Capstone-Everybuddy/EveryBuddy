@@ -15,34 +15,37 @@ import ChatRoom from 'pages/ChatRoom';
 import UserUpdate from 'pages/UserUpdate';
 import MatchingInfo from 'pages/MatchingInfo';
 import Admin from 'pages/Admin';
+import { AuthProvider } from 'components/AuthContext';
 
 function App() {
   const name = 'user_name';
   const token = 'token';
   return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <GlobalStyle />
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route element={<BottomNav />}>
-            <Route path="/matching" element={<Matching />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/profile" element={<Profile />} />
-          </Route>
-          <Route path="/matching-info" element={<MatchingInfo />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/chat/room" element={<ChatRoom />} />
-          <Route
-            path="/userupdate"
-            element={<UserUpdate name={name} token={token ?? null} />}
-          />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <GlobalStyle />
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route element={<BottomNav />}>
+              <Route path="/matching" element={<Matching />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+            <Route path="/matching-info" element={<MatchingInfo />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/chat/room" element={<ChatRoom />} />
+            <Route
+              path="/userupdate"
+              element={<UserUpdate name={name} token={token ?? null} />}
+            />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

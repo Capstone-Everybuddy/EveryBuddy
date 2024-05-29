@@ -7,25 +7,25 @@ import LoginButton from 'components/LoginButton';
 import { useMutation } from '@tanstack/react-query';
 import { PostLoginReq, BaseResponsePostLoginRes } from 'api/Api';
 import { api } from 'api/Client';
+import { useAuth } from 'components/AuthContext';
 
 const Login: React.FC = () => {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState<string>(''); // useUserType 훅을 대체
+  const [userType, setUserType] = useState<'seoulmate' | 'buddy'>('seoulmate');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserType(event.target.value);
+    setUserType(event.target.value as 'seoulmate' | 'buddy');
   };
 
   const loginMutation = useMutation<
     BaseResponsePostLoginRes,
     Error,
-    { role: string; data: PostLoginReq }
+    { role: 'seoulmate' | 'buddy'; data: PostLoginReq }
   >({
     mutationFn: async ({ role, data }) => {
-      const message = `Attempting login with role: ${role}`;
-
       if (role === 'seoulmate') {
         return api.seoulmates.loginSeoulmate(data);
       } else if (role === 'buddy') {
@@ -34,8 +34,28 @@ const Login: React.FC = () => {
         throw new Error('Please Check Your Type');
       }
     },
-    onSuccess: () => {
-      navigate('/matching');
+    onSettled: (data) => {
+      if (data?.isSuccess && data.result) {
+        const { result } = data;
+        const idx =
+          userType === 'seoulmate' ? result.seoulmateIdx : result.buddyIdx;
+        const name = result.name;
+
+        if (idx !== undefined && name !== undefined) {
+          const user = {
+            role: userType,
+            idx: idx,
+            name: name,
+          };
+          login(userType, user);
+          console.log(user);
+          navigate('/matching');
+        } else {
+          alert('Failed to login, try again');
+        }
+      } else {
+        alert('Failed to login, try again');
+      }
     },
   });
 
@@ -104,7 +124,6 @@ const Login: React.FC = () => {
             {loginMutation.isError && (
               <ErrorMessage>Error: {loginMutation.error?.message}</ErrorMessage>
             )}
-            {loginMutation.isSuccess && <div>Login successful!</div>}
           </FormGrid>
           <TextWrapper>
             <Text>Forgot your Id? Click Here</Text>

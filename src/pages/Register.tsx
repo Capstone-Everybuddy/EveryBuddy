@@ -388,6 +388,7 @@ const CheckButton = styled.button<{ isChecked: boolean }>`
 
 const NextButton = styled.button`
   padding: 10px 20px;
+  margin-bottom: 20px;
   background-color: ${({ disabled }) => (disabled ? '#B2B2B2' : 'orange')};
   color: white;
   border: none;
