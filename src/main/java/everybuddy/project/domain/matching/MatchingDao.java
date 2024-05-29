@@ -204,10 +204,23 @@ public class MatchingDao {
 
             for (GetBuddyInfo buddyInfo : buddyInfos) {
                 String buddyIdx = buddyInfo.getBuddyIdx();
+                Map<String, Double> weigth_score = new HashMap<>();
+                for (int i=0; i<7; i++) {
+                    weigth_score.put(items[i], 1.0);
+                }
+                for (int i=0; i<7; i++) {
+                    if (preferrank_s.getFirst().equals(items[i])) weigth_score.put(items[i], 1.6);
+                    else if (preferrank_s.getSecond().equals(items[i])) weigth_score.put(items[i], 1.5);
+                    else if (preferrank_s.getThird().equals(items[i])) weigth_score.put(items[i], 1.4);
+                    else if (preferrank_s.getFourth().equals(items[i])) weigth_score.put(items[i], 1.3);
+                    else if (preferrank_s.getFifth().equals(items[i])) weigth_score.put(items[i], 1.2);
+                    else if (preferrank_s.getSixth().equals(items[i])) weigth_score.put(items[i], 1.1);
+                }
                 double score = 0.0;
 
                 // Calculate compatibility
                 preferrank_s_score.put(items[0], calculateMatchScore(seoulmatePre.getPersonalities(), buddyInfo.getPersonalities()));
+
                 preferrank_s_score.put(items[1], calculateMatchScore(seoulmatePre.getLanguages(), buddyInfo.getLanguages()));
                 preferrank_s_score.put(items[2], calculateMatchScore(seoulmatePre.getHobbies(), buddyInfo.getHobbies()));
                 preferrank_s_score.put(items[3], calculateMatchScore(seoulmatePre.getWanttodos(), buddyInfo.getWanttodos()));
@@ -223,19 +236,17 @@ public class MatchingDao {
                     preferrank_s_score.put(items[6], 1.0);
                 } else preferrank_s_score.put(items[6], 0.0);
 
-                //MotherTongue 존재 유무 검사 -> 0.05 가중치 값 미리 계산
-                if (seoulmatePre.getLanguages().contains(buddyInfo.getMotherTongue())) {
-                    preferrank_s_score.put(items[1], preferrank_s_score.get(items[1])+1.3);
+                for (int i=0; i<7; i++) {
+                    String ss = items[i];
+                    preferrank_s_score.put(ss, preferrank_s_score.get(ss)*weigth_score.get(ss));
                 }
 
-                for (int i=0; i<7; i++) {
-                    if (preferrank_s.getFirst().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.6);
-                    else if (preferrank_s.getSecond().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.5);
-                    else if (preferrank_s.getThird().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.4);
-                    else if (preferrank_s.getFourth().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.3);
-                    else if (preferrank_s.getFifth().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.2);
-                    else if (preferrank_s.getSixth().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.1);
-                }
+                //MotherTongue 존재 유무 검사 -> 0.05 가중치 값 미리 계산
+                if (seoulmatePre.getLanguages().contains(buddyInfo.getMotherTongue())) {
+                    String ss = items[1];
+                    double language_score = preferrank_s_score.get(ss) * weigth_score.get(ss) + 0.05;
+                    preferrank_s_score.put(ss, language_score);
+                };
 
                 for (int i=0; i<7; i++) {
                     // 소수점 셋째자리에서 반올림.
