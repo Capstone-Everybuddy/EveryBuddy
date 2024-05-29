@@ -237,21 +237,17 @@ public class MatchingDao {
                 } else preferrank_s_score.put(items[6], 0.0);
 
                 for (int i=0; i<7; i++) {
-                    String ss = items[i];
-                    preferrank_s_score.put(ss, preferrank_s_score.get(ss)*weigth_score.get(ss));
+                    preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*weigth_score.get(items[i]));
                 }
-
-                //MotherTongue 존재 유무 검사 -> 0.05 가중치 값 미리 계산
-                if (seoulmatePre.getLanguages().contains(buddyInfo.getMotherTongue())) {
-                    String ss = items[1];
-                    double language_score = preferrank_s_score.get(ss) * weigth_score.get(ss) + 0.05;
-                    preferrank_s_score.put(ss, language_score);
-                };
-
                 for (int i=0; i<7; i++) {
                     // 소수점 셋째자리에서 반올림.
                     score += Math.round(preferrank_s_score.get(items[i])*100)/100.0;
                 }
+
+                //MotherTongue 존재 유무 검사 -> 0.05 가중치 값 미리 계산
+                if (seoulmatePre.getLanguages().contains(buddyInfo.getMotherTongue())) {
+                    score += 0.05;
+                };
 
                 buddyScores.put(Integer.parseInt(buddyIdx), Math.round(score*100)/100.0);
             }
