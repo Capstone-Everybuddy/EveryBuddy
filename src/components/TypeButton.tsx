@@ -1,3 +1,4 @@
+// components/TypeButton.tsx
 import React from 'react';
 import styled from 'styled-components';
 import { FaUserAlt } from 'react-icons/fa';
@@ -6,12 +7,18 @@ import { FaEarthAmericas } from 'react-icons/fa6';
 interface TypeButtonProps {
   type: 'MATE' | 'BUDDY';
   description: string;
-  onClick: () => void;
+  onClick: () => void; // onClick 프로퍼티 추가
 }
 
-const TypeButton: React.FC<TypeButtonProps> = ({ type, description }) => {
+const TypeButton: React.FC<TypeButtonProps> = ({
+  type,
+  description,
+  onClick,
+}) => {
   return (
-    <ButtonWrapper type={type}>
+    <ButtonWrapper type={type} onClick={onClick}>
+      {' '}
+      {/* onClick 이벤트 핸들러 추가 */}
       <TextContainer>
         <ButtonText type={type}>{description}</ButtonText>
         <Description type={type}>

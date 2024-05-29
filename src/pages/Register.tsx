@@ -1,15 +1,22 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useRef,
+  useEffect,
+} from 'react';
+import { MdEdit } from 'react-icons/md';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import { api } from 'api/Client';
 
 interface FormData {
   user_name: string;
   user_id: string;
   user_pwd: string;
   user_pwdCheck: string;
-  user_studentNum: string;
+  profileImage: string;
 }
 
 interface FormErrors {
@@ -17,16 +24,17 @@ interface FormErrors {
   user_id: string;
   user_pwd: string;
   user_pwdCheck: string;
-  user_studentNum: string;
 }
 
 const Register = () => {
+  const location = useLocation();
+  const userType = location.state?.userType || '';
   const [formData, setFormData] = useState<FormData>({
     user_name: '',
     user_id: '',
     user_pwd: '',
     user_pwdCheck: '',
-    user_studentNum: '',
+    profileImage: 'https://via.placeholder.com/150',
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
@@ -34,12 +42,12 @@ const Register = () => {
     user_id: '',
     user_pwd: '',
     user_pwdCheck: '',
-    user_studentNum: '',
   });
 
-  const [isChecked] = useState<boolean>(() => {
-    return localStorage.getItem('isChecked') === 'true';
-  });
+  const [isChecked, setIsChecked] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -61,6 +69,20 @@ const Register = () => {
     }
   };
 
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, profileImage: reader.result as string });
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
   const validateForm = () => {
     let hasErrors = false;
     const errors: FormErrors = {
@@ -68,7 +90,6 @@ const Register = () => {
       user_id: '',
       user_pwd: '',
       user_pwdCheck: '',
-      user_studentNum: '',
     };
 
     for (const key in formData) {
@@ -78,7 +99,10 @@ const Register = () => {
       }
     }
 
-    if (formData.user_pwd !== formData.user_pwdCheck) {
+    if (
+      formData.user_pwd !== formData.user_pwdCheck &&
+      formData.user_pwdCheck !== ''
+    ) {
       errors.user_pwdCheck = 'Passwords do not match.';
       hasErrors = true;
     }
@@ -87,19 +111,72 @@ const Register = () => {
     return !hasErrors;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const transformData = (data: FormData) => {
+    const { user_id, ...rest } = data;
+    return { ID: user_id, ...rest };
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateForm()) {
-      alert('Registration completed.');
-      navigate('/login');
+      console.log(`User type: ${userType}`);
+      console.log('Form data:', formData);
+
+      try {
+        const transformedData = transformData(formData);
+
+        if (userType === 'MATE') {
+          console.log('Calling createSeoulmate API');
+          const response = await api.seoulmates.createSeoulmate({
+            ...transformedData,
+            password1: formData.user_pwd,
+            password2: formData.user_pwdCheck,
+            profileImg: formData.profileImage,
+          });
+          console.log('createSeoulmate response:', response);
+          alert('Seoulmate registration completed.');
+          navigate('/login');
+        } else if (userType === 'BUDDY') {
+          console.log('Calling createBuddy API');
+          const response = await api.buddies.createBuddy({
+            ...transformedData,
+            password1: formData.user_pwd,
+            password2: formData.user_pwdCheck,
+            profileImg: formData.profileImage,
+          });
+          console.log('createBuddy response:', response);
+          alert('Buddy registration completed.');
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('API call error:', error);
+        alert('Failed to register.');
+      }
     }
   };
 
+  useEffect(() => {
+    // 페이지가 로드될 때 localStorage에서 데이터를 가져와서 설정합니다.
+    const storedFormData = localStorage.getItem('formData');
+    if (storedFormData) {
+      setFormData(JSON.parse(storedFormData));
+    }
+
+    const storedIsChecked = localStorage.getItem('isChecked');
+    if (storedIsChecked) {
+      setIsChecked(JSON.parse(storedIsChecked));
+    }
+  }, []);
+
+  useEffect(() => {
+    // formData 또는 isChecked가 변경될 때마다 localStorage에 저장합니다.
+    localStorage.setItem('formData', JSON.stringify(formData));
+    localStorage.setItem('isChecked', JSON.stringify(isChecked));
+  }, [formData, isChecked]);
   const isFormValid =
     !Object.values(formErrors).some((error) => error !== '') &&
     Object.values(formData).every((value) => value !== '');
-  const navigate = useNavigate();
 
   return (
     <MainWrapper>
@@ -114,6 +191,17 @@ const Register = () => {
           <p>Please enter your information.</p>
           <Form onSubmit={handleSubmit}>
             <FormGrid>
+              <ProfileImage>
+                <img src={formData.profileImage} alt="Profile Preview" />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ display: 'none' }}
+                />
+                <MdEditIcon onClick={triggerFileInput} />
+              </ProfileImage>
               <InputDiv>
                 <Label htmlFor="user_name">NAME</Label>
                 <Input
@@ -166,23 +254,13 @@ const Register = () => {
                   <ErrorMessage>{formErrors.user_pwdCheck}</ErrorMessage>
                 )}
               </InputDiv>
-              <InputDiv>
-                <Label htmlFor="user_studentNum">STUDENT NUMBER</Label>
-                <Input
-                  type="number"
-                  id="user_studentNum"
-                  name="user_studentNum"
-                  value={formData.user_studentNum}
-                  onChange={handleInputChange}
-                />
-                {formErrors.user_studentNum && (
-                  <ErrorMessage>{formErrors.user_studentNum}</ErrorMessage>
-                )}
-              </InputDiv>
             </FormGrid>
             <Link to="/check">
               <CheckButton
-                onClick={() => localStorage.setItem('isChecked', 'true')}
+                onClick={() => {
+                  localStorage.setItem('isChecked', 'true');
+                  setIsChecked(true);
+                }}
                 isChecked={isChecked}
               >
                 Go To Student Check
@@ -259,6 +337,25 @@ const Input = styled.input`
     -webkit-appearance: none;
     margin: 0;
   }
+`;
+
+const ProfileImage = styled.div`
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+`;
+
+const MdEditIcon = styled(MdEdit)`
+  position: absolute;
+  top: 270px;
+  right: 160px;
+  cursor: pointer;
 `;
 
 const ErrorMessage = styled.span`
