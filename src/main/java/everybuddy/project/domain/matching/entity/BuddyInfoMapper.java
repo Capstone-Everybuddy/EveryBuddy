@@ -16,11 +16,12 @@ public class BuddyInfoMapper implements RowMapper<GetBuddyInfo> {
         String major = rs.getString("major");
         String sex = rs.getString("sex");
         String continent = rs.getString("continent");
+        String motherTongue = rs.getString("motherTongue");
         List<String> languages = Arrays.asList(rs.getString("languages").split(","));
         List<String> personalities = Arrays.asList(rs.getString("personalities").split(","));
         List<String> hobbies = Arrays.asList(rs.getString("hobbies").split(","));
         List<String> wanttodos = Arrays.asList(rs.getString("wanttodos").split(","));
 
-        return new GetBuddyInfo(buddyIdx, major, sex, continent, languages, personalities, hobbies, wanttodos);
+        return new GetBuddyInfo(buddyIdx, major, sex, continent, motherTongue, languages, personalities, hobbies, wanttodos);
     }
 }

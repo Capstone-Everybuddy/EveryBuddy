@@ -171,7 +171,7 @@ public class MatchingDao {
                 "         LEFT JOIN (SELECT seoulmateIdx, GROUP_CONCAT(`no`) AS wanttodos FROM wanttodo_s GROUP BY seoulmateIdx) want ON sm.seoulmateIdx = want.seoulmateIdx;\n";
         List<GetSeoulmatePre> seoulmatePres = this.jdbcTemplate.query(getSeoulmatePresQuery, new SeoulmatePreMapper());
 
-        String getBuddyInfosQuery ="SELECT b.buddyIdx, b.major, b.sex, b.continent, lang.languages, pers.personalities, hobb.hobbies, want.wanttodos\n" +
+        String getBuddyInfosQuery ="SELECT b.buddyIdx, b.major, b.sex, b.continent, b.motherTongue, lang.languages, pers.personalities, hobb.hobbies, want.wanttodos\n" +
                 "FROM buddy b\n" +
                 "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS languages FROM languageInfo_b GROUP BY buddyIdx) lang ON b.buddyIdx = lang.buddyIdx\n" +
                 "         LEFT JOIN (SELECT buddyIdx, GROUP_CONCAT(`no`) AS personalities FROM personalityInfo_b GROUP BY buddyIdx) pers ON b.buddyIdx = pers.buddyIdx\n" +
@@ -223,6 +223,11 @@ public class MatchingDao {
                     preferrank_s_score.put(items[6], 1.0);
                 } else preferrank_s_score.put(items[6], 0.0);
 
+                //MotherTongue 존재 유무 검사 -> 0.05 가중치 값 미리 계산
+                if (seoulmatePre.getLanguages().contains(buddyInfo.getMotherTongue())) {
+                    preferrank_s_score.put(items[1], preferrank_s_score.get(items[1])+1.3);
+                }
+
                 for (int i=0; i<7; i++) {
                     if (preferrank_s.getFirst().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.6);
                     else if (preferrank_s.getSecond().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.5);
@@ -231,11 +236,13 @@ public class MatchingDao {
                     else if (preferrank_s.getFifth().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.2);
                     else if (preferrank_s.getSixth().equals(items[i])) preferrank_s_score.put(items[i], preferrank_s_score.get(items[i])*1.1);
                 }
+
                 for (int i=0; i<7; i++) {
-                    score += preferrank_s_score.get(items[i]);
+                    // 소수점 셋째자리에서 반올림.
+                    score += Math.round(preferrank_s_score.get(items[i])*100)/100.0;
                 }
 
-                buddyScores.put(Integer.parseInt(buddyIdx), score);  // Total score divided by the number of categories
+                buddyScores.put(Integer.parseInt(buddyIdx), Math.round(score*100)/100.0);
             }
             // Sorting buddyScores by values in descending order
             List<Map.Entry<Integer, Double>> sortedBuddies = new ArrayList<>(buddyScores.entrySet());
@@ -243,7 +250,7 @@ public class MatchingDao {
 
             // // Store sorted results in the main map
             System.out.println(" -----------------------------------------------");
-            System.out.println("<<Provider>>");
+            System.out.println("<<Seoulmate>>");
             System.out.println("seoulmateIdx: " + seoulmateIdx);
             List<String> sortedBuddy = new ArrayList<>();
             for (Map.Entry<Integer, Double> entry : sortedBuddies) {
@@ -311,10 +318,10 @@ public class MatchingDao {
                 // Considering major and sex as single value fields
                 if (buddyPre.getMajors().contains(seoulmateInfo.getMajor())) {
                     preferrank_b_score.put(itemb[4], 1.0);
-                }
+                } else preferrank_b_score.put(itemb[4], 0.0);
                 if (buddyPre.getSexs().contains(seoulmateInfo.getSex())) {
                     preferrank_b_score.put(itemb[5], 1.0);
-                }
+                } else preferrank_b_score.put(itemb[5], 0.0);
 
                 for (int i=0; i<6; i++) {
                     if (preferrank_b.getFirst().equals(itemb[i])) preferrank_b_score.put(itemb[i], preferrank_b_score.get(itemb[i])*1.5);
@@ -324,10 +331,11 @@ public class MatchingDao {
                     else if (preferrank_b.getFifth().equals(itemb[i])) preferrank_b_score.put(itemb[i], preferrank_b_score.get(itemb[i])*1.1);
                 }
                 for (int i=0; i<6; i++) {
-                    score += preferrank_b_score.get(itemb[i]);
+                    // 소수점 셋째자리에서 반올림.
+                    score += Math.round(preferrank_b_score.get(itemb[i])*100)/100.0;
                 }
 
-                seoulmateScores.put(Integer.parseInt(seoulmateIdx), score);  // Total score divided by the number of categories
+                seoulmateScores.put(Integer.parseInt(seoulmateIdx), Math.round(score*100)/100.0);  // Total score divided by the number of categories
             }
             // Sorting buddyScores by values in descending order
             List<Map.Entry<Integer, Double>> sortedSeoulmates = new ArrayList<>(seoulmateScores.entrySet());
@@ -335,7 +343,7 @@ public class MatchingDao {
 
             // // Store sorted results in the main map
             System.out.println(" -----------------------------------------------");
-            System.out.println("<<Demander>>");
+            System.out.println("<<Buddy>>");
             System.out.println("buddyIdx: " + buddyIdx);
             List<String> sortedSeoulmate = new ArrayList<>();
             for (Map.Entry<Integer, Double> entry : sortedSeoulmates) {

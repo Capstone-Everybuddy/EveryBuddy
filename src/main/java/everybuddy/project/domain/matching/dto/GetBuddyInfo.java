@@ -12,6 +12,7 @@ public class GetBuddyInfo {
     private String major;
     private String sex;
     private String continent;
+    private String motherTongue;
     private List<String> languages;
     private List<String> personalities;
     private List<String> hobbies;
