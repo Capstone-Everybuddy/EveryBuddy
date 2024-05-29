@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from 'react';
 
 interface User {
   role: 'seoulmate' | 'buddy';
@@ -23,9 +29,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const login = (role: 'seoulmate' | 'buddy', user: Omit<User, 'role'>) => {
     setUser({ role, ...user });
+    localStorage.setItem('user', JSON.stringify({ role, ...user }));
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
