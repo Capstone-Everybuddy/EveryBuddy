@@ -1,4 +1,4 @@
-package everybuddy.project.domain.chatting.entitiy;
+package everybuddy.project.domain.chatting.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,6 @@ public class ChatRoom {
 
     private String roomId;
     private String roomName;
-
 
     public static ChatRoom create(String name) {
         ChatRoom room = new ChatRoom();

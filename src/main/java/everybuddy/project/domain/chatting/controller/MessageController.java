@@ -1,6 +1,7 @@
 package everybuddy.project.domain.chatting.controller;
 
-import everybuddy.project.domain.chatting.entitiy.ChatMessage;
+import everybuddy.project.domain.chatting.entity.ChatMessage;
+import everybuddy.project.domain.chatting.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -11,12 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
 
     private final SimpMessageSendingOperations sendingOperations;
+    private final ChatService chatService;
 
     @MessageMapping("/chat/message")
     public void enter(ChatMessage message) {
         if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
-            message.setMessage(message.getSender()+"님이 입장하였습니다.");
+            message.setMessage(message.getSender() + "님이 입장하였습니다.");
         }
-        sendingOperations.convertAndSend("/topic/chat/room/"+message.getRoomId(),message);
+        if (message.getSenderType() == null) {
+            message.setSenderType(ChatMessage.SenderType.BUDDY); // 기본 값을 설정
+        }
+        chatService.saveMessage(message); // 메시지 저장
+        sendingOperations.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);
     }
 }

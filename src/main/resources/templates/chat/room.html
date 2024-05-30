@@ -42,8 +42,7 @@
         el: '#app',
         data: {
             room_name : '',
-            chatrooms: [
-            ]
+            chatrooms: []
         },
         created() {
             this.findAllRoom();
@@ -58,24 +57,32 @@
                     return;
                 } else {
                     var params = new URLSearchParams();
-                    params.append("name",this.room_name);
+                    params.append("name", this.room_name);
                     axios.post('/chat/room', params)
                         .then(
                             response => {
-                                alert(response.data.roomName+"방 개설에 성공하였습니다.")
+                                alert(response.data.roomName + " 방 개설에 성공하였습니다.");
                                 this.room_name = '';
                                 this.findAllRoom();
                             }
                         )
-                        .catch( response => { alert("채팅방 개설에 실패하였습니다."); } );
+                        .catch(response => { alert("채팅방 개설에 실패하였습니다."); });
                 }
             },
             enterRoom: function(roomId) {
-                var sender = prompt('대화명을 입력해 주세요.');
-                if(sender !== "") {
-                    localStorage.setItem('wschat.sender',sender);
-                    localStorage.setItem('wschat.roomId',roomId);
-                    location.href="/chat/room/enter/"+roomId;
+                var sender = prompt('이름을 입력해 주세요.');
+                if (sender !== null && sender.trim() !== "") {
+                    var senderType = prompt('사용자 타입을 입력해 주세요. (BUDDY 또는 SEOULMATE)').toUpperCase();
+                    if (senderType === "BUDDY" || senderType === "SEOULMATE") {
+                        localStorage.setItem('wschat.sender', sender);
+                        localStorage.setItem('wschat.senderType', senderType);
+                        localStorage.setItem('wschat.roomId', roomId);
+                        location.href = "/chat/room/enter/" + roomId;
+                    } else {
+                        alert("올바른 사용자 타입을 입력해 주세요. (BUDDY 또는 SEOULMATE)");
+                    }
+                } else {
+                    alert("이름을 입력해 주세요.");
                 }
             }
         }

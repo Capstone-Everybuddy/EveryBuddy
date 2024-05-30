@@ -1,44 +1,49 @@
 package everybuddy.project.domain.chatting.service;
 
-import everybuddy.project.domain.chatting.entitiy.ChatRoom;
+import everybuddy.project.domain.chatting.dao.ChatRoomDao;
+import everybuddy.project.domain.chatting.dao.ChatMessageDao;
+import everybuddy.project.domain.chatting.entity.ChatRoom;
+import everybuddy.project.domain.chatting.entity.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ChatService {
 
-    private Map<String, ChatRoom> chatRooms;
+    private final ChatRoomDao chatRoomDao;
+    private final ChatMessageDao chatMessageDao;
 
-    @PostConstruct
-    //의존관게 주입완료되면 실행되는 코드
-    private void init() {
-        chatRooms = new LinkedHashMap<>();
-    }
-
-    //채팅방 불러오기
+    // 채팅방 불러오기
     public List<ChatRoom> findAllRoom() {
-        //채팅방 최근 생성 순으로 반환
-        List<ChatRoom> result = new ArrayList<>(chatRooms.values());
-        Collections.reverse(result);
-
-        return result;
+        return chatRoomDao.findAllRooms();
     }
 
-    //채팅방 하나 불러오기
+    // 채팅방 하나 불러오기
     public ChatRoom findById(String roomId) {
-        return chatRooms.get(roomId);
+        return chatRoomDao.findRoomById(roomId);
     }
 
-    //채팅방 생성
+    // 채팅방 생성
     public ChatRoom createRoom(String name) {
         ChatRoom chatRoom = ChatRoom.create(name);
-        chatRooms.put(chatRoom.getRoomId(), chatRoom);
+        chatRoomDao.save(chatRoom);
         return chatRoom;
+    }
+
+    // 채팅 메시지 불러오기
+    public List<ChatMessage> findMessagesByRoomId(String roomId) {
+        return chatMessageDao.findMessagesByRoomId(roomId);
+    }
+
+    // 채팅 메시지 저장
+    public void saveMessage(ChatMessage chatMessage) {
+        chatMessage.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        chatMessageDao.save(chatMessage);
     }
 }

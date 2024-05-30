@@ -1,9 +1,11 @@
-package everybuddy.project.domain.chatting.entitiy;
+package everybuddy.project.domain.chatting.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -14,11 +16,15 @@ public class ChatMessage {
         ENTER, TALK
     }
 
+    public enum SenderType {
+        SEOULMATE, BUDDY
+    }
+
     private MessageType type;
-    //채팅방 ID
     private String roomId;
-    //보내는 사람
     private String sender;
-    //내용
+    private int senderId; // 추가된 필드
+    private SenderType senderType; // 추가된 필드
     private String message;
+    private Timestamp createdAt; // 추가된 필드
 }
