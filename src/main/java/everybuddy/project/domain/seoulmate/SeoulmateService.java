@@ -53,18 +53,18 @@ public class SeoulmateService {
         }
     }
 
-    public GetSeoulmateProfileRes getSeoulmateProfile(String seoulmateId) {
-        SeoulmateProfile seoulmate = seoulmateDao.getSeoulmateProfile(seoulmateId);
+    public GetSeoulmateProfileRes getSeoulmateProfile(int seoulmateIdx) {
+        SeoulmateProfile seoulmate = seoulmateDao.getSeoulmateProfile(seoulmateIdx);
         return new GetSeoulmateProfileRes(seoulmate.getName(), seoulmate.getID(), seoulmate.getPassword(), seoulmate.getStudentId(), seoulmate.getSex(), seoulmate.getMajor(), seoulmate.getProfileImg());
     }
     
-    public void modifySeoulmateProfile(String seoulmateId, ModifyProfileReq modifyProfileReq) throws BaseException {
+    public void modifySeoulmateProfile(int seoulmateIdx, ModifyProfileReq modifyProfileReq) throws BaseException {
         try {
             // 서울메이트의 아이디(seoulmateId)를 통해 프로필을 가져옵니다.
-            SeoulmateProfile seoulmateProfile = seoulmateDao.getSeoulmateProfile(seoulmateId);
+            SeoulmateProfile seoulmateProfile = seoulmateDao.getSeoulmateProfile(seoulmateIdx);
             if (seoulmateProfile != null) {
                 // 프로필을 가져왔다면 수정을 수행합니다.
-                seoulmateDao.updateProfileById(seoulmateId, modifyProfileReq);
+                seoulmateDao.updateProfileById(seoulmateIdx, modifyProfileReq);
             } else {
                 // 프로필을 찾을 수 없을 때 예외를 발생시킵니다.
                 throw new BaseException(DATABASE_ERROR);

@@ -148,8 +148,8 @@ public class BuddyDao {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public BuddyProfile getBuddyProfile(String buddyId) {
-        String profileQuery = "SELECT buddyIdx, `name`, ID, password, studentId, continent, profileImg FROM buddy WHERE ID = ?";
+    public BuddyProfile getBuddyProfile(int buddyIdx) {
+        String profileQuery = "SELECT buddyIdx, `name`, ID, password, studentId, continent, profileImg FROM buddy WHERE buddyIdx = ?";
         return this.jdbcTemplate.queryForObject(profileQuery,
                 (rs, rowNum) -> new BuddyProfile (
                         rs.getInt("buddyIdx"),
@@ -160,12 +160,12 @@ public class BuddyDao {
                         rs.getString("continent"),
                         rs.getString("profileImg")
                 ),
-                buddyId);
+                buddyIdx);
     }
-    public void updateProfileById(String buddyId, everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) throws BaseException {
+    public void updateProfileById(int buddyIdx, everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) throws BaseException {
         try {
-            String updateProfileQuery = "UPDATE buddy SET nationality = ?, profileImg = ? WHERE ID = ?";
-            Object[] updateProfileParams = new Object[]{modifyProfileReq.getNationality(), modifyProfileReq.getProfileImg(), buddyId};
+            String updateProfileQuery = "UPDATE buddy SET nationality = ?, profileImg = ? WHERE buddyIdx = ?";
+            Object[] updateProfileParams = new Object[]{modifyProfileReq.getNationality(), modifyProfileReq.getProfileImg(), buddyIdx};
             this.jdbcTemplate.update(updateProfileQuery, updateProfileParams);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

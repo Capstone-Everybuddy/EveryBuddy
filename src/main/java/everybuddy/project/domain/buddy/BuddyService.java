@@ -55,16 +55,16 @@ public class BuddyService {
 
 
 
-    public GetBuddyProfileRes getBuddyProfile(String buddyId) {
-        BuddyProfile buddy = buddyDao.getBuddyProfile(buddyId);
+    public GetBuddyProfileRes getBuddyProfile(int buddyIdx) {
+        BuddyProfile buddy = buddyDao.getBuddyProfile(buddyIdx);
         return new GetBuddyProfileRes(buddy.getName(), buddy.getID(), buddy.getPassword(), buddy.getStudentId(), buddy.getNationality(), buddy.getProfileImg());
     }
 
-    public void modifyBuddyProfile(String buddyId, everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) throws BaseException {
+    public void modifyBuddyProfile(int buddyIdx, everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) throws BaseException {
         try {
-            BuddyProfile buddyProfile = buddyDao.getBuddyProfile(buddyId);
+            BuddyProfile buddyProfile = buddyDao.getBuddyProfile(buddyIdx);
             if (buddyProfile != null) {
-                buddyDao.updateProfileById(buddyId, modifyProfileReq);
+                buddyDao.updateProfileById(buddyIdx, modifyProfileReq);
             } else {
                 throw new BaseException(DATABASE_ERROR);
             }

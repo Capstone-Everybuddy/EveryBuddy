@@ -154,8 +154,8 @@ public class SeoulmateDao {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public SeoulmateProfile getSeoulmateProfile(String seoulmateId) {
-        String profileQuery = "SELECT seoulmateIdx, `name`, ID, password, studentId, sex, major, profileImg FROM seoulmate WHERE ID = ?";
+    public SeoulmateProfile getSeoulmateProfile(int seoulmateIdx) {
+        String profileQuery = "SELECT seoulmateIdx, `name`, ID, password, studentId, sex, major, profileImg FROM seoulmate WHERE seoulmateIdx = ?";
         return this.jdbcTemplate.queryForObject(profileQuery,
                 (rs, rowNum) -> new SeoulmateProfile (
                         rs.getInt("seoulmateIdx"),
@@ -167,12 +167,12 @@ public class SeoulmateDao {
                         rs.getString("major"),
                         rs.getString("profileImg")
                 ),
-                seoulmateId);
+                seoulmateIdx);
     }
-    public void updateProfileById(String seoulmateId, ModifyProfileReq modifyProfileReq) throws BaseException {
+    public void updateProfileById(int seoulmateIdx, ModifyProfileReq modifyProfileReq) throws BaseException {
         try {
-            String updateProfileQuery = "UPDATE seoulmate SET sex = ?, major = ?, profileImg = ? WHERE ID = ?";
-            Object[] updateProfileParams = new Object[]{modifyProfileReq.getSex(), modifyProfileReq.getMajor(), modifyProfileReq.getProfileImg(), seoulmateId};
+            String updateProfileQuery = "UPDATE seoulmate SET sex = ?, major = ?, profileImg = ? WHERE seoulmateIdx = ?";
+            Object[] updateProfileParams = new Object[]{modifyProfileReq.getSex(), modifyProfileReq.getMajor(), modifyProfileReq.getProfileImg(), seoulmateIdx};
             this.jdbcTemplate.update(updateProfileQuery, updateProfileParams);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

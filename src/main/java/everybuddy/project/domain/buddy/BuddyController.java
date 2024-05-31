@@ -73,19 +73,19 @@ public class BuddyController {
 
     /*프로필 조회*/
     @ResponseBody
-    @GetMapping("/{buddyId}")
+    @GetMapping("/{buddyIdx}")
     @Operation(summary = "버디 프로필 조회 API", description = "버디의 프로필을 조회하는 API")
-    public GetBuddyProfileRes getBuddyProfile(@PathVariable("buddyId") String buddyId) {
-        GetBuddyProfileRes buddyProfileRes = buddyService.getBuddyProfile(buddyId);
+    public GetBuddyProfileRes getBuddyProfile(@PathVariable("buddyIdx") int buddyIdx) {
+        GetBuddyProfileRes buddyProfileRes = buddyService.getBuddyProfile(buddyIdx);
         return buddyProfileRes;
     }
 
     @ResponseBody
-    @PutMapping("/modify/{buddyId}")
+    @PutMapping("/modify/{buddyIdx}")
     @Operation(summary = "버디 프로필 수정 API", description = "버디 프로필을 수정하는 API")
-    public ResponseEntity<BaseResponse<String>> modifyBuddyProfile(@PathVariable("buddyId") String buddyId, @RequestBody everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) {
+    public ResponseEntity<BaseResponse<String>> modifyBuddyProfile(@PathVariable("buddyIdx") int buddyIdx, @RequestBody everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) {
         try {
-            buddyService.modifyBuddyProfile(buddyId, modifyProfileReq);
+            buddyService.modifyBuddyProfile(buddyIdx, modifyProfileReq);
             String message = "프로필이 성공적으로 수정되었습니다.";
             return ResponseEntity.ok(new BaseResponse<>(message));
         } catch (BaseException baseException) {

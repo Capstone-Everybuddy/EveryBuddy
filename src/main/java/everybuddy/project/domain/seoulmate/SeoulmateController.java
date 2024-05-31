@@ -63,19 +63,19 @@ public class SeoulmateController {
 
     /*프로필 조회*/
     @ResponseBody
-    @GetMapping("/{seoulmateId}")
+    @GetMapping("/{seoulmateIdx}")
     @Operation(summary = "서울메이트 프로필 조회 API", description = "서울메이트의 프로필을 조회하는 API")
-    public GetSeoulmateProfileRes getSeoulmateProfile(@PathVariable("seoulmateId") String seoulmateId) {
-        GetSeoulmateProfileRes seoulmateProfileRes = seoulmateService.getSeoulmateProfile(seoulmateId);
+    public GetSeoulmateProfileRes getSeoulmateProfile(@PathVariable("seoulmateIdx") int seoulmateIdx) {
+        GetSeoulmateProfileRes seoulmateProfileRes = seoulmateService.getSeoulmateProfile(seoulmateIdx);
         return seoulmateProfileRes;
     }
 
     @ResponseBody
-    @PutMapping("/modify/{seoulmateId}")
+    @PutMapping("/modify/{seoulmateIdx}")
     @Operation(summary = "서울메이트 프로필 수정 API", description = "서울메이트 프로필을 수정하는 API")
-    public ResponseEntity<BaseResponse<String>> modifySeoulmateProfile(@PathVariable("seoulmateId") String seoulmateId, @RequestBody ModifyProfileReq modifyProfileReq) {
+    public ResponseEntity<BaseResponse<String>> modifySeoulmateProfile(@PathVariable("seoulmateIdx") int seoulmateIdx, @RequestBody ModifyProfileReq modifyProfileReq) {
         try {
-            seoulmateService.modifySeoulmateProfile(seoulmateId, modifyProfileReq);
+            seoulmateService.modifySeoulmateProfile(seoulmateIdx, modifyProfileReq);
             String message = "프로필이 성공적으로 수정되었습니다.";
             return ResponseEntity.ok(new BaseResponse<>(message));
         } catch (BaseException baseException) {
