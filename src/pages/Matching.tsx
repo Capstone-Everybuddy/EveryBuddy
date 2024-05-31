@@ -24,7 +24,7 @@ const Matching: React.FC = () => {
     <Main.Wrapper>
       <Layout.PageContent>
         <Header title="Matching" />
-        {isMatchingComplete ? (
+        {!isMatchingComplete ? (
           <MatchingCompleteContainer />
         ) : (
           <MatchingStartContainer />

@@ -13,6 +13,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import useSeoulmate from 'hooks/useSeoulmate';
 import useBuddy from 'hooks/useBuddy';
+import { useAuth } from 'components/AuthContext';
 
 enum Role {
   SEOULMATE,
@@ -111,9 +112,9 @@ const convertToInfoFormat = (
 };
 
 const MatchingInfo = () => {
+  const { user } = useAuth();
   // role
-  let role: Role = Role.SEOULMATE;
-  role = Role.BUDDY;
+  const role: Role = user?.role === 'seoulmate' ? Role.SEOULMATE : Role.BUDDY;
 
   // api
   const { savePreferenceSeoulmate, saveInfoSeoulmate } = useSeoulmate();
@@ -185,28 +186,27 @@ const MatchingInfo = () => {
 
   const submitCompleted = () => {
     if (enterType === 'information') {
-      if (role === Role.SEOULMATE)
+      if (role === Role.SEOULMATE && user)
         saveInfoSeoulmate({
-          seoulmateIdx: 1, //TODO: 임시로 idx 넣음
+          seoulmateIdx: user.idx,
           data: convertToInfoFormat(lists, role),
         });
-      else if (role === Role.BUDDY)
+      else if (role === Role.BUDDY && user)
         saveInfoBuddy({
-          buddyIdx: 2,
+          buddyIdx: user.idx,
           data: convertToInfoFormat(lists, role),
         });
     } else if (enterType === 'preference') {
-      if (role === Role.SEOULMATE)
+      if (role === Role.SEOULMATE && user)
         savePreferenceSeoulmate({
-          seoulmateIdx: 1, //TODO: 임시로 idx 넣음
+          seoulmateIdx: user.idx,
           data: convertToPreferenceFormat(rankingOptions, lists, role),
         });
-      else if (role === Role.BUDDY) {
+      else if (role === Role.BUDDY && user) {
         savePreferenceBuddy({
-          buddyIdx: 2,
+          buddyIdx: user.idx,
           data: convertToPreferenceFormat(rankingOptions, lists, role),
         });
-        console.log(convertToPreferenceFormat(rankingOptions, lists, role));
       }
     }
   };
