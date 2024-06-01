@@ -6,6 +6,8 @@ import Main from 'components/Main';
 import segmented from '../assets/segmented.png';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
+import { useAuth } from 'components/AuthContext';
+import { api } from 'api/Client';
 
 interface User {
   user_name: string;
@@ -17,7 +19,7 @@ interface User {
 }
 
 const Profile: React.FC = () => {
-  const [user, setUser] = useState<User>({
+  const [userProfile, setUserProfile] = useState<User>({
     user_name: 'USER',
     user_id: 'USERID',
     user_language: 'English',
@@ -26,34 +28,34 @@ const Profile: React.FC = () => {
     profileImage: 'https://via.placeholder.com/80x80',
   });
 
-  const token = sessionStorage.getItem('token');
-  const name = sessionStorage.getItem('name');
+  const { user } = useAuth();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`서버URL/user?user_name=${name}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${token}`,
-        },
-      });
-      const result = await response.json();
-      if (response.status === 200) {
-        setUser({
-          user_name: result.name,
-          user_id: result.user_id,
-          user_pwd: result.user_pwd,
-          user_language: result.user_language,
-          user_studentNum: result.user_studentNum,
-          profileImage: result.profileImage,
-        });
-      } else {
-        console.log('실패');
+    const fetchProfile = async () => {
+      try {
+        if (user) {
+          let profileData;
+          if (user.role === 'seoulmate') {
+            profileData = await api.seoulmates.getSeoulmateProfile(user.idx);
+          } else {
+            profileData = await api.buddies.getBuddyProfile(user.idx);
+          }
+          setUserProfile({
+            user_name: profileData.name || 'USER',
+            user_id: profileData.id || 'USERID',
+            user_pwd: profileData.password || 'passwordxxx',
+            user_studentNum: profileData.studentId || '20xxxxxxxxx',
+            profileImage:
+              profileData.profileImg || 'https://via.placeholder.com/80x80',
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
       }
     };
-    fetchData();
-  }, [name, token]);
+
+    fetchProfile();
+  }, [user]);
 
   return (
     <Main.Wrapper>
@@ -63,14 +65,13 @@ const Profile: React.FC = () => {
         <UserProfile>
           <ProfileSection>
             <ProfileImage>
-              <img src={user.profileImage} alt="프로필사진" />
+              <img src={userProfile.profileImage} alt="프로필사진" />
             </ProfileImage>
             <UserInfo>
-              <h1>{user.user_name}</h1>
-              <p>{user.user_id}</p>
-              <p>{user.user_pwd}</p>
-              <p>{user.user_language}</p>
-              <p>{user.user_studentNum}</p>
+              <h1>{userProfile.user_name}</h1>
+              <p>{userProfile.user_id}</p>
+              <p>{userProfile.user_studentNum}</p>
+              <p>{userProfile.user_pwd}</p>
             </UserInfo>
           </ProfileSection>
           <Link to="/userupdate">
