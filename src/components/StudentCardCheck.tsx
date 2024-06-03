@@ -21,13 +21,10 @@ const StudentCardCheck = ({ studentIdCheckInputChange }: Props) => {
     formData.append('file', image);
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_HOST}/api/ocr`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
+      const response = await fetch(`/api/ocr`, {
+        method: 'POST',
+        body: formData,
+      });
       const { images } = await response.json();
       if (images[0].inferResult === 'SUCCESS') {
         let studentId = '';

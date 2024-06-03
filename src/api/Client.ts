@@ -11,5 +11,5 @@ export const queryClient = new QueryClient({
 });
 
 export const api = new Api({
-  baseURL: `${process.env.REACT_APP_API_HOST}`,
+  baseURL: `/api`,
 });
