@@ -21,7 +21,7 @@ const StudentCardCheck = ({ studentIdCheckInputChange }: Props) => {
     formData.append('file', image);
 
     try {
-      const response = await fetch(`/api/ocr`, {
+      const response = await fetch(`/api/api/ocr`, {
         method: 'POST',
         body: formData,
       });
