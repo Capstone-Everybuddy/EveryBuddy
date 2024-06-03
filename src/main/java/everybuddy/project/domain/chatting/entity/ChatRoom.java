@@ -10,12 +10,11 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ChatRoom {
 
-    private String roomId;
+    private Integer roomId; // 변경: String -> Integer
     private String roomName;
 
     public static ChatRoom create(String name) {
         ChatRoom room = new ChatRoom();
-        room.roomId = UUID.randomUUID().toString();
         room.roomName = name;
         return room;
     }

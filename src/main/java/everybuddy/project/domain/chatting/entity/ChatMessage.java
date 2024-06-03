@@ -17,7 +17,7 @@ public class ChatMessage {
     }
 
     public enum SenderType {
-        SEOULMATE, BUDDY
+        seoulmate, buddy
     }
 
     private MessageType type;

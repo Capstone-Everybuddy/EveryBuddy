@@ -27,7 +27,9 @@ public class ChatRoomDao {
     }
 
     public void save(ChatRoom chatRoom) {
-        String sql = "INSERT INTO chat_room (room_id, room_name, created_at) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, chatRoom.getRoomId(), chatRoom.getRoomName(), new Timestamp(System.currentTimeMillis()));
+        String sql = "INSERT INTO chat_room (room_name, created_at) VALUES (?, ?)";
+        jdbcTemplate.update(sql, chatRoom.getRoomName(), new Timestamp(System.currentTimeMillis()));
+        Integer roomId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+        chatRoom.setRoomId(roomId);
     }
 }

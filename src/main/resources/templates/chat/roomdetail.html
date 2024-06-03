@@ -67,7 +67,18 @@
         },
         methods: {
             findRoom: function() {
-                axios.get('/chat/room/' + this.roomId).then(response => { this.room = response.data; });
+                axios.get('/chat/room/' + this.roomId).then(response => {
+                    this.room = response.data;
+                    this.loadMessages();
+                });
+            },
+            loadMessages: function() {
+                axios.get('/chat/messages/' + this.roomId).then(response => {
+                    this.messages = response.data;
+                    this.connectWebSocket(); // 메시지가 로드된 후에 WebSocket 연결
+                }).catch(error => {
+                    console.error("Failed to load messages:", error);
+                });
             },
             sendMessage: function() {
                 ws.send("/app/chat/message", {}, JSON.stringify({
