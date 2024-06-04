@@ -4,6 +4,7 @@ import React, {
   FormEvent,
   useRef,
   useEffect,
+  MouseEvent,
 } from 'react';
 import { MdEdit } from 'react-icons/md';
 import styled from 'styled-components';
@@ -19,6 +20,7 @@ interface FormData {
   user_pwdCheck: string;
   profileImage: string;
   user_studentId: string;
+  user_auth: string;
 }
 
 interface FormErrors {
@@ -27,6 +29,7 @@ interface FormErrors {
   user_pwd: string;
   user_studentId: string;
   user_pwdCheck: string;
+  user_auth: string;
 }
 
 const Register = () => {
@@ -38,6 +41,7 @@ const Register = () => {
     user_pwd: '',
     user_pwdCheck: '',
     user_studentId: '',
+    user_auth: '',
     profileImage: 'https://via.placeholder.com/150',
   });
 
@@ -47,7 +51,12 @@ const Register = () => {
     user_pwd: '',
     user_pwdCheck: '',
     user_studentId: '',
+    user_auth: '',
   });
+
+  const [authCode, setAuthCode] = useState('');
+
+  const [completeAuth, setCompleteAuth] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -99,6 +108,7 @@ const Register = () => {
       user_pwd: '',
       user_pwdCheck: '',
       user_studentId: '',
+      user_auth: '',
     };
 
     for (const key in formData) {
@@ -164,7 +174,19 @@ const Register = () => {
 
   const isFormValid =
     !Object.values(formErrors).some((error) => error !== '') &&
-    Object.values(formData).every((value) => value !== '');
+    Object.values(formData).every((value) => value !== '') &&
+    completeAuth;
+
+  const handleAuthSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (formData['user_auth'] !== 'everybuddy!') {
+      setCompleteAuth('');
+      setFormErrors((prev) => ({
+        ...prev,
+        user_auth: 'The verification code does not match.',
+      }));
+    } else setCompleteAuth('Verification completed.');
+  };
 
   return (
     <MainWrapper>
@@ -256,6 +278,25 @@ const Register = () => {
                 )}
               </InputDiv>
             </FormGrid>
+            <InputDiv>
+              <Label htmlFor="user_auth">Verification Code</Label>
+              <AuthDiv>
+                <Input
+                  type="text"
+                  id="user_auth"
+                  name="user_auth"
+                  value={formData.user_auth}
+                  onChange={handleInputChange}
+                />
+                <SubmitButton onClick={handleAuthSubmit}>Submit</SubmitButton>
+              </AuthDiv>
+              {formErrors.user_auth && (
+                <ErrorMessage>{formErrors.user_auth}</ErrorMessage>
+              )}
+              {completeAuth && (
+                <CompleteMessage>{completeAuth}</CompleteMessage>
+              )}
+            </InputDiv>
             <StudentCardCheck
               studentIdCheckInputChange={studentIdCheckInputChange}
             />
@@ -355,6 +396,12 @@ const ErrorMessage = styled.span`
   padding-top: 10px;
 `;
 
+const CompleteMessage = styled.span`
+  font-size: 12px;
+  padding-left: 10px;
+  padding-top: 10px;
+`;
+
 const CheckButton = styled.button<{ isChecked: boolean }>`
   padding: 10px 20px;
   background-color: ${({ isChecked }) => (isChecked ? '#B2B2B2' : 'orange')};
@@ -378,6 +425,25 @@ const NextButton = styled.button`
   border-radius: 40px;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   width: 100%;
+`;
+
+const AuthDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 20px; /* 간격을 주기 위해 마진 추가 */
+`;
+
+const SubmitButton = styled.button`
+  padding: 8px 10px;
+  background-color: ${(props) => props.theme.colors.orange};
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
 `;
 
 export default Register;
