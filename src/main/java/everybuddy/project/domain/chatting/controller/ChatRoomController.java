@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatRoomController {
@@ -18,7 +18,6 @@ public class ChatRoomController {
 
     // 채팅 리스트 화면 html
     @GetMapping("/room")
-    @ResponseBody
     public String rooms(Model model) {
         return "/chat/room";
     }
@@ -39,7 +38,6 @@ public class ChatRoomController {
 
     // 채팅방 입장 화면 html
     @GetMapping("/room/enter/{roomId}")
-    @ResponseBody
     public String roomDetail(Model model, @PathVariable String roomId) {
         model.addAttribute("roomId", roomId);
         return "/chat/roomdetail";
