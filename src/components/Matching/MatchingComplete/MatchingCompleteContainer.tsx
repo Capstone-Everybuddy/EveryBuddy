@@ -2,28 +2,30 @@ import React from 'react';
 import styled from 'styled-components';
 import MemberProfile from './MemberProfile';
 import { Role } from 'data/matching';
+import useMatching from 'hooks/useMatching';
 
 const MatchingCompleteContainer = () => {
+  const { matchingArray } = useMatching();
   return (
     <Container>
       <MainText>매칭 정보 확인하기</MainText>
       <SubText>나와 매칭된 사람들의 정보를 확인해보세요</SubText>
       <MemberList>
-        <MemberProfile
-          name="이수빈"
-          studentId="2020920044"
-          memberRole={Role.SEOULMATE}
-        />
-        <MemberProfile
-          name="이수빈"
-          studentId="2020920044"
-          memberRole={Role.BUDDY}
-        />
-        <MemberProfile
-          name="이수빈"
-          studentId="2020920044"
-          memberRole={Role.BUDDY}
-        />
+        {matchingArray && (
+          <MemberProfile
+            name={matchingArray[0].seoulmateName!}
+            studentId={matchingArray[0].seoulmateStudentId!}
+            memberRole={Role.SEOULMATE}
+          />
+        )}
+        {matchingArray?.map((item) => (
+          <MemberProfile
+            key={item.buddyStudentId}
+            name={item.buddyName!}
+            studentId={item.buddyStudentId!}
+            memberRole={Role.BUDDY}
+          />
+        ))}
       </MemberList>
     </Container>
   );

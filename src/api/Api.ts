@@ -14,6 +14,8 @@ export interface ModifyProfileReq {
   password?: string;
   studentId?: string;
   /** @format int32 */
+  sex?: number;
+  major?: string;
   profileImg?: string;
   id?: string;
 }
@@ -80,8 +82,8 @@ export interface BaseResponsePostLoginRes {
 
 export interface PostLoginRes {
   /** @format int32 */
-  buddyIdx?: number;
   seoulmateIdx?: number;
+  buddyIdx?: number;
   name?: string;
 }
 
@@ -100,6 +102,12 @@ export interface Matching {
   /** @format int32 */
   seoulmateIdx?: number;
   buddyIdxs?: number[];
+}
+
+export interface ChatRoom {
+  /** @format int32 */
+  roomId?: number;
+  roomName?: string;
 }
 
 export interface PostBuddyReq {
@@ -163,21 +171,31 @@ export interface GetStatusRes {
   state?: number;
 }
 
-export interface BaseResponseGetMatchingRes {
+export interface BaseResponseListGetMatchingRes {
   isSuccess?: boolean;
   /** @format int32 */
   code?: number;
   message?: string;
-  result?: GetMatchingRes;
+  result?: GetMatchingRes[];
 }
 
 export interface GetMatchingRes {
   seoulmateName?: string;
-  seoulmateID?: string;
+  seoulmateStudentId?: string;
   seoulmateProfileImg?: string;
+  /** @format int32 */
+  seoulmateMajor?: number;
+  /** @format int32 */
+  seoulmateSex?: number;
   buddyName?: string;
-  buddyID?: string;
+  buddyStudentId?: string;
   buddyProfileImg?: string;
+  /** @format int32 */
+  buddyMajor?: number;
+  /** @format int32 */
+  buddySex?: number;
+  /** @format int32 */
+  buddyContinent?: number;
 }
 
 export interface BaseResponseListTeam {
@@ -233,12 +251,16 @@ export interface Team {
   buddyList?: Buddy[];
 }
 
-export interface BaseResponseListGetMatchingRes {
-  isSuccess?: boolean;
+export interface ChatMessage {
+  type?: ChatMessageTypeEnum;
+  roomId?: string;
+  sender?: string;
   /** @format int32 */
-  code?: number;
+  senderId?: number;
+  senderType?: ChatMessageSenderTypeEnum;
   message?: string;
-  result?: GetMatchingRes[];
+  /** @format date-time */
+  createdAt?: string;
 }
 
 export interface GetBuddyProfileRes {
@@ -248,6 +270,16 @@ export interface GetBuddyProfileRes {
   nationality?: string;
   studentId?: string;
   id?: string;
+}
+
+export enum ChatMessageTypeEnum {
+  ENTER = 'ENTER',
+  TALK = 'TALK',
+}
+
+export enum ChatMessageSenderTypeEnum {
+  Seoulmate = 'seoulmate',
+  Buddy = 'buddy',
 }
 
 import type {
@@ -715,7 +747,7 @@ export class Api<
      * @request GET:/matchings/seoulmate/{buddyIdx}
      */
     getMatching: (buddyIdx: number, params: RequestParams = {}) =>
-      this.request<BaseResponseGetMatchingRes, any>({
+      this.request<BaseResponseListGetMatchingRes, any>({
         path: `/matchings/seoulmate/${buddyIdx}`,
         method: 'GET',
         ...params,
@@ -763,6 +795,83 @@ export class Api<
       this.request<BaseResponseString, any>({
         path: `/matchings/delete`,
         method: 'DELETE',
+        ...params,
+      }),
+  };
+  chat = {
+    /**
+     * No description
+     *
+     * @tags chat-room-controller
+     * @name CreateRoom
+     * @request POST:/chat/room
+     */
+    createRoom: (
+      query: {
+        name: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ChatRoom, any>({
+        path: `/chat/room`,
+        method: 'POST',
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags chat-room-controller
+     * @name Room
+     * @request GET:/chat/rooms/{userId}
+     */
+    room: (userId: number, params: RequestParams = {}) =>
+      this.request<ChatRoom[], any>({
+        path: `/chat/rooms/${userId}`,
+        method: 'GET',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags chat-room-controller
+     * @name GetRoomId
+     * @request GET:/chat/roomId/{userId}/{userType}
+     */
+    getRoomId: (userId: number, userType: string, params: RequestParams = {}) =>
+      this.request<number, any>({
+        path: `/chat/roomId/${userId}/${userType}`,
+        method: 'GET',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags chat-room-controller
+     * @name RoomInfo
+     * @request GET:/chat/room/{roomId}
+     */
+    roomInfo: (roomId: string, params: RequestParams = {}) =>
+      this.request<ChatRoom, any>({
+        path: `/chat/room/${roomId}`,
+        method: 'GET',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags message-controller
+     * @name GetMessages
+     * @request GET:/chat/messages/{roomId}
+     */
+    getMessages: (roomId: string, params: RequestParams = {}) =>
+      this.request<ChatMessage[], any>({
+        path: `/chat/messages/${roomId}`,
+        method: 'GET',
         ...params,
       }),
   };
