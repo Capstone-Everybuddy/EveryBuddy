@@ -54,6 +54,14 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  /* 스크롤바 감추기 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 및 Edge */
+
+  /* Webkit 기반 브라우저(Chrome, Safari 등)에서 스크롤바 감추기 */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ArrowWrapper = styled.div`
