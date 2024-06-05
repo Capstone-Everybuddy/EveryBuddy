@@ -32,7 +32,7 @@ public class MessageController {
             message.setMessage(message.getSender() + "님이 입장하였습니다.");
         }
         if (message.getSenderType() == null) {
-            message.setSenderType(ChatMessage.SenderType.buddy); // 기본 값을 설정
+            message.setSenderType(ChatMessage.SenderType.b); // 기본 값을 설정
         }
         chatService.saveMessage(message); // 메시지 저장
         sendingOperations.convertAndSend("/topic/chat/room/" + message.getRoomId(), message);

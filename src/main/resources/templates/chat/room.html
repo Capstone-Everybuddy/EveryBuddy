@@ -72,16 +72,16 @@
             enterRoom: function(roomId) {
                 var sender = prompt('이름을 입력해 주세요.');
                 if (sender !== null && sender.trim() !== "") {
-                    var senderType = prompt('사용자 타입을 입력해 주세요. (buddy 또는 seoulmate)');
+                    var senderType = prompt('사용자 타입을 입력해 주세요. (b 또는 s)');
                     var senderId = prompt('아이디를 입력해 주세요.');
-                    if (senderType === "buddy" || senderType === "seoulmate") {
+                    if (senderType === "b" || senderType === "s") {
                         localStorage.setItem('wschat.sender', sender);
                         localStorage.setItem('wschat.senderId', senderId);
                         localStorage.setItem('wschat.senderType', senderType);
                         localStorage.setItem('wschat.roomId', roomId);
                         location.href = "/chat/room/enter/" + roomId;
                     } else {
-                        alert("올바른 사용자 타입을 입력해 주세요. (buddy 또는 seoulmate)");
+                        alert("올바른 사용자 타입을 입력해 주세요. (b 또는 s)");
                     }
                 } else {
                     alert("이름을 입력해 주세요.");
