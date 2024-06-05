@@ -8,19 +8,16 @@ import MatchingList from 'components/Matching/MatchingList';
 import useMatchingState from 'hooks/useMatchingState';
 
 const Admin = () => {
-  const { isMatchingComplete } = useMatchingState();
+  const { isMatchingComplete, matchingStart } = useMatchingState();
   return (
     <Main.Wrapper>
       <Layout.PageContent>
         <Header title="Admin" />
-        {!isMatchingComplete ? (
+        {isMatchingComplete ? (
           <MatchingList />
         ) : (
           <ButtonWrapper>
-            <Button
-              text="매칭 시작하기"
-              onClick={() => console.log('매칭 시작하기!!')}
-            />
+            <Button text="매칭 시작하기" onClick={() => matchingStart()} />
           </ButtonWrapper>
         )}
       </Layout.PageContent>

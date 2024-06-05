@@ -3,242 +3,10 @@ import MemberProfile from './MatchingComplete/MemberProfile';
 import styled from 'styled-components';
 import { Role } from 'data/matching';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
-const arr = [
-  {
-    seoulmate: {
-      seoulmateIdx: 1,
-      name: 'Subin',
-      password: 'string',
-      studentId: 'string',
-      profileImg: 'string',
-      major: 0,
-      sex: 0,
-      certified: 0,
-      state: 0,
-      id: 'string',
-    },
-    buddyList: [
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-    ],
-  },
-  {
-    seoulmate: {
-      seoulmateIdx: 2,
-      name: 'Suyeon',
-      password: 'string',
-      studentId: 'string',
-      profileImg: 'string',
-      major: 0,
-      sex: 0,
-      certified: 0,
-      state: 0,
-      id: 'string',
-    },
-    buddyList: [
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-    ],
-  },
-  {
-    seoulmate: {
-      seoulmateIdx: 3,
-      name: 'Heesun',
-      password: 'string',
-      studentId: 'string',
-      profileImg: 'string',
-      major: 0,
-      sex: 0,
-      certified: 0,
-      state: 0,
-      id: 'string',
-    },
-    buddyList: [
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-    ],
-  },
-  {
-    seoulmate: {
-      seoulmateIdx: 4,
-      name: 'Youngjin',
-      password: 'string',
-      studentId: 'string',
-      profileImg: 'string',
-      major: 0,
-      sex: 0,
-      certified: 0,
-      state: 0,
-      id: 'string',
-    },
-    buddyList: [
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-      {
-        buddyIdx: 0,
-        name: 'string',
-        password: 'string',
-        studentId: 'string',
-        profileImg: 'string',
-        major: 0,
-        sex: 0,
-        continent: 0,
-        motherTongue: 0,
-        certified: 0,
-        state: 0,
-        id: 'string',
-      },
-    ],
-  },
-];
+import useMatchingState from 'hooks/useMatchingState';
 
 const MatchingList = () => {
+  const { matchingEntire, matchingDelete } = useMatchingState();
   const [selected, setSelected] = useState<number>(0);
   const [showFull, setShowFull] = useState(false);
 
@@ -259,20 +27,24 @@ const MatchingList = () => {
         <span>{showFull ? '전체 접기' : '전체 펼치기'}</span>
         {showFull ? <FiChevronUp /> : <FiChevronDown />}
       </Button>
-      {arr.map((item) => (
-        <GroupList key={item.seoulmate.seoulmateIdx}>
+      <RedButton onClick={() => matchingDelete()}>
+        <span>매칭 초기화</span>
+      </RedButton>
+      {matchingEntire?.map((item) => (
+        <GroupList key={item.seoulmate?.seoulmateIdx}>
           <MemberProfile
-            name={item.seoulmate.name}
+            name={item.seoulmate?.name || ''}
             memberRole={Role.SEOULMATE}
             studentId="2020920044"
-            onClick={() => clickSeoulMate(item.seoulmate.seoulmateIdx)}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            onClick={() => clickSeoulMate(item.seoulmate?.seoulmateIdx || 0)}
           />
-          {(showFull || selected === item.seoulmate.seoulmateIdx) && (
+          {(showFull || selected === item.seoulmate?.seoulmateIdx) && (
             <BuddyList>
-              {item.buddyList.map((item) => (
+              {item.buddyList?.map((item) => (
                 <MemberProfile
                   key={item.buddyIdx}
-                  name={item.name}
+                  name={item.name!}
                   studentId="2020920044"
                   memberRole={Role.BUDDY}
                 />
@@ -304,6 +76,7 @@ const BuddyList = styled.div`
 `;
 
 const Button = styled.div`
+  margin: 10px 0px;
   display: flex;
   align-items: center;
   padding: 0.75rem 1.25rem;
@@ -322,6 +95,38 @@ const Button = styled.div`
   &:focus {
     outline: none;
     box-shadow: 0 0 0 4px rgba(255, 168, 0, 0.3);
+  }
+
+  span {
+    margin-right: 0.5rem;
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+`;
+
+const RedButton = styled.div`
+  margin: 10px 0px;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  background-color: #ff0000; /* 단색 배경 사용 */
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #cc0000; /* 호버 시 배경색 변화 */
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3);
   }
 
   span {
