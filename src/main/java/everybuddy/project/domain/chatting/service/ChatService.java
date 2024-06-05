@@ -20,8 +20,13 @@ public class ChatService {
     private final ChatMessageDao chatMessageDao;
 
     // 채팅방 불러오기
-    public List<ChatRoom> findAllRoom() {
-        return chatRoomDao.findAllRooms();
+    public List<ChatRoom> findAllRoom(int userId) {
+        return chatRoomDao.findAllRooms(userId);
+    }
+
+    // 유저 아이디에 해당하는 채팅방 아이디 반환
+    public int getRoomId(int userId, String userType)  {
+        return chatRoomDao.getRoomId(userId, userType);
     }
 
     // 채팅방 하나 불러오기

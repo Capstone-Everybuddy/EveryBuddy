@@ -360,4 +360,19 @@ public class MatchingDao {
         this.jdbcTemplate.update("UPDATE matching_state SET state = 1 WHERE matchingIdx = 1");
     }
 
+    public void saveChatroom(Map<String, List<String>> matches) {
+        int groupIdx = 1;
+        for (Map.Entry<String, List<String>> entry : matches.entrySet()) {
+            String demanderIdx = entry.getKey();
+            List<String> providerIdxs = entry.getValue();
+            String saveChatroomSeoulmateQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 's')";
+            this.jdbcTemplate.update(saveChatroomSeoulmateQuery, groupIdx, demanderIdx);
+            for (int i=0; i<providerIdxs.size(); i++) {
+                String saveChatroomBuddyQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 'b')";
+                this.jdbcTemplate.update(saveChatroomBuddyQuery, groupIdx, Integer.parseInt(providerIdxs.get(i)));
+            }
+        }
+        this.jdbcTemplate.update("UPDATE matching_state SET state = 1 WHERE matchingIdx = 1");
+    }
+
 }
