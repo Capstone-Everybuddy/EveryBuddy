@@ -30,7 +30,7 @@ const UserUpdate: React.FC = () => {
     profileImage: 'https://via.placeholder.com/80x80',
   });
 
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -123,7 +123,7 @@ const UserUpdate: React.FC = () => {
             <FormButton>
               <Button text="Submit" type="submit"></Button>
               <Link to="/">
-                <Button text="Logout" type="button"></Button>
+                <Button text="Logout" type="button" onClick={logout}></Button>
               </Link>
             </FormButton>
           </StyledForm>

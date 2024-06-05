@@ -80,7 +80,6 @@ const Profile: React.FC = () => {
               <p>{userProfile.user_id}</p>
               <p>{userProfile.user_studentNum}</p>
               <p>{matchingInfo.major[userProfile.user_major!]}</p>
-              <p>{userProfile.user_pwd}</p>
             </UserInfo>
           </ProfileSection>
           <Link to="/userupdate">
