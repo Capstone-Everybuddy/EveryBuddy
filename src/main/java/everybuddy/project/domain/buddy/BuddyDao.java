@@ -149,16 +149,18 @@ public class BuddyDao {
         }
     }
     public BuddyProfile getBuddyProfile(int buddyIdx) {
-        String profileQuery = "SELECT buddyIdx, `name`, ID, password, studentId, continent, profileImg FROM buddy WHERE buddyIdx = ?";
+        String profileQuery = "SELECT buddyIdx, `name`, ID, studentId, profileImg, major, sex, continent, motherTongue FROM buddy WHERE buddyIdx = ?";
         return this.jdbcTemplate.queryForObject(profileQuery,
                 (rs, rowNum) -> new BuddyProfile (
                         rs.getInt("buddyIdx"),
                         rs.getString("name"),
                         rs.getString("ID"),
-                        rs.getString("password"),
                         rs.getString("studentId"),
-                        rs.getString("continent"),
-                        rs.getString("profileImg")
+                        rs.getString("profileImg"),
+                        rs.getInt("major"),
+                        rs.getInt("sex"),
+                        rs.getInt("continent"),
+                        rs.getInt("motherTongue")
                 ),
                 buddyIdx);
     }

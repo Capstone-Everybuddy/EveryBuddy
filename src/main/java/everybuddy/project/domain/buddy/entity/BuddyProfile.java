@@ -11,8 +11,10 @@ public class BuddyProfile {
     private int buddyIdx;
     private String name;
     private String ID;
-    private String password;
     private String studentId;
-    private String nationality;
     private String profileImg;
+    private int major;
+    private int sex;
+    private int continent;
+    private int motherTongue;
 }
