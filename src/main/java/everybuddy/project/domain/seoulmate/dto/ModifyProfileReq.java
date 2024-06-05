@@ -6,6 +6,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ModifyProfileReq {
     private String password;
 }
