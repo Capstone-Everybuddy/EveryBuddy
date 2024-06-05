@@ -57,7 +57,7 @@ public class BuddyService {
 
     public GetBuddyProfileRes getBuddyProfile(int buddyIdx) {
         BuddyProfile buddy = buddyDao.getBuddyProfile(buddyIdx);
-        return new GetBuddyProfileRes(buddy.getName(), buddy.getID(), buddy.getPassword(), buddy.getStudentId(), buddy.getNationality(), buddy.getProfileImg());
+        return new GetBuddyProfileRes(buddy.getName(), buddy.getID(), buddy.getStudentId(), buddy.getProfileImg(), buddy.getMajor(), buddy.getSex(), buddy.getContinent(), buddy.getMotherTongue());
     }
 
     public void modifyBuddyProfile(int buddyIdx, everybuddy.project.domain.buddy.dto.ModifyProfileReq modifyProfileReq) throws BaseException {

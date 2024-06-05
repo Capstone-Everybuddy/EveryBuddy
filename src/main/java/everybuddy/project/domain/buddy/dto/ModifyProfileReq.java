@@ -2,17 +2,13 @@ package everybuddy.project.domain.buddy.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ModifyProfileReq {
-    private String name;
-    private String ID;
     private String password;
-    private String major;
-    private String studentId;
-    private String profileImg;
-    private String nationality;
 }

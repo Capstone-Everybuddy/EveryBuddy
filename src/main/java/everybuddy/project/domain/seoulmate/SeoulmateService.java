@@ -55,7 +55,7 @@ public class SeoulmateService {
 
     public GetSeoulmateProfileRes getSeoulmateProfile(int seoulmateIdx) {
         SeoulmateProfile seoulmate = seoulmateDao.getSeoulmateProfile(seoulmateIdx);
-        return new GetSeoulmateProfileRes(seoulmate.getName(), seoulmate.getID(), seoulmate.getPassword(), seoulmate.getStudentId(), seoulmate.getSex(), seoulmate.getMajor(), seoulmate.getProfileImg());
+        return new GetSeoulmateProfileRes(seoulmate.getName(), seoulmate.getID(), seoulmate.getStudentId(), seoulmate.getProfileImg(), seoulmate.getMajor(), seoulmate.getSex());
     }
     
     public void modifySeoulmateProfile(int seoulmateIdx, ModifyProfileReq modifyProfileReq) throws BaseException {

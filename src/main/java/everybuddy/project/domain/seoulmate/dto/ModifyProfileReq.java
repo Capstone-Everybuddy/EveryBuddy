@@ -6,12 +6,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ModifyProfileReq {
-    private String name;
-    private String ID;
     private String password;
-    private String studentId;
-    private int sex;
-    private String major;
-    private String profileImg;
 }

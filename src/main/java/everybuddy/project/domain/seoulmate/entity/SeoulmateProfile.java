@@ -11,9 +11,8 @@ public class SeoulmateProfile {
     private int seoulmateIdx;
     private String name;
     private String ID;
-    private String password;
     private String studentId;
-    private int sex;
-    private String major;
     private String profileImg;
+    private int major;
+    private int sex;
 }
