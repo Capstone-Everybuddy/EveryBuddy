@@ -8,11 +8,12 @@ import Button from '../components/Button';
 import { Link } from 'react-router-dom';
 import { useAuth } from 'components/AuthContext';
 import { api } from 'api/Client';
+import { matchingInfo } from 'data/matching';
 
 interface User {
   user_name: string;
   user_id?: string;
-  user_major?: string;
+  user_major?: number;
   user_language?: string;
   user_pwd?: string;
   user_studentNum?: string;
@@ -23,6 +24,7 @@ const Profile: React.FC = () => {
   const [userProfile, setUserProfile] = useState<User>({
     user_name: 'USER',
     user_id: 'USERID',
+    user_major: 0,
     user_language: 'English',
     user_pwd: 'passwordxxx',
     user_studentNum: '20xxxxxxxxx',
@@ -47,10 +49,12 @@ const Profile: React.FC = () => {
           setUserProfile({
             user_name: profileData.name || 'USER',
             user_id: profileData.id || 'USERID',
+            user_major: Number(profileData.major) || 0,
             user_pwd: profileData.password || 'passwordxxx',
             user_studentNum: profileData.studentId || '20xxxxxxxxx',
             profileImage:
-              profileData.profileImg || 'https://via.placeholder.com/80x80',
+              profileData.profileImg ||
+              'https://png.pngtree.com/png-vector/20191009/ourmid/pngtree-user-icon-png-image_1796659.jpg',
           });
         }
       } catch (error) {
@@ -75,6 +79,7 @@ const Profile: React.FC = () => {
               <h1>{userProfile.user_name}</h1>
               <p>{userProfile.user_id}</p>
               <p>{userProfile.user_studentNum}</p>
+              <p>{matchingInfo.major[userProfile.user_major!]}</p>
               <p>{userProfile.user_pwd}</p>
             </UserInfo>
           </ProfileSection>
