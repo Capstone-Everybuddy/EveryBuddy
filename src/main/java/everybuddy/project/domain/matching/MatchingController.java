@@ -44,10 +44,10 @@ public class MatchingController {
     @ResponseBody
     @GetMapping("/seoulmate/{buddyIdx}")
     @Operation(summary = "서울메이트 조회 API", description = "버디) 담당 서울메이트 조회 API")
-    public BaseResponse<GetMatchingRes> getMatching(@PathVariable("buddyIdx") Integer buddyIdx) {
+    public BaseResponse<List<GetMatchingRes>> getMatching(@PathVariable("buddyIdx") Integer buddyIdx) {
         try {
-            GetMatchingRes getMatchingRes = matchingService.getMatching(buddyIdx);
-            return new BaseResponse<>(getMatchingRes);
+            List<GetMatchingRes> getMatchingsRes = matchingService.getMatchingsWithB(buddyIdx);
+            return new BaseResponse<>(getMatchingsRes);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());
         }
@@ -60,7 +60,7 @@ public class MatchingController {
     @Operation(summary = "버디 조회 API", description = "설메) 담당 버디들 조회 API")
     public BaseResponse<List<GetMatchingRes>> getMatchings(@PathVariable("seoulmateIdx") Integer seoulmateIdx) {
         try {
-            List<GetMatchingRes> getMatchingsRes = matchingService.getMatchings(seoulmateIdx);
+            List<GetMatchingRes> getMatchingsRes = matchingService.getMatchingsWithS(seoulmateIdx);
             return new BaseResponse<>(getMatchingsRes);
         } catch (BaseException baseException) {
             return new BaseResponse<>(baseException.getStatus());

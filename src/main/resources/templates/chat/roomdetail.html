@@ -55,6 +55,7 @@
             roomId: '',
             room: {},
             sender: '',
+            senderId: '',
             senderType: '',
             message: '',
             messages: []
@@ -62,6 +63,7 @@
         created() {
             this.roomId = localStorage.getItem('wschat.roomId');
             this.sender = localStorage.getItem('wschat.sender');
+            this.senderId = localStorage.getItem('wschat.senderId');
             this.senderType = localStorage.getItem('wschat.senderType');
             this.findRoom();
         },
@@ -85,9 +87,11 @@
                     type: 'TALK',
                     roomId: this.roomId,
                     sender: this.sender,
+                    senderId: this.senderId,
                     senderType: this.senderType,
                     message: this.message
                 }));
+                console.log(this.senderId);
                 this.message = '';
             },
             recvMessage: function(recv) {
@@ -111,6 +115,7 @@
                 type: 'ENTER',
                 roomId: vm.$data.roomId,
                 sender: vm.$data.sender,
+                senderId: vm.$data.senderId,
                 senderType: vm.$data.senderType
             }));
         }, function(error) {

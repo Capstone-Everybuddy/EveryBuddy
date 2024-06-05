@@ -22,11 +22,16 @@ public class ChatRoomController {
         return "/chat/room";
     }
 
-    // 모든 채팅방 목록 반환
-    @GetMapping("/rooms")
+    // 유저 아이디에 해당하는 채팅방 아이디 반환
+    @GetMapping("/roomId/{userId}/{userType}")
     @ResponseBody
-    public List<ChatRoom> room() {
-        return chatService.findAllRoom();
+    public int getRoomId(@PathVariable("userId") int userId, @PathVariable("userType") String userType) { return chatService.getRoomId(userId, userType); };
+
+    // 모든 채팅방 목록 반환
+    @GetMapping("/rooms/{userId}")
+    @ResponseBody
+    public List<ChatRoom> room(@PathVariable("userId") int userId) {
+        return chatService.findAllRoom(userId);
     }
 
     // 채팅방 생성

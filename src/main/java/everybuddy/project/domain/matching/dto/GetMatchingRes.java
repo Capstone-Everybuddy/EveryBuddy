@@ -9,9 +9,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GetMatchingRes {
     private String seoulmateName;
-    private String seoulmateID;
+    private String seoulmateStudentId;
     private String seoulmateProfileImg;
+    private int seoulmateMajor;
+    private int seoulmateSex;
     private String buddyName;
-    private String buddyID;
+    private String buddyStudentId;
     private String buddyProfileImg;
+    private int buddyMajor;
+    private int buddySex;
+    private int buddyContinent;
 }

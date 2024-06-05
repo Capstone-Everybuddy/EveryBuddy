@@ -49,7 +49,7 @@
         },
         methods: {
             findAllRoom: function() {
-                axios.get('/chat/rooms').then(response => { this.chatrooms = response.data; });
+                axios.get('/chat/rooms/1').then(response => { this.chatrooms = response.data; });
             },
             createRoom: function() {
                 if("" === this.room_name) {
@@ -73,8 +73,10 @@
                 var sender = prompt('이름을 입력해 주세요.');
                 if (sender !== null && sender.trim() !== "") {
                     var senderType = prompt('사용자 타입을 입력해 주세요. (buddy 또는 seoulmate)');
+                    var senderId = prompt('아이디를 입력해 주세요.');
                     if (senderType === "buddy" || senderType === "seoulmate") {
                         localStorage.setItem('wschat.sender', sender);
+                        localStorage.setItem('wschat.senderId', senderId);
                         localStorage.setItem('wschat.senderType', senderType);
                         localStorage.setItem('wschat.roomId', roomId);
                         location.href = "/chat/room/enter/" + roomId;
