@@ -380,6 +380,7 @@ public class MatchingDao {
                 String saveChatroomBuddyQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 'b')";
                 this.jdbcTemplate.update(saveChatroomBuddyQuery, groupIdx, Integer.parseInt(providerIdxs.get(i)));
             }
+            groupIdx++;
         }
         this.jdbcTemplate.update("UPDATE matching_state SET state = 1 WHERE matchingIdx = 1");
     }
