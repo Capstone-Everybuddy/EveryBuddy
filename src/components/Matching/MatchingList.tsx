@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Role } from 'data/matching';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import useMatchingState from 'hooks/useMatchingState';
+import { matchingInfo } from '../../data/matching';
 
 const MatchingList = () => {
   const { matchingEntire, matchingDelete } = useMatchingState();
@@ -35,7 +36,9 @@ const MatchingList = () => {
           <MemberProfile
             name={item.seoulmate?.name || ''}
             memberRole={Role.SEOULMATE}
-            studentId="2020920044"
+            studentId={item.seoulmate?.studentId || ''}
+            sex={matchingInfo.sex[item.seoulmate?.sex || 0]}
+            major={matchingInfo.major[item.seoulmate?.major || 0]}
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             onClick={() => clickSeoulMate(item.seoulmate?.seoulmateIdx || 0)}
           />
@@ -45,6 +48,8 @@ const MatchingList = () => {
                 <MemberProfile
                   key={item.buddyIdx}
                   name={item.name!}
+                  sex={matchingInfo.sex[item.sex || 0]}
+                  major={matchingInfo.major[item.major || 0]}
                   studentId="2020920044"
                   memberRole={Role.BUDDY}
                 />

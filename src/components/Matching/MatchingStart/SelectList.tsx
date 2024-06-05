@@ -30,7 +30,7 @@ const getMainText = (
       case 'major':
         return 'What kind of major would you like your matching partner to have?';
       case 'continent':
-        return '문구 모르겟음...';
+        return 'Which continent do you live in?';
       default:
         return null;
     }
@@ -49,7 +49,7 @@ const getMainText = (
       case 'major':
         return 'Please select your major.';
       case 'continent':
-        return '문구 모르겟음...';
+        return 'Please select the continent where you reside.';
       case 'motherTongue':
         return 'Please select your native language.';
       default:
@@ -73,6 +73,7 @@ const SelectList: React.FC<SelectListProps> = ({
         <MainText>{mainText}</MainText>
         <SubText>At least one selection is required</SubText>
         <SelectGrid
+          enterType={enterType}
           lists={lists}
           setLists={setLists}
           currentValue={currentValue}
