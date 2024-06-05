@@ -110,6 +110,6 @@ public class MatchingService {
             System.out.println("Demander Index: " + demanderIdx + ", Providers: " + providerIdxs);
         }
         matchingDao.saveMatching(matches);
-        matchingDao.saveChatroom(matches);
+//        matchingDao.saveChatroom(matches);
     }
 }
