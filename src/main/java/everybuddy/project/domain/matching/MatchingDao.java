@@ -42,17 +42,22 @@ public class MatchingDao {
     // 결과 집합이 없을 때는 빈 List를 반환한다.
     // ✔ <T> List<T> query(String sql, RowMapper<T> rowMapper)
     public List<GetMatchingRes> getMatchings(Integer seoulmateIdx) {
-        String getMatchingsQuery = "SELECT s.name as seoulmateName, s.ID as seoulmateID, s.profileImg as seoulmateProfileImg, b.name as buddyName, b.ID as buddyID, b.profileImg as buddyProfileImg FROM `buddy` AS `b` INNER JOIN `matching` as `m` ON b.buddyIdx = m.buddyIdx INNER JOIN `seoulmate` AS `s` ON m.seoulmateIdx = s.seoulmateIdx WHERE s.seoulmateIdx = ?";
+        String getMatchingsQuery = "SELECT s.name as seoulmateName, s.studentId as seoulmateStudentId, s.profileImg as seoulmateProfileImg, s.major as seoulmateMajor, s.sex as seoulmateSex, b.name as buddyName, b.studentId as buddyStudentId, b.profileImg as buddyProfileImg, b.major as buddyMajor, b.sex as buddySex, b.continent as buddyContinent FROM `buddy` AS `b` INNER JOIN `matching` as `m` ON b.buddyIdx = m.buddyIdx INNER JOIN `seoulmate` AS `s` ON m.seoulmateIdx = s.seoulmateIdx WHERE s.seoulmateIdx = ?";
         String getMatchingsParams = String.valueOf(seoulmateIdx);
         List<GetMatchingRes> getMatchingsRes = this.jdbcTemplate.query(
                 getMatchingsQuery,
                 (rs, rowNum) -> new GetMatchingRes(
                         rs.getString("seoulmateName"),
-                        rs.getString("seoulmateID"),
+                        rs.getString("seoulmateStudentId"),
                         rs.getString("seoulmateProfileImg"),
+                        rs.getInt("seoulmateMajor"),
+                        rs.getInt("seoulmateSex"),
                         rs.getString("buddyName"),
-                        rs.getString("buddyID"),
-                        rs.getString("buddyProfileImg")
+                        rs.getString("buddyStudentId"),
+                        rs.getString("buddyProfileImg"),
+                        rs.getInt("buddyMajor"),
+                        rs.getInt("buddySex"),
+                        rs.getInt("buddyContinent")
                 ),
                 getMatchingsParams
         );
