@@ -26,7 +26,8 @@ const Profile: React.FC = () => {
     user_language: 'English',
     user_pwd: 'passwordxxx',
     user_studentNum: '20xxxxxxxxx',
-    profileImage: 'https://via.placeholder.com/80x80',
+    profileImage:
+      'https://png.pngtree.com/png-vector/20191009/ourmid/pngtree-user-icon-png-image_1796659.jpg',
   });
 
   const { user } = useAuth();
@@ -106,6 +107,7 @@ const ProfileSection = styled.div`
 const ProfileImage = styled.div`
   img {
     border-radius: 35px;
+    width: 80px;
   }
 `;
 

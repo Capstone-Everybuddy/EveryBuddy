@@ -112,7 +112,7 @@ const UserUpdate: React.FC = () => {
                 <label>PASSWORD</label>
                 <input
                   name="user_pwd"
-                  type="password"
+                  type="text"
                   placeholder="Password"
                   value={userProfile.user_pwd}
                   onChange={editProfile}

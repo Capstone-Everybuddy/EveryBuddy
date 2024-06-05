@@ -198,17 +198,6 @@ const Register = () => {
           <p>Please enter your information.</p>
           <Form onSubmit={handleSubmit}>
             <FormGrid>
-              <ProfileImage>
-                <img src={formData.profileImage} alt="Profile Preview" />
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                />
-                <MdEditIcon onClick={triggerFileInput} />
-              </ProfileImage>
               <InputDiv>
                 <Label htmlFor="user_name">NAME</Label>
                 <Input
@@ -365,25 +354,6 @@ const Input = styled.input`
     -webkit-appearance: none;
     margin: 0;
   }
-`;
-
-const ProfileImage = styled.div`
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-  img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-`;
-
-const MdEditIcon = styled(MdEdit)`
-  position: absolute;
-  top: 270px;
-  right: 160px;
-  cursor: pointer;
 `;
 
 const ErrorMessage = styled.span`

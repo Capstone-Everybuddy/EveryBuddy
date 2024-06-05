@@ -136,7 +136,6 @@ const Login: React.FC = () => {
 };
 
 const MainWrapper = styled.div`
-  overflow-y: auto;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.yellow};
 `;
