@@ -5,6 +5,7 @@ import everybuddy.project.domain.matching.entity.*;
 import everybuddy.project.global.config.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -92,6 +93,8 @@ public class MatchingService {
             System.out.println();
         }
     }
+
+    @Transactional
     // practice
     public void applyGaleShapley() throws BaseException {
         Map<String, List<String>> providers = matchingDao.Providers();
@@ -110,6 +113,6 @@ public class MatchingService {
             System.out.println("Demander Index: " + demanderIdx + ", Providers: " + providerIdxs);
         }
         matchingDao.saveMatching(matches);
-//        matchingDao.saveChatroom(matches);
+        matchingDao.saveChatroom(matches);
     }
 }

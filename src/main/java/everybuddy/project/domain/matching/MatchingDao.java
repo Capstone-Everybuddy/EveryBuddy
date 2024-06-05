@@ -5,6 +5,7 @@ import everybuddy.project.domain.matching.entity.*;
 import everybuddy.project.global.config.BaseException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.*;
@@ -19,6 +20,7 @@ public class MatchingDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    @Transactional
     public void postMatching(List<Matching> postMatchingReq) {
         for (int i=0; i<postMatchingReq.size(); i++) {
             for (int j=0; j<postMatchingReq.get(i).getBuddyIdxs().size(); j++) {
@@ -118,6 +120,7 @@ public class MatchingDao {
         return this.jdbcTemplate.queryForObject("SELECT state FROM matching_state WHERE matchingIdx = 1", int.class);
     }
 
+    @Transactional
     public void deleteMatching() {
         this.jdbcTemplate.update("UPDATE matching_state SET state = 0 WHERE matchingIdx = 1");
         /* execute() 메서드
@@ -353,6 +356,7 @@ public class MatchingDao {
         return demander;
     }
 
+    @Transactional
     public void saveMatching(Map<String, List<String>> matches) {
         for (Map.Entry<String, List<String>> entry : matches.entrySet()) {
             String demanderIdx = entry.getKey();
@@ -365,19 +369,20 @@ public class MatchingDao {
         this.jdbcTemplate.update("UPDATE matching_state SET state = 1 WHERE matchingIdx = 1");
     }
 
-//    public void saveChatroom(Map<String, List<String>> matches) {
-//        int groupIdx = 1;
-//        for (Map.Entry<String, List<String>> entry : matches.entrySet()) {
-//            String demanderIdx = entry.getKey();
-//            List<String> providerIdxs = entry.getValue();
-//            String saveChatroomSeoulmateQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 's')";
-//            this.jdbcTemplate.update(saveChatroomSeoulmateQuery, groupIdx, demanderIdx);
-//            for (int i=0; i<providerIdxs.size(); i++) {
-//                String saveChatroomBuddyQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 'b')";
-//                this.jdbcTemplate.update(saveChatroomBuddyQuery, groupIdx, Integer.parseInt(providerIdxs.get(i)));
-//            }
-//        }
-//        this.jdbcTemplate.update("UPDATE matching_state SET state = 1 WHERE matchingIdx = 1");
-//    }
+    public void saveChatroom(Map<String, List<String>> matches) {
+        int groupIdx = 1;
+        for (Map.Entry<String, List<String>> entry : matches.entrySet()) {
+            String demanderIdx = entry.getKey();
+            List<String> providerIdxs = entry.getValue();
+            String saveChatroomSeoulmateQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 's')";
+            this.jdbcTemplate.update(saveChatroomSeoulmateQuery, groupIdx, Integer.parseInt(demanderIdx));
+            for (int i=0; i<providerIdxs.size(); i++) {
+                String saveChatroomBuddyQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 'b')";
+                this.jdbcTemplate.update(saveChatroomBuddyQuery, groupIdx, Integer.parseInt(providerIdxs.get(i)));
+            }
+            groupIdx++;
+        }
+        this.jdbcTemplate.update("UPDATE matching_state SET state = 1 WHERE matchingIdx = 1");
+    }
 
 }
