@@ -5,10 +5,10 @@ import MatchingStartContainer from 'components/Matching/MatchingStart/MatchingSt
 import MatchingCompleteContainer from 'components/Matching/MatchingComplete/MatchingCompleteContainer';
 import Main from 'components/Main';
 import { useAuth } from 'components/AuthContext';
-import useMatching from 'hooks/useMatching';
+import useMatchingState from 'hooks/useMatchingState';
 
 const Matching: React.FC = () => {
-  const { isMatchingComplete } = useMatching();
+  const { isMatchingComplete } = useMatchingState();
   const { user } = useAuth();
   useEffect(() => {
     if (user) {

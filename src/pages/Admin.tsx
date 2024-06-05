@@ -4,11 +4,11 @@ import Layout from 'components/Layout';
 import Header from 'components/Header';
 import Button from 'components/Button';
 import styled from 'styled-components';
-import useMatching from 'hooks/useMatching';
 import MatchingList from 'components/Matching/MatchingList';
+import useMatchingState from 'hooks/useMatchingState';
 
 const Admin = () => {
-  const { isMatchingComplete } = useMatching();
+  const { isMatchingComplete } = useMatchingState();
   return (
     <Main.Wrapper>
       <Layout.PageContent>

@@ -2,13 +2,8 @@ import { api } from 'api/Client';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from 'components/AuthContext';
 
-/** 매칭 상태 조회 훅 */
 const useMatching = () => {
   const { user } = useAuth();
-  const { data: matchingState } = useQuery({
-    queryKey: ['MatchingState'],
-    queryFn: () => api.matchings.getState(),
-  });
 
   let data;
 
@@ -27,7 +22,6 @@ const useMatching = () => {
   }
 
   return {
-    isMatchingComplete: matchingState?.result?.state,
     matchingArray: data?.result,
   };
 };

@@ -3,11 +3,11 @@ import ChatList from 'components/Chatting/ChatList/ChatList';
 import Header from 'components/Header';
 import Layout from 'components/Layout';
 import Main from 'components/Main';
-import useMatching from 'hooks/useMatching';
+import useMatchingState from 'hooks/useMatchingState';
 import styled from 'styled-components';
 
 const Chatting = () => {
-  const { isMatchingComplete } = useMatching();
+  const { isMatchingComplete } = useMatchingState();
   return (
     <Main.Wrapper>
       <Layout.PageContent>
