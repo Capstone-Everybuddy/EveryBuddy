@@ -12,7 +12,7 @@ const Chatting = () => {
     <Main.Wrapper>
       <Layout.PageContent>
         <Header title="Chat" />
-        {!isMatchingComplete ? (
+        {isMatchingComplete ? (
           <ChatList />
         ) : (
           <CompleteMessage>
@@ -25,7 +25,13 @@ const Chatting = () => {
 };
 
 const CompleteMessage = styled.div`
-  padding: 10px 0px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 0 auto;
+  margin-bottom: 60px;
 `;
 
 export default Chatting;

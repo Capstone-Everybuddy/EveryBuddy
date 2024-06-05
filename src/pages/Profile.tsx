@@ -71,7 +71,6 @@ const Profile: React.FC = () => {
               <h1>{userProfile.user_name}</h1>
               <p>{userProfile.user_id}</p>
               <p>{userProfile.user_studentNum}</p>
-              <p>{userProfile.user_pwd}</p>
             </UserInfo>
           </ProfileSection>
           <Link to="/userupdate">

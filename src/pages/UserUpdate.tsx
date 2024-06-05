@@ -82,92 +82,94 @@ const UserUpdate: React.FC<UserUpdateProps> = ({ name, token }) => {
     <Main.Wrapper>
       <Layout.PageContent>
         <Header title="Edit Profile" />
-        <StyledForm onSubmit={handleSubmit}>
-          <UserImg>
-            <img
-              src={previewImageSrc}
-              alt=""
-              style={{ width: '80px', height: '80px' }}
-            />
-            <MdEditIcon
-              onClick={() => inputRef.current && inputRef.current.click()}
-            />
-            <input
-              type="file"
-              ref={inputRef}
-              onChange={handleImageChange}
-              style={{ display: 'none' }}
-            />
-          </UserImg>
-          <UserInfo>
-            <Edit>
-              <label>NAME</label>
-              <input
-                type="text"
-                value={user_name}
-                placeholder="Name"
-                onChange={(e) => setUser_name(e.target.value)}
+        <Container>
+          <StyledForm onSubmit={handleSubmit}>
+            {/* <UserImg>
+              <img
+                src={previewImageSrc}
+                alt=""
+                style={{ width: '80px', height: '80px' }}
               />
-            </Edit>
+              <MdEditIcon
+                onClick={() => inputRef.current && inputRef.current.click()}
+              />
+              <input
+                type="file"
+                ref={inputRef}
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
+              />
+            </UserImg> */}
+            <UserInfo>
+              <Edit>
+                <label>NAME</label>
+                <input
+                  type="text"
+                  value={user_name}
+                  placeholder="Name"
+                  onChange={(e) => setUser_name(e.target.value)}
+                />
+              </Edit>
 
-            <Edit>
-              <label>ID</label>
-              <input
-                type="text"
-                value={user_id}
-                placeholder="Id"
-                onChange={(e) => setUser_id(e.target.value)}
-              />
-            </Edit>
+              <Edit>
+                <label>ID</label>
+                <input
+                  type="text"
+                  value={user_id}
+                  placeholder="Id"
+                  onChange={(e) => setUser_id(e.target.value)}
+                />
+              </Edit>
 
-            <Edit>
-              <label>PASSWORD</label>
-              <input
-                type="text"
-                value={user_pwd}
-                placeholder="Password"
-                onChange={(e) => setUser_pwd(e.target.value)}
-              />
-            </Edit>
+              <Edit>
+                <label>PASSWORD</label>
+                <input
+                  type="text"
+                  value={user_pwd}
+                  placeholder="Password"
+                  onChange={(e) => setUser_pwd(e.target.value)}
+                />
+              </Edit>
 
-            <Edit>
-              <label>LANGUAGE</label>
-              <input
-                type="text"
-                value={user_language}
-                placeholder="Language"
-                onChange={(e) => setUser_language(e.target.value)}
-              />
-            </Edit>
+              <Edit>
+                <label>LANGUAGE</label>
+                <input
+                  type="text"
+                  value={user_language}
+                  placeholder="Language"
+                  onChange={(e) => setUser_language(e.target.value)}
+                />
+              </Edit>
 
-            <Edit>
-              <label>MAJOR</label>
-              <input
-                type="text"
-                value={user_major}
-                placeholder="Major"
-                onChange={(e) => setUser_major(e.target.value)}
-              />
-            </Edit>
+              <Edit>
+                <label>MAJOR</label>
+                <input
+                  type="text"
+                  value={user_major}
+                  placeholder="Major"
+                  onChange={(e) => setUser_major(e.target.value)}
+                />
+              </Edit>
 
-            <Edit>
-              <label>STUDENT NUMBER</label>
-              <input
-                type="text"
-                value={user_studentNum}
-                placeholder="Student Number"
-                onChange={(e) => setUser_studentNum(e.target.value)}
-              />
-            </Edit>
-          </UserInfo>
-          {/* submit button */}
-          <FormButton>
-            <Button text="Submit" type="submit"></Button>
-            <Link to="/">
-              <Button text="Logout" type="button"></Button>
-            </Link>
-          </FormButton>
-        </StyledForm>
+              <Edit>
+                <label>STUDENT NUMBER</label>
+                <input
+                  type="text"
+                  value={user_studentNum}
+                  placeholder="Student Number"
+                  onChange={(e) => setUser_studentNum(e.target.value)}
+                />
+              </Edit>
+            </UserInfo>
+            {/* submit button */}
+            <FormButton>
+              <Button text="Submit" type="submit"></Button>
+              <Link to="/">
+                <Button text="Logout" type="button"></Button>
+              </Link>
+            </FormButton>
+          </StyledForm>
+        </Container>
       </Layout.PageContent>
     </Main.Wrapper>
   );
@@ -224,6 +226,22 @@ const FormButton = styled.div`
   Button {
     font-size: 16px;
     margin: 10px;
+  }
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+
+  /* 스크롤바 감추기 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 및 Edge */
+
+  /* Webkit 기반 브라우저(Chrome, Safari 등)에서 스크롤바 감추기 */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 `;
 
