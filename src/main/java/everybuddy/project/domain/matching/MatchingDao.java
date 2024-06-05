@@ -27,30 +27,16 @@ public class MatchingDao {
                 this.jdbcTemplate.update(postMatchingQuery, postMatchingParams);
             }
         }
-        this.jdbcTemplate.update("UPDATE seoulmate SET state = 1 WHERE seoulmateIdx = 1");
+        this.jdbcTemplate.update("UPDATE matching_state SET state = 1 WHERE matchingIdx = 1");
+    }
+
+    public int getSeoulmateIdx(int buddyIdx) {
+        String getSeoulmateIdxQuery = "SELECT seoulmateIdx FROM matching WHERE buddyIdx = ?";
+        return this.jdbcTemplate.queryForObject(getSeoulmateIdxQuery, int.class, buddyIdx);
     }
 
     // queryForObject: 단일 결과 행을 반환하는 쿼리를 실행할 때 주로 사용된다.
     // ✔ <T> T queryForObject(String sql, Class<T> requiredType)
-    public GetMatchingRes getMatching(Integer buddyIdx) {
-        String getMatchingQuery = "SELECT s.name as seoulmateName, s.ID as seoulmateID, s.profileImg as seoulmateProfileImg, b.name as buddyName, b.ID as buddyID, b.profileImg as buddyProfileImg FROM `buddy` AS `b` INNER JOIN `matching` as `m` ON b.buddyIdx = m.buddyIdx INNER JOIN `seoulmate` AS `s` ON m.seoulmateIdx = s.seoulmateIdx WHERE b.buddyIdx = ?";
-        String getMatchingParams = String.valueOf(buddyIdx);
-        GetMatchingRes getMatchingRes = this.jdbcTemplate.queryForObject(
-                getMatchingQuery,
-                (rs, rowNum) -> new GetMatchingRes(
-                        rs.getString("seoulmateName"),
-                        rs.getString("seoulmateID"),
-                        rs.getString("seoulmateProfileImg"),
-                        rs.getString("buddyName"),
-                        rs.getString("buddyID"),
-                        rs.getString("buddyProfileImg")
-                        ),
-                getMatchingParams
-        );
-        return getMatchingRes;
-    }
-
-
     // query: 결과를 List 형태로 반환하는 쿼리를 실행할 때 주로 사용된다.
     // 결과는 RowMapper 인터페이스를 구현하는 객체를 사용하여 각 행을 매핑하여 반환한다.
     // 결과 집합이 없을 때는 빈 List를 반환한다.
@@ -124,11 +110,11 @@ public class MatchingDao {
     }
 
     public int getState() {
-        return this.jdbcTemplate.queryForObject("SELECT state FROM seoulmate WHERE seoulmateIdx = 1", int.class);
+        return this.jdbcTemplate.queryForObject("SELECT state FROM matching_state WHERE matchingIdx = 1", int.class);
     }
 
     public void deleteMatching() {
-        this.jdbcTemplate.update("UPDATE seoulmate SET state = 0 WHERE seoulmateIdx = 1");
+        this.jdbcTemplate.update("UPDATE matching_state SET state = 0 WHERE matchingIdx = 1");
         /* execute() 메서드
         이외에 임의의 SQL을 실행할 때는 execute() 메서드를 사용할 수 있다. 테이블을 생성하는 DDL 등에 사용할 수 있다.
         */
@@ -371,7 +357,7 @@ public class MatchingDao {
                 this.jdbcTemplate.update(saveMatchingQuery, Integer.parseInt(demanderIdx), Integer.parseInt(providerIdxs.get(i)));
             }
         }
-        this.jdbcTemplate.update("UPDATE seoulmate SET state = 1");
+        this.jdbcTemplate.update("UPDATE matching_state SET state = 1 WHERE matchingIdx = 1");
     }
 
 }

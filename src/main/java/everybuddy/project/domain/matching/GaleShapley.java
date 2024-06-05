@@ -14,7 +14,7 @@ public class GaleShapley {
 
         for (String provider : providers) {
             providerCapacity.put(provider, baseCapacity);
-            preferenceCount.put(provider, new Integer[]{0, 0, 0});
+            preferenceCount.put(provider, new Integer[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0});
         }
 
         int remainingCapacity = numDemanders - baseCapacity * numProviders;

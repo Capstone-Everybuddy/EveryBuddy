@@ -30,18 +30,19 @@ public class MatchingService {
         }
     }
 
-    public GetMatchingRes getMatching(Integer buddyIdx) throws BaseException {
+    public List<GetMatchingRes> getMatchingsWithB(Integer buddyIdx) throws BaseException {
         int state = matchingDao.getState();
         if (state == 0) throw new BaseException(BEFORE_MATCHING);
         try {
-            GetMatchingRes getMatchingRes = matchingDao.getMatching(buddyIdx);
+            int seoulmateIdx = matchingDao.getSeoulmateIdx(buddyIdx);
+            List<GetMatchingRes> getMatchingRes = matchingDao.getMatchings(seoulmateIdx);
             return getMatchingRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public List<GetMatchingRes> getMatchings(Integer seoulmateIdx) throws BaseException {
+    public List<GetMatchingRes> getMatchingsWithS(Integer seoulmateIdx) throws BaseException {
         int state = matchingDao.getState();
         if (state == 0) throw new BaseException(BEFORE_MATCHING);
         try {
