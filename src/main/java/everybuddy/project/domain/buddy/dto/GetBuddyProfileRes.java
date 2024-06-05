@@ -13,5 +13,5 @@ public class GetBuddyProfileRes {
     private String password;
     private String profileImg;
     private String nationality;
-    private String studentID;
+    private String studentId;
 }
