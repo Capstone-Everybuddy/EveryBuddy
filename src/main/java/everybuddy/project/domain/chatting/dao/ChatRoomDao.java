@@ -16,10 +16,10 @@ public class ChatRoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ChatRoom> findAllRooms(int userId) {
-        String sql = "SELECT * FROM chat_room LEFT OUTER JOIN chat_group ON chat_room.room_id=chat_group.room_id WHERE user_id = ? ORDER BY created_at DESC";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ChatRoom.class), userId);
-    }
+//    public List<ChatRoom> findAllRooms(int userId) {
+//        String sql = "SELECT * FROM chat_room LEFT OUTER JOIN chat_group ON chat_room.room_id=chat_group.room_id WHERE user_id = ? AND user_type=? ORDER BY created_at DESC";
+//        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ChatRoom.class), userId, user_type);
+//    }
 
     public int getRoomId(int userId, String userType) {
         String sql = "SELECT room_id FROM chat_group WHERE user_id=? AND user_type=?";

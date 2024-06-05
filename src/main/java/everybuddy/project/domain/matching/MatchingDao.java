@@ -138,6 +138,28 @@ public class MatchingDao {
                         "CONSTRAINT `fk_matching_seoulmate1` " +
                         "FOREIGN KEY (`seoulmateIdx`) " +
                         "REFERENCES `seoulmate` (`seoulmateIdx`) ON DELETE NO ACTION ON UPDATE NO ACTION)");
+
+        this.jdbcTemplate.execute("DROP TABLE if exists `chat_message`");
+        this.jdbcTemplate.execute("DROP TABLE if exists `chat_group`");
+        this.jdbcTemplate.execute("create table chat_group\n" +
+                "(\n" +
+                "    `no` int not null AUTO_INCREMENT primary key,\n" +
+                "    room_id int null,\n" +
+                "    user_id int not null,\n" +
+                "    user_type char(1) default 'b'\n" +
+                ")");
+        this.jdbcTemplate.execute("CREATE INDEX idx_room_id ON chat_group(room_id);");
+        this.jdbcTemplate.execute("CREATE TABLE `chat_message` (\n" +
+                "                                `message_id` int NOT NULL AUTO_INCREMENT,\n" +
+                "                                `room_id` int NOT NULL,\n" +
+                "                                `sender_id` int NOT NULL,\n" +
+                "                                `sender_type` enum('seoulmate', 'buddy') NOT NULL,\n" +
+                "                                `message` text NOT NULL,\n" +
+                "                                `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,\n" +
+                "                                PRIMARY KEY (`message_id`),\n" +
+                "                                KEY `room_id` (`room_id`),\n" +
+                "                                FOREIGN KEY (`room_id`) REFERENCES `chat_group` (`room_id`) ON DELETE CASCADE\n" +
+                ");");
     }
 
 
@@ -374,10 +396,10 @@ public class MatchingDao {
         for (Map.Entry<String, List<String>> entry : matches.entrySet()) {
             String demanderIdx = entry.getKey();
             List<String> providerIdxs = entry.getValue();
-            String saveChatroomSeoulmateQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 's')";
+            String saveChatroomSeoulmateQuery = "INSERT INTO chat_group (room_id, user_id, user_type) VALUES (?, ?, 's')";
             this.jdbcTemplate.update(saveChatroomSeoulmateQuery, groupIdx, Integer.parseInt(demanderIdx));
             for (int i=0; i<providerIdxs.size(); i++) {
-                String saveChatroomBuddyQuery = "INSERT INTO chat_group (group_id, user_id, user_type) VALUES (?, ?, 'b')";
+                String saveChatroomBuddyQuery = "INSERT INTO chat_group (room_id, user_id, user_type) VALUES (?, ?, 'b')";
                 this.jdbcTemplate.update(saveChatroomBuddyQuery, groupIdx, Integer.parseInt(providerIdxs.get(i)));
             }
             groupIdx++;

@@ -27,12 +27,12 @@ public class ChatRoomController {
     @ResponseBody
     public int getRoomId(@PathVariable("userId") int userId, @PathVariable("userType") String userType) { return chatService.getRoomId(userId, userType); };
 
-    // 모든 채팅방 목록 반환
-    @GetMapping("/rooms/{userId}")
-    @ResponseBody
-    public List<ChatRoom> room(@PathVariable("userId") int userId) {
-        return chatService.findAllRoom(userId);
-    }
+//    // 모든 채팅방 목록 반환
+//    @GetMapping("/rooms/{userId}")
+//    @ResponseBody
+//    public List<ChatRoom> room(@PathVariable("userId") int userId) {
+//        return chatService.findAllRoom(userId);
+//    }
 
     // 채팅방 생성
     @PostMapping("/room")
