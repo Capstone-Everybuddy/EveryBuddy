@@ -8,6 +8,7 @@ import {
 } from 'data/matching';
 
 interface SelectGridProps {
+  enterType: 'information' | 'preference';
   lists: typeof preferenceOptionsList;
   setLists: React.Dispatch<React.SetStateAction<typeof preferenceOptionsList>>;
   currentValue: MatchingInfoKeys;
@@ -15,6 +16,7 @@ interface SelectGridProps {
 }
 
 const SelectGrid: React.FC<SelectGridProps> = ({
+  enterType,
   lists,
   setLists,
   currentValue,
@@ -33,10 +35,20 @@ const SelectGrid: React.FC<SelectGridProps> = ({
           ),
         };
       } else {
-        return {
-          ...prevLists,
-          [currentValue]: [...prevLists[currentValue], code],
-        };
+        if (
+          enterType === 'information' &&
+          ['sex', 'major', 'continent', 'motherTongue'].includes(currentValue)
+        ) {
+          return {
+            ...prevLists,
+            [currentValue]: [code], // 기존 값을 대체하여 새로운 값으로 설정
+          };
+        } else {
+          return {
+            ...prevLists,
+            [currentValue]: [...prevLists[currentValue], code],
+          };
+        }
       }
     });
   };

@@ -20,7 +20,7 @@ const Modal: React.FC<ModalProps> = ({ show, submitCompleted }) => {
             <MainText>제출 완료!</MainText>
             <SubText>
               답변 감사합니다. <br />
-              그룹 매칭은 0월 00일에 공지될 예정입니다.
+              매칭이 완료되면 결과가 자동으로 표시됩니다.
             </SubText>
             <Button
               text="메인으로 돌아가기"
