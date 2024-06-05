@@ -12,6 +12,7 @@ import { api } from 'api/Client';
 interface User {
   user_name: string;
   user_id?: string;
+  user_major?: string;
   user_language?: string;
   user_pwd?: string;
   user_studentNum?: string;
@@ -36,6 +37,8 @@ const Profile: React.FC = () => {
         if (user) {
           let profileData;
           if (user.role === 'seoulmate') {
+            console.log('api 로딩');
+
             profileData = await api.seoulmates.getSeoulmateProfile(user.idx);
           } else {
             profileData = await api.buddies.getBuddyProfile(user.idx);
@@ -71,6 +74,7 @@ const Profile: React.FC = () => {
               <h1>{userProfile.user_name}</h1>
               <p>{userProfile.user_id}</p>
               <p>{userProfile.user_studentNum}</p>
+              <p>{userProfile.user_pwd}</p>
             </UserInfo>
           </ProfileSection>
           <Link to="/userupdate">

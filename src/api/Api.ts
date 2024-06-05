@@ -14,6 +14,8 @@ export interface ModifyProfileReq {
   password?: string;
   studentId?: string;
   /** @format int32 */
+  major: string;
+  sex: number;
   profileImg?: string;
   id?: string;
 }
@@ -245,6 +247,8 @@ export interface GetBuddyProfileRes {
   name?: string;
   password?: string;
   profileImg?: string;
+  major: string;
+  sex: number;
   nationality?: string;
   studentId?: string;
   id?: string;

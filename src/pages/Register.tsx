@@ -3,7 +3,6 @@ import React, {
   ChangeEvent,
   FormEvent,
   useRef,
-  useEffect,
   MouseEvent,
 } from 'react';
 import { MdEdit } from 'react-icons/md';
@@ -53,8 +52,6 @@ const Register = () => {
     user_studentId: '',
     user_auth: '',
   });
-
-  const [authCode, setAuthCode] = useState('');
 
   const [completeAuth, setCompleteAuth] = useState('');
 
@@ -400,18 +397,6 @@ const CompleteMessage = styled.span`
   font-size: 12px;
   padding-left: 10px;
   padding-top: 10px;
-`;
-
-const CheckButton = styled.button<{ isChecked: boolean }>`
-  padding: 10px 20px;
-  background-color: ${({ isChecked }) => (isChecked ? '#B2B2B2' : 'orange')};
-  color: white;
-  border: none;
-  font-size: 20px;
-  font-weight: 700;
-  border-radius: 40px;
-  width: 100%;
-  cursor: ${({ isChecked }) => (isChecked ? 'not-allowed' : 'pointer')};
 `;
 
 const NextButton = styled.button`

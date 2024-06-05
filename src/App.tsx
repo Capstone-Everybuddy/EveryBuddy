@@ -18,8 +18,6 @@ import Admin from 'pages/Admin';
 import { AuthProvider } from 'components/AuthContext';
 
 function App() {
-  const name = 'user_name';
-  const token = 'token';
   return (
     <AuthProvider>
       <ThemeProvider theme={theme}>
@@ -37,10 +35,7 @@ function App() {
             <Route path="/matching-info" element={<MatchingInfo />} />
             <Route path="/register" element={<Register />} />
             <Route path="/chat/room" element={<ChatRoom />} />
-            <Route
-              path="/userupdate"
-              element={<UserUpdate name={name} token={token ?? null} />}
-            />
+            <Route path="/userupdate" element={<UserUpdate />} />
             <Route path="/admin" element={<Admin />} />
           </Routes>
         </BrowserRouter>

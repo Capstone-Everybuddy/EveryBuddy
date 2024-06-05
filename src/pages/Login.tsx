@@ -136,6 +136,7 @@ const Login: React.FC = () => {
 };
 
 const MainWrapper = styled.div`
+  overflow-y: auto;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.yellow};
 `;
@@ -208,14 +209,6 @@ const ArrowWrapper = styled.div`
 
 const RadioButton = styled.input`
   margin-right: 10px;
-`;
-
-const LogMessage = styled.pre`
-  background: #f1f1f1;
-  padding: 10px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  margin-top: 10px;
 `;
 
 const TextWrapper = styled.div`
