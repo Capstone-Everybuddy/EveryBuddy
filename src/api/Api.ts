@@ -14,8 +14,6 @@ export interface ModifyProfileReq {
   password?: string;
   studentId?: string;
   /** @format int32 */
-  sex?: number;
-  major?: string;
   profileImg?: string;
   id?: string;
 }
@@ -248,7 +246,7 @@ export interface GetBuddyProfileRes {
   password?: string;
   profileImg?: string;
   nationality?: string;
-  studentID?: string;
+  studentId?: string;
   id?: string;
 }
 
@@ -443,15 +441,15 @@ export class Api<
      * @tags seoulmate-controller
      * @name ModifySeoulmateProfile
      * @summary 서울메이트 프로필 수정 API
-     * @request PUT:/seoulmates/modify/{seoulmateId}
+     * @request PUT:/seoulmates/modify/{seoulmateIdx}
      */
     modifySeoulmateProfile: (
-      seoulmateId: string,
+      seoulmateIdx: number,
       data: ModifyProfileReq,
       params: RequestParams = {},
     ) =>
       this.request<BaseResponseString, any>({
-        path: `/seoulmates/modify/${seoulmateId}`,
+        path: `/seoulmates/modify/${seoulmateIdx}`,
         method: 'PUT',
         body: data,
         type: ContentType.Json,
@@ -538,11 +536,11 @@ export class Api<
      * @tags seoulmate-controller
      * @name GetSeoulmateProfile
      * @summary 서울메이트 프로필 조회 API
-     * @request GET:/seoulmates/{seoulmateId}
+     * @request GET:/seoulmates/{seoulmateIdx}
      */
-    getSeoulmateProfile: (seoulmateId: string, params: RequestParams = {}) =>
+    getSeoulmateProfile: (seoulmateIdx: number, params: RequestParams = {}) =>
       this.request<GetSeoulmateProfileRes, any>({
-        path: `/seoulmates/${seoulmateId}`,
+        path: `/seoulmates/${seoulmateIdx}`,
         method: 'GET',
         ...params,
       }),
@@ -554,15 +552,15 @@ export class Api<
      * @tags buddy-controller
      * @name ModifyBuddyProfile
      * @summary 버디 프로필 수정 API
-     * @request PUT:/buddies/modify/{buddyId}
+     * @request PUT:/buddies/modify/{buddyIdx}
      */
     modifyBuddyProfile: (
-      buddyId: string,
+      buddyIdx: number,
       data: ModifyProfileReq,
       params: RequestParams = {},
     ) =>
       this.request<BaseResponseString, any>({
-        path: `/buddies/modify/${buddyId}`,
+        path: `/buddies/modify/${buddyIdx}`,
         method: 'PUT',
         body: data,
         type: ContentType.Json,
@@ -651,11 +649,11 @@ export class Api<
      * @tags buddy-controller
      * @name GetBuddyProfile
      * @summary 버디 프로필 조회 API
-     * @request GET:/buddies/{buddyId}
+     * @request GET:/buddies/{buddyIdx}
      */
-    getBuddyProfile: (buddyId: string, params: RequestParams = {}) =>
+    getBuddyProfile: (buddyIdx: number, params: RequestParams = {}) =>
       this.request<GetBuddyProfileRes, any>({
-        path: `/buddies/${buddyId}`,
+        path: `/buddies/${buddyIdx}`,
         method: 'GET',
         ...params,
       }),
@@ -765,6 +763,29 @@ export class Api<
       this.request<BaseResponseString, any>({
         path: `/matchings/delete`,
         method: 'DELETE',
+        ...params,
+      }),
+  };
+  api = {
+    /**
+     * No description
+     *
+     * @tags ocr-controller
+     * @name ProxyToClovaApi
+     * @request POST:/api/ocr
+     */
+    proxyToClovaApi: (
+      data: {
+        /** @format binary */
+        file: File;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<string, any>({
+        path: `/api/ocr`,
+        method: 'POST',
+        body: data,
+        type: ContentType.FormData,
         ...params,
       }),
   };
