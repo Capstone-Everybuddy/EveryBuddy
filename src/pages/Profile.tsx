@@ -12,6 +12,7 @@ import { api } from 'api/Client';
 interface User {
   user_name: string;
   user_id?: string;
+  user_major?: string;
   user_language?: string;
   user_pwd?: string;
   user_studentNum?: string;
@@ -25,7 +26,8 @@ const Profile: React.FC = () => {
     user_language: 'English',
     user_pwd: 'passwordxxx',
     user_studentNum: '20xxxxxxxxx',
-    profileImage: 'https://via.placeholder.com/80x80',
+    profileImage:
+      'https://png.pngtree.com/png-vector/20191009/ourmid/pngtree-user-icon-png-image_1796659.jpg',
   });
 
   const { user } = useAuth();
@@ -36,6 +38,8 @@ const Profile: React.FC = () => {
         if (user) {
           let profileData;
           if (user.role === 'seoulmate') {
+            console.log('api 로딩');
+
             profileData = await api.seoulmates.getSeoulmateProfile(user.idx);
           } else {
             profileData = await api.buddies.getBuddyProfile(user.idx);
@@ -71,6 +75,7 @@ const Profile: React.FC = () => {
               <h1>{userProfile.user_name}</h1>
               <p>{userProfile.user_id}</p>
               <p>{userProfile.user_studentNum}</p>
+              <p>{userProfile.user_pwd}</p>
             </UserInfo>
           </ProfileSection>
           <Link to="/userupdate">
@@ -102,6 +107,7 @@ const ProfileSection = styled.div`
 const ProfileImage = styled.div`
   img {
     border-radius: 35px;
+    width: 80px;
   }
 `;
 

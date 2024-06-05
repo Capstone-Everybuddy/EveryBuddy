@@ -45,6 +45,7 @@ const SignUp = () => {
 const MainWrapper = styled.div`
   height: 100vh;
   background-color: ${(props) => props.theme.colors.yellow};
+  overflow-y: auto;
 `;
 
 const ContentWrapper = styled.div`

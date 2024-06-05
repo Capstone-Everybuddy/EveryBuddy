@@ -210,14 +210,6 @@ const RadioButton = styled.input`
   margin-right: 10px;
 `;
 
-const LogMessage = styled.pre`
-  background: #f1f1f1;
-  padding: 10px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  margin-top: 10px;
-`;
-
 const TextWrapper = styled.div`
   padding-top: 40px;
   display: flex;

@@ -267,6 +267,8 @@ export interface GetBuddyProfileRes {
   name?: string;
   password?: string;
   profileImg?: string;
+  major: string;
+  sex: number;
   nationality?: string;
   studentId?: string;
   id?: string;

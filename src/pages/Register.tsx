@@ -3,7 +3,6 @@ import React, {
   ChangeEvent,
   FormEvent,
   useRef,
-  useEffect,
   MouseEvent,
 } from 'react';
 import { MdEdit } from 'react-icons/md';
@@ -53,8 +52,6 @@ const Register = () => {
     user_studentId: '',
     user_auth: '',
   });
-
-  const [authCode, setAuthCode] = useState('');
 
   const [completeAuth, setCompleteAuth] = useState('');
 
@@ -201,17 +198,6 @@ const Register = () => {
           <p>Please enter your information.</p>
           <Form onSubmit={handleSubmit}>
             <FormGrid>
-              <ProfileImage>
-                <img src={formData.profileImage} alt="Profile Preview" />
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                />
-                <MdEditIcon onClick={triggerFileInput} />
-              </ProfileImage>
               <InputDiv>
                 <Label htmlFor="user_name">NAME</Label>
                 <Input
@@ -370,25 +356,6 @@ const Input = styled.input`
   }
 `;
 
-const ProfileImage = styled.div`
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-  img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-`;
-
-const MdEditIcon = styled(MdEdit)`
-  position: absolute;
-  top: 270px;
-  right: 160px;
-  cursor: pointer;
-`;
-
 const ErrorMessage = styled.span`
   font-size: 12px;
   color: red;
@@ -400,18 +367,6 @@ const CompleteMessage = styled.span`
   font-size: 12px;
   padding-left: 10px;
   padding-top: 10px;
-`;
-
-const CheckButton = styled.button<{ isChecked: boolean }>`
-  padding: 10px 20px;
-  background-color: ${({ isChecked }) => (isChecked ? '#B2B2B2' : 'orange')};
-  color: white;
-  border: none;
-  font-size: 20px;
-  font-weight: 700;
-  border-radius: 40px;
-  width: 100%;
-  cursor: ${({ isChecked }) => (isChecked ? 'not-allowed' : 'pointer')};
 `;
 
 const NextButton = styled.button`
