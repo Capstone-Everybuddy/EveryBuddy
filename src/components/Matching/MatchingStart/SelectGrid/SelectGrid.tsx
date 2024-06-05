@@ -64,9 +64,9 @@ const SelectGrid: React.FC<SelectGridProps> = ({
           <SelectItem
             key={item}
             text={item}
-            selected={lists[currentValue].indexOf(idx + 1) !== -1}
+            selected={lists[currentValue].indexOf(idx) !== -1}
             onClick={() => {
-              toggleItemSelection(idx + 1);
+              toggleItemSelection(idx);
             }}
           />
         ))}

@@ -3,9 +3,12 @@ import styled from 'styled-components';
 import MemberProfile from './MemberProfile';
 import { Role } from 'data/matching';
 import useMatching from 'hooks/useMatching';
+import { matchingInfo } from '../../../data/matching';
+import { useAuth } from 'components/AuthContext';
 
 const MatchingCompleteContainer = () => {
   const { matchingArray } = useMatching();
+
   return (
     <Container>
       <MainText>매칭 정보 확인하기</MainText>
@@ -15,15 +18,20 @@ const MatchingCompleteContainer = () => {
           <MemberProfile
             name={matchingArray[0].seoulmateName!}
             studentId={matchingArray[0].seoulmateStudentId!}
+            sex={matchingInfo.sex[matchingArray[0].seoulmateSex!]}
+            major={matchingInfo.major[matchingArray[0].seoulmateMajor!]}
             memberRole={Role.SEOULMATE}
           />
         )}
         {matchingArray?.map((item) => (
           <MemberProfile
-            key={item.buddyStudentId}
+            key={item.buddyStudentId!}
             name={item.buddyName!}
             studentId={item.buddyStudentId!}
+            sex={matchingInfo.sex[item.buddySex!]}
+            major={matchingInfo.major[item.buddyMajor!]}
             memberRole={Role.BUDDY}
+            continent={matchingInfo.continent[item.buddyContinent!]}
           />
         ))}
       </MemberList>

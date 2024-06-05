@@ -5,21 +5,34 @@ import { Role } from 'data/matching';
 interface MemberProfileProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
   memberRole: Role;
-  studentId: string; // 추가된 학번 속성
+  studentId: string;
+  sex: string;
+  major: string;
+  continent?: string;
+  isCurrentUser?: boolean;
 }
 
 const MemberProfile: React.FC<MemberProfileProps> = ({
   name,
   memberRole,
-  studentId, // 추가된 학번 속성
+  studentId,
+  sex,
+  major,
+  continent,
+  isCurrentUser,
   ...rest
 }) => {
   return (
     <Wrapper onClick={rest.onClick}>
-      <div>
-        <Name>{name}</Name>
-        <StudentId>{studentId}</StudentId>
-      </div>
+      <Info>
+        <Name>
+          {name} {isCurrentUser && <CurrentUserTag>(본인)</CurrentUserTag>}
+        </Name>
+        <StudentId>Student ID: {studentId}</StudentId>
+        <Sex>Sex: {sex}</Sex>
+        <Major>Major: {major}</Major>
+        {continent && <Continent>Continent: {continent}</Continent>}
+      </Info>
 
       <RoleDiv memberRole={memberRole}>
         {memberRole === Role.SEOULMATE ? 'SeoulMate' : 'Buddy'}
@@ -47,16 +60,44 @@ const Wrapper = styled.div`
   cursor: pointer;
 `;
 
+const Info = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const Name = styled.div`
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 10px;
 `;
 
+const CurrentUserTag = styled.span`
+  font-size: 14px;
+  color: ${(props) => props.theme.colors.orange};
+`;
+
 const StudentId = styled.div`
   font-size: 14px;
   font-weight: 400;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+`;
+
+const Sex = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 5px;
+`;
+
+const Major = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 5px;
+`;
+
+const Continent = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 5px;
 `;
 
 const RoleDiv = styled.div<{ memberRole: Role }>`
