@@ -11,6 +11,7 @@ public class ModifyProfileReq {
     private String name;
     private String ID;
     private String password;
+    private String major;
     private String studentId;
     private String profileImg;
     private String nationality;

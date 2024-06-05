@@ -171,8 +171,8 @@ public class SeoulmateDao {
     }
     public void updateProfileById(int seoulmateIdx, ModifyProfileReq modifyProfileReq) throws BaseException {
         try {
-            String updateProfileQuery = "UPDATE seoulmate SET sex = ?, major = ?, profileImg = ? WHERE seoulmateIdx = ?";
-            Object[] updateProfileParams = new Object[]{modifyProfileReq.getSex(), modifyProfileReq.getMajor(), modifyProfileReq.getProfileImg(), seoulmateIdx};
+            String updateProfileQuery = "UPDATE seoulmate SET password = ? WHERE seoulmateIdx = ?";
+            Object[] updateProfileParams = new Object[]{modifyProfileReq.getPassword(), seoulmateIdx};
             this.jdbcTemplate.update(updateProfileQuery, updateProfileParams);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
