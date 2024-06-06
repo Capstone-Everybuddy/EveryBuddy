@@ -7,6 +7,7 @@ import Main from 'components/Main';
 import Button from '../components/Button';
 import { useAuth } from 'components/AuthContext';
 import { api } from 'api/Client';
+import { matchingInfo } from 'data/matching';
 
 interface User {
   user_name: string;
@@ -25,7 +26,6 @@ const UserUpdate: React.FC = () => {
     user_id: 'USERID',
     user_sex: 1,
     user_major: 'computer',
-    user_pwd: 'passwordxxx',
     user_studentNum: '20xxxxxxxxx',
     profileImage: 'https://via.placeholder.com/80x80',
   });
@@ -45,9 +45,8 @@ const UserUpdate: React.FC = () => {
           setUserProfile({
             user_name: profileData.name || 'USER',
             user_id: profileData.id || 'USERID',
-            user_major: profileData.major || 'computer',
+            user_major: matchingInfo.major[profileData.major!] || 'computer',
             user_sex: profileData.sex || 1,
-            user_pwd: profileData.password || 'passwordxxx',
             user_studentNum: profileData.studentId || '20xxxxxxxxx',
             profileImage:
               profileData.profileImg || 'https://via.placeholder.com/80x80',
@@ -69,23 +68,11 @@ const UserUpdate: React.FC = () => {
           console.log('api call modify');
 
           await api.seoulmates.modifySeoulmateProfile(user.idx, {
-            name: userProfile.user_name,
-            id: userProfile.user_id,
             password: userProfile.user_pwd,
-            studentId: userProfile.user_studentNum,
-            profileImg: userProfile.profileImage,
-            major: userProfile.user_major,
-            sex: userProfile.user_sex,
           });
         } else {
           await api.buddies.modifyBuddyProfile(user.idx, {
-            name: userProfile.user_name,
-            id: userProfile.user_id,
             password: userProfile.user_pwd,
-            studentId: userProfile.user_studentNum,
-            profileImg: userProfile.profileImage,
-            major: userProfile.user_major,
-            sex: userProfile.user_sex,
           });
         }
         alert('Profile updated successfully');

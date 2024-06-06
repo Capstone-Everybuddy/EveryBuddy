@@ -26,7 +26,6 @@ const Profile: React.FC = () => {
     user_id: 'USERID',
     user_major: 0,
     user_language: 'English',
-    user_pwd: 'passwordxxx',
     user_studentNum: '20xxxxxxxxx',
     profileImage:
       'https://png.pngtree.com/png-vector/20191009/ourmid/pngtree-user-icon-png-image_1796659.jpg',
@@ -50,7 +49,6 @@ const Profile: React.FC = () => {
             user_name: profileData.name || 'USER',
             user_id: profileData.id || 'USERID',
             user_major: Number(profileData.major) || 0,
-            user_pwd: profileData.password || 'passwordxxx',
             user_studentNum: profileData.studentId || '20xxxxxxxxx',
             profileImage:
               profileData.profileImg ||
