@@ -31,10 +31,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("http://localhost:3001")
+                .allowedOrigins("https://frontend-pi-lovat.vercel.app")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .allowCredentials(false).maxAge(6000);
+                .allowCredentials(true).maxAge(6000);
     }
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
