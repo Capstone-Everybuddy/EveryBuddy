@@ -25,7 +25,7 @@ public class ChatMessageDao {
         if (chatMessage.getSenderType() == null) {
             chatMessage.setSenderType(ChatMessage.SenderType.b); // 기본 값을 설정
         }
-        String sql = "INSERT INTO chat_message (room_id, sender_id, sender_type, message, created_at) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, chatMessage.getRoomId(), chatMessage.getSenderId(), chatMessage.getSenderType().toString(), chatMessage.getMessage(), new Timestamp(System.currentTimeMillis()));
+        String sql = "INSERT INTO chat_message (room_id, sender_id, sender_type, sender, message, created_at) VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, chatMessage.getRoomId(), chatMessage.getSenderId(), chatMessage.getSenderType().toString(), chatMessage.getSender() ,chatMessage.getMessage(), new Timestamp(System.currentTimeMillis()));
     }
 }

@@ -22,9 +22,9 @@ public class ChatMessage {
 
     private MessageType type;
     private String roomId;
-    private String sender;
     private int senderId; // 추가된 필드
     private SenderType senderType; // 추가된 필드
+    private String sender;
     private String message;
     private Timestamp createdAt; // 추가된 필드
 }
