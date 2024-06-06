@@ -52,7 +52,7 @@ const ChatRoom = () => {
     }
 
     // const socket = new SockJS(`${process.env.REACT_APP_API_HOST}/ws/chat`);
-    const socket = new SockJS(`/ws/chat`);
+    const socket = new SockJS(process.env.REACT_APP_WS_HOST!);
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => {
