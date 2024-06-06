@@ -40,7 +40,8 @@ public class WebConfig implements WebMvcConfigurer {
     public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(false);
-        config.addAllowedOrigin("*");
+        config.addAllowedOrigin("http://localhost:3001");
+        config.addAllowedOrigin("https://frontend-pi-lovat.vercel.app");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setMaxAge(6000L);
