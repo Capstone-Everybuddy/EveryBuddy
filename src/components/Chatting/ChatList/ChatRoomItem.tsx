@@ -7,10 +7,9 @@ const ChatRoomItem = () => {
   return (
     <Container onClick={() => navigate('/chat/room')}>
       <div>
-        <GroupName>SeoulMate Group</GroupName>
-        <GroupMembers>John, Subin, Youngjin, Heesun, Suyeon</GroupMembers>
+        <GroupName>SeoulMate & Buddy</GroupName>
+        <GroupMembers>Click to Start Chatting!</GroupMembers>
       </div>
-      <RecentMessage>I posted a new video on YouTub...</RecentMessage>
     </Container>
   );
 };
@@ -38,6 +37,7 @@ const GroupName = styled.div`
 
 const GroupMembers = styled.div`
   font-size: 14px;
+  margin-top: 10px;
 `;
 
 const RecentMessage = styled.div`

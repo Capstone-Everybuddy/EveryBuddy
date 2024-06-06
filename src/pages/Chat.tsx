@@ -1,5 +1,4 @@
 import ChatList from 'components/Chatting/ChatList/ChatList';
-
 import Header from 'components/Header';
 import Layout from 'components/Layout';
 import Main from 'components/Main';
@@ -8,6 +7,7 @@ import styled from 'styled-components';
 
 const Chatting = () => {
   const { isMatchingComplete } = useMatchingState();
+
   return (
     <Main.Wrapper>
       <Layout.PageContent>

@@ -10,14 +10,7 @@
  */
 
 export interface ModifyProfileReq {
-  name?: string;
   password?: string;
-  studentId?: string;
-  /** @format int32 */
-  sex?: number;
-  major?: string;
-  profileImg?: string;
-  id?: string;
 }
 
 export interface BaseResponseString {
@@ -149,12 +142,12 @@ export interface PostBuddyInfoReq {
 
 export interface GetSeoulmateProfileRes {
   name?: string;
-  password?: string;
   studentId?: string;
+  profileImg?: string;
+  /** @format int32 */
+  major?: number;
   /** @format int32 */
   sex?: number;
-  major?: string;
-  profileImg?: string;
   id?: string;
 }
 
@@ -265,12 +258,16 @@ export interface ChatMessage {
 
 export interface GetBuddyProfileRes {
   name?: string;
-  password?: string;
-  profileImg?: string;
-  major: string;
-  sex: number;
-  nationality?: string;
   studentId?: string;
+  profileImg?: string;
+  /** @format int32 */
+  major?: number;
+  /** @format int32 */
+  sex?: number;
+  /** @format int32 */
+  continent?: number;
+  /** @format int32 */
+  motherTongue?: number;
   id?: string;
 }
 
@@ -280,8 +277,8 @@ export enum ChatMessageTypeEnum {
 }
 
 export enum ChatMessageSenderTypeEnum {
-  Seoulmate = 'seoulmate',
-  Buddy = 'buddy',
+  S = 's',
+  B = 'b',
 }
 
 import type {
@@ -818,20 +815,6 @@ export class Api<
         path: `/chat/room`,
         method: 'POST',
         query: query,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags chat-room-controller
-     * @name Room
-     * @request GET:/chat/rooms/{userId}
-     */
-    room: (userId: number, params: RequestParams = {}) =>
-      this.request<ChatRoom[], any>({
-        path: `/chat/rooms/${userId}`,
-        method: 'GET',
         ...params,
       }),
 
