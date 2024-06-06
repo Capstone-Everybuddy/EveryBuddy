@@ -50,7 +50,7 @@ const MatchingList = () => {
                   name={item.name!}
                   sex={matchingInfo.sex[item.sex || 0]}
                   major={matchingInfo.major[item.major || 0]}
-                  studentId="2020920044"
+                  studentId={item.studentId!}
                   memberRole={Role.BUDDY}
                 />
               ))}

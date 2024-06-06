@@ -48,6 +48,8 @@ export const matchingInfo = {
     'Foodie Adventures',
     'Exhibition/Performance Visits',
     'Gaming',
+    'Hiking',
+    'Watching Animation',
   ],
   wanttodo: [
     'Language Exchange',

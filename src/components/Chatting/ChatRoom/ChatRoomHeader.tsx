@@ -2,15 +2,17 @@ import React from 'react';
 import { ReactComponent as ArrowLeft } from 'assets/arrow-left.svg';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import useMatching from 'hooks/useMatching';
 
 const ChatRoomHeader = () => {
   const navigate = useNavigate();
+  const { matchingArray } = useMatching();
   return (
     <Container>
       <ArrowLeftIcon onClick={() => navigate(-1)} />
       <div>
-        <GroupName>SeoulMate Group</GroupName>
-        <GroupMembers>John, Subin, Youngjin, Heesun, Suyeon</GroupMembers>
+        <GroupName>Chatting</GroupName>
+        <GroupMembers>{/* {matchingArray} */}</GroupMembers>
       </div>
     </Container>
   );

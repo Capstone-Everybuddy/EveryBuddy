@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 
-interface User {
+export interface User {
   role: 'seoulmate' | 'buddy';
   idx: number;
   name: string;

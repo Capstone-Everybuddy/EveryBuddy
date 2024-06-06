@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from 'api/Client';
 
 const useMatchingState = () => {
-  const { data: matchingState } = useQuery({
+  const { data: matchingState, refetch: refetchMatchingState } = useQuery({
     queryKey: ['MatchingState'],
     queryFn: () => api.matchings.getState(),
   });
@@ -15,6 +15,7 @@ const useMatchingState = () => {
   const { mutate: matchingStart } = useMutation({
     mutationFn: () => api.matchings.applyGaleShapley(),
     onSuccess: (data: any) => {
+      refetchMatchingState();
       console.log('success', data);
     },
   });
@@ -22,6 +23,7 @@ const useMatchingState = () => {
   const { mutate: matchingDelete } = useMutation({
     mutationFn: () => api.matchings.deleteMatching(),
     onSuccess: (data: any) => {
+      refetchMatchingState();
       console.log('success', data);
     },
   });

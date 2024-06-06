@@ -2,15 +2,30 @@ import React from 'react';
 import styled from 'styled-components';
 import { ReactComponent as SendButton } from 'assets/send.svg';
 
-const ChatInput = () => {
+interface ChatInputProps {
+  message: string;
+  onChangeMessage: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  sendMessage: () => void;
+}
+
+const ChatInput = ({
+  message,
+  onChangeMessage,
+  sendMessage,
+}: ChatInputProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('submit');
+    sendMessage();
   };
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <Input type="text" placeholder="Message here..." />
+        <Input
+          type="text"
+          placeholder="Message here..."
+          value={message}
+          onChange={onChangeMessage}
+        />
         <Button type="submit">
           <SendButton />
         </Button>
