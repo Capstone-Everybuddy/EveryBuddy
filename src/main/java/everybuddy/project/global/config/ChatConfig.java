@@ -12,7 +12,9 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws/chat").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/ws/chat")
+                .setAllowedOrigins("http://localhost:3001", "https://frontend-pi-lovat.vercel.app")
+                .withSockJS();
     }
 
     @Override
