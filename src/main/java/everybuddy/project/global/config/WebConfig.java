@@ -31,8 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3001")
-                .allowedOrigins("https://frontend-pi-lovat.vercel.app")
+                .allowedOrigins("http://localhost:3001","https://frontend-pi-lovat.vercel.app")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .allowCredentials(true).maxAge(6000);
@@ -40,7 +39,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false);
+        config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3001");
         config.addAllowedOrigin("https://frontend-pi-lovat.vercel.app");
         config.addAllowedHeader("*");
