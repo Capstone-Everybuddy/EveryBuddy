@@ -17,13 +17,14 @@ const Modal: React.FC<ModalProps> = ({ show, submitCompleted }) => {
         <>
           <BlackScreen show={show} />
           <ModalContainer>
-            <MainText>제출 완료!</MainText>
+            <MainText>Submission Complete!</MainText>
             <SubText>
-              답변 감사합니다. <br />
-              매칭이 완료되면 결과가 자동으로 표시됩니다.
+              Thank you for your response. <br />
+              The results will be automatically displayed once the matching is
+              complete.
             </SubText>
             <Button
-              text="메인으로 돌아가기"
+              text="Return to Main"
               onClick={() => {
                 submitCompleted();
                 navigate('/matching');
@@ -66,4 +67,5 @@ const SubText = styled.div`
   text-align: center;
   padding-bottom: 24px;
 `;
+
 export default Modal;
