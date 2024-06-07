@@ -22,7 +22,7 @@ const useMatching = () => {
   }
 
   return {
-    matchingArray: data?.result,
+    matchingArray: data?.result || [],
   };
 };
 
