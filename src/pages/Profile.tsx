@@ -24,7 +24,7 @@ const Profile: React.FC = () => {
   const [userProfile, setUserProfile] = useState<User>({
     user_name: 'USER',
     user_id: 'USERID',
-    user_major: 0,
+    user_major: undefined,
     user_language: 'English',
     user_studentNum: '20xxxxxxxxx',
     profileImage:
@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
           setUserProfile({
             user_name: profileData.name || 'USER',
             user_id: profileData.id || 'USERID',
-            user_major: Number(profileData.major) || 0,
+            user_major: Number(profileData.major),
             user_studentNum: profileData.studentId || '20xxxxxxxxx',
             profileImage:
               profileData.profileImg ||
@@ -77,7 +77,9 @@ const Profile: React.FC = () => {
               <h1>{userProfile.user_name}</h1>
               <p>{userProfile.user_id}</p>
               <p>{userProfile.user_studentNum}</p>
-              <p>{matchingInfo.major[userProfile.user_major!]}</p>
+              {userProfile.user_major !== undefined && (
+                <p>{matchingInfo.major[userProfile.user_major!]}</p>
+              )}
             </UserInfo>
           </ProfileSection>
           <Link to="/userupdate">

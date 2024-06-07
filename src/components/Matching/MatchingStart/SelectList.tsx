@@ -30,7 +30,7 @@ const getMainText = (
       case 'major':
         return 'What kind of major would you like your matching partner to have?';
       case 'continent':
-        return 'Which continent do you live in?';
+        return 'What continent would you prefer your matching partner to be from?';
       default:
         return null;
     }
