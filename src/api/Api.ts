@@ -247,10 +247,10 @@ export interface Team {
 export interface ChatMessage {
   type?: ChatMessageTypeEnum;
   roomId?: string;
-  sender?: string;
   /** @format int32 */
   senderId?: number;
   senderType?: ChatMessageSenderTypeEnum;
+  sender?: string;
   message?: string;
   /** @format date-time */
   createdAt?: string;

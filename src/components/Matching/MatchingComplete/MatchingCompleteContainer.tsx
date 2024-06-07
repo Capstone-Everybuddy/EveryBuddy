@@ -4,7 +4,6 @@ import MemberProfile from './MemberProfile';
 import { Role } from 'data/matching';
 import useMatching from 'hooks/useMatching';
 import { matchingInfo } from '../../../data/matching';
-import { useAuth } from 'components/AuthContext';
 
 const MatchingCompleteContainer = () => {
   const { matchingArray } = useMatching();
@@ -14,7 +13,7 @@ const MatchingCompleteContainer = () => {
       <MainText>매칭 정보 확인하기</MainText>
       <SubText>나와 매칭된 사람들의 정보를 확인해보세요</SubText>
       <MemberList>
-        {matchingArray && (
+        {matchingArray.length > 0 && (
           <MemberProfile
             name={matchingArray[0].seoulmateName!}
             studentId={matchingArray[0].seoulmateStudentId!}

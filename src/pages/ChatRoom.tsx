@@ -51,8 +51,8 @@ const ChatRoom = () => {
       ws.deactivate(); // 기존 연결이 있을 경우 해제
     }
 
-    // const socket = new SockJS(`${process.env.REACT_APP_API_HOST}/ws/chat`);
-    const socket = new SockJS(process.env.REACT_APP_WS_HOST!);
+    const socket = new SockJS(`${process.env.REACT_APP_API_HOST}/ws/chat`);
+    // const socket = new SockJS(process.env.REACT_APP_WS_HOST!);
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => {
