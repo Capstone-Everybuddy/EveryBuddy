@@ -16,7 +16,7 @@ const Chatting = () => {
           <ChatList />
         ) : (
           <CompleteMessage>
-            매칭이 완료된 후 채팅방이 생성됩니다.
+            Once matching is complete, <br />a chat room will be created.
           </CompleteMessage>
         )}
       </Layout.PageContent>
@@ -32,6 +32,7 @@ const CompleteMessage = styled.div`
   height: 100%;
   margin: 0 auto;
   margin-bottom: 60px;
+  text-align: center;
 `;
 
 export default Chatting;

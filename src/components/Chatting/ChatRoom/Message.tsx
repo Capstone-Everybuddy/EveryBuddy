@@ -8,7 +8,10 @@ interface MessageProps {
 }
 
 const Message: React.FC<MessageProps> = ({ isUser, message }) => {
-  const formattedDate: string = new Date(message.createdAt!).toLocaleString();
+  const formattedDate: string = new Date(
+    message.createdAt ?? Date.now(),
+  ).toLocaleString('ko-KR');
+
   return (
     <MessageWrapper isUser={isUser}>
       <MessageContent isUser={isUser}>

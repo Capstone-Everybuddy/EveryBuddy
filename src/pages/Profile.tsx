@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from 'components/AuthContext';
 import { api } from 'api/Client';
 import { matchingInfo } from 'data/matching';
+import useMatchingState from 'hooks/useMatchingState';
 
 interface User {
   user_name: string;
@@ -32,6 +33,7 @@ const Profile: React.FC = () => {
   });
 
   const { user } = useAuth();
+  const { isMatchingComplete } = useMatchingState();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -51,7 +53,6 @@ const Profile: React.FC = () => {
             user_major: Number(profileData.major),
             user_studentNum: profileData.studentId || '20xxxxxxxxx',
             profileImage:
-              profileData.profileImg ||
               'https://png.pngtree.com/png-vector/20191009/ourmid/pngtree-user-icon-png-image_1796659.jpg',
           });
         }
@@ -77,8 +78,12 @@ const Profile: React.FC = () => {
               <h1>{userProfile.user_name}</h1>
               <p>{userProfile.user_id}</p>
               <p>{userProfile.user_studentNum}</p>
-              {userProfile.user_major !== undefined && (
-                <p>{matchingInfo.major[userProfile.user_major!]}</p>
+              {isMatchingComplete ? (
+                userProfile.user_major !== undefined && (
+                  <p>{matchingInfo.major[userProfile.user_major!]}</p>
+                )
+              ) : (
+                <p> </p>
               )}
             </UserInfo>
           </ProfileSection>
