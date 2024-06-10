@@ -59,6 +59,7 @@ const MainText = styled.div`
   font-weight: 700;
   font-size: 24px;
   padding: 24px;
+  text-align: center;
 `;
 
 const SubText = styled.div`

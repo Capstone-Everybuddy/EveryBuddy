@@ -25,6 +25,7 @@ const ChatRoom = () => {
         try {
           const response = await api.chat.getMessages(String(roomId));
           setPastMessages(response);
+          console.log(roomId);
           connectWebSocket();
         } catch (error) {
           console.error('Failed to fetch messages:', error);
@@ -64,10 +65,11 @@ const ChatRoom = () => {
     });
 
     client.onConnect = (frame) => {
+      console.log('WebSocket connected to:', `/topic/chat/room/${roomId}`);
+
       client.subscribe(`/topic/chat/room/${roomId}`, (message) => {
         const recv = JSON.parse(message.body);
-        console.log(recv);
-        setMessages((prevMessages) => [...prevMessages, recv]);
+        recvMessage(recv);
       });
     };
 
