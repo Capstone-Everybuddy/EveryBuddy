@@ -153,7 +153,8 @@ public class MatchingDao {
                 "                                `message_id` int NOT NULL AUTO_INCREMENT,\n" +
                 "                                `room_id` int NOT NULL,\n" +
                 "                                `sender_id` int NOT NULL,\n" +
-                "                                `sender_type` enum('seoulmate', 'buddy') NOT NULL,\n" +
+                "                                `sender_type` char(1) default 'b'\n" +
+                "                                `sender` char(255) NOT NULL,\n" +
                 "                                `message` text NOT NULL,\n" +
                 "                                `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,\n" +
                 "                                PRIMARY KEY (`message_id`),\n" +
